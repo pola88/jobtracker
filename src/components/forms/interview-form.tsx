@@ -20,11 +20,12 @@ type InterviewFormProps = {
     date?: string;
     salary?: string;
     benefits?: string | null;
-    notes?: string | null;
     status?: string;
     tags?: string[];
+    initialNote?: string | null;
   };
   submitLabel?: string;
+  showInitialNoteField?: boolean;
 };
 
 const initialState: ActionResponse = {
@@ -35,6 +36,7 @@ export function InterviewForm({
   action,
   defaultValues,
   submitLabel = "Guardar",
+  showInitialNoteField = false,
 }: InterviewFormProps) {
   const [state, formAction] = useFormState(action, initialState);
 
@@ -101,12 +103,14 @@ export function InterviewForm({
           placeholder="Seguro médico, stock, etc."
           defaultValue={defaultValues?.benefits ?? ""}
         />
-        <TextareaField
-          label="Notas internas"
-          name="notes"
-          placeholder="Seguimiento semanal, feedback pendiente..."
-          defaultValue={defaultValues?.notes ?? ""}
-        />
+        {showInitialNoteField && (
+          <TextareaField
+            label="Nota inicial"
+            name="initialNote"
+            placeholder="Seguimiento semanal, feedback pendiente..."
+            defaultValue={defaultValues?.initialNote ?? ""}
+          />
+        )}
       </div>
       <Field
         label="Tags (separados por coma)"

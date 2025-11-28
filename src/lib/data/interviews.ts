@@ -65,6 +65,11 @@ export const getInterviews = unstable_cache(
 export async function getInterviewById(id: string, userId: string) {
   return prisma.interview.findFirst({
     where: { id, userId },
+    include: {
+      notes: {
+        orderBy: { createdAt: "desc" },
+      },
+    },
   });
 }
 

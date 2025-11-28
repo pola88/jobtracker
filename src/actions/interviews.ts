@@ -29,17 +29,28 @@ export async function createInterviewAction(
       return { success: false, message: "Datos inválidos" };
     }
 
+    const { initialNote, ...interviewData } = parsed.data;
+
     const user = await requireCurrentUser();
-    await prisma.interview.create({
+    const interview = await prisma.interview.create({
       data: {
-        ...parsed.data,
+        ...interviewData,
         salary:
-          parsed.data.salary !== undefined
-            ? new Prisma.Decimal(parsed.data.salary)
+          interviewData.salary !== undefined
+            ? new Prisma.Decimal(interviewData.salary)
             : undefined,
         userId: user.id,
       },
     });
+
+    if (initialNote) {
+      await prisma.interviewNote.create({
+        data: {
+          interviewId: interview.id,
+          content: initialNote,
+        },
+      });
+    }
 
     invalidateInterviewCaches();
     return { success: true, message: "Entrevista creada" };
@@ -66,6 +77,9 @@ export async function updateInterviewAction(
       return { success: false, message: "Datos inválidos" };
     }
 
+    const { initialNote: _initialNote, ...interviewData } = parsed.data;
+    void _initialNote;
+
     const user = await requireCurrentUser();
 
     const interview = await prisma.interview.findUnique({
@@ -78,10 +92,10 @@ export async function updateInterviewAction(
     await prisma.interview.update({
       where: { id: interviewId },
       data: {
-        ...parsed.data,
+        ...interviewData,
         salary:
-          parsed.data.salary !== undefined
-            ? new Prisma.Decimal(parsed.data.salary)
+          interviewData.salary !== undefined
+            ? new Prisma.Decimal(interviewData.salary)
             : null,
       },
     });

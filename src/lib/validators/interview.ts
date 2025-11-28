@@ -16,7 +16,10 @@ export const interviewSchema = z.object({
       return Number.isFinite(parsed) ? parsed : undefined;
     }),
   benefits: z.string().optional().transform((value) => value?.trim() || undefined),
-  notes: z.string().optional().transform((value) => value?.trim() || undefined),
+  initialNote: z
+    .string()
+    .optional()
+    .transform((value) => value?.trim() || undefined),
   status: z.enum(statusEnum, {
     required_error: "El estado es obligatorio",
   }),

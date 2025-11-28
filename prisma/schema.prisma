@@ -34,10 +34,18 @@ model Interview {
   date      DateTime
   salary    Decimal?        @db.Decimal(10, 2)
   benefits  String?
-  notes     String?
   status    InterviewStatus @default(applied)
   tags      String[]        @default([])
+  notes     InterviewNote[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
+}
+
+model InterviewNote {
+  id          String     @id @default(cuid())
+  interviewId String
+  interview   Interview  @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  content     String
+  createdAt   DateTime   @default(now())
 }
 

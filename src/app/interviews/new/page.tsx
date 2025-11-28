@@ -15,7 +15,11 @@ export default async function NewInterviewPage() {
       description="Documenta los detalles clave para tu próxima conversación"
     >
       <div className="max-w-3xl rounded-2xl border bg-card/80 p-6">
-        <InterviewForm action={createInterviewAction} submitLabel="Crear entrevista" />
+        <InterviewForm
+          action={createInterviewAction}
+          submitLabel="Crear entrevista"
+          showInitialNoteField
+        />
       </div>
     </AppShell>
   );
