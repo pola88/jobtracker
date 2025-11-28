@@ -79,14 +79,6 @@ export function InterviewForm({
           defaultValue={defaultValues?.date ?? ""}
           required
         />
-        <Field
-          label="Salario esperado"
-          name="salary"
-          type="number"
-          step="0.01"
-          placeholder="85000"
-          defaultValue={defaultValues?.salary ?? ""}
-        />
         <div className="space-y-2">
           <label className="text-sm font-medium text-muted-foreground">
             Estado
@@ -131,12 +123,19 @@ export function InterviewForm({
             defaultValue={defaultValues?.compensationValue ?? ""}
             required={type !== "range"}
           />
-          <Field
-            label="Moneda"
-            name="currency"
-            placeholder="USD"
-            defaultValue={defaultValues?.currency ?? "USD"}
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Moneda</label>
+            <select
+              name="currency"
+              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              defaultValue={defaultValues?.currency ?? "USD"}
+            >
+              <option value="USD">USD</option>
+              <option value="ARS">ARS</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </div>
         </div>
         {type === "range" && (
           <Field

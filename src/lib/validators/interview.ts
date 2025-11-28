@@ -15,14 +15,6 @@ export const interviewSchema = z.object({
   position: z.string().min(2, "El puesto es obligatorio"),
   recruiter: z.string().optional().transform((value) => value?.trim() || undefined),
   date: z.coerce.date({ required_error: "La fecha es obligatoria" }),
-  salary: z
-    .string()
-    .optional()
-    .transform((value) => {
-      if (!value) return undefined;
-      const parsed = Number(value);
-      return Number.isFinite(parsed) ? parsed : undefined;
-    }),
   benefits: z.string().optional().transform((value) => value?.trim() || undefined),
   compensationType: z.enum(compensationTypes),
   compensationValue: z

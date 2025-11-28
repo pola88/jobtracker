@@ -42,7 +42,6 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
               position: interview.position,
               recruiter: interview.recruiter ?? "",
               date: format(new Date(interview.date), "yyyy-MM-dd"),
-              salary: interview.salary?.toString() ?? "",
               benefits: interview.benefits ?? "",
               status: interview.status,
               tags: interview.tags,
