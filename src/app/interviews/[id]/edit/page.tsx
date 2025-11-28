@@ -46,6 +46,12 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
               benefits: interview.benefits ?? "",
               status: interview.status,
               tags: interview.tags,
+              compensationType: interview.compensationType,
+              compensationValue: interview.compensationValue?.toString() ?? "",
+              compensationUpper: interview.compensationUpper?.toString() ?? "",
+              compensationNotes: interview.compensationNotes ?? "",
+              currency: interview.currency ?? "USD",
+              experienceRating: interview.experienceRating,
             }}
           />
         </div>

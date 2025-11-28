@@ -39,6 +39,14 @@ export async function createInterviewAction(
           interviewData.salary !== undefined
             ? new Prisma.Decimal(interviewData.salary)
             : undefined,
+        compensationValue:
+          interviewData.compensationValue !== undefined
+            ? new Prisma.Decimal(interviewData.compensationValue)
+            : undefined,
+        compensationUpper:
+          interviewData.compensationUpper !== undefined
+            ? new Prisma.Decimal(interviewData.compensationUpper)
+            : undefined,
         userId: user.id,
       },
     });
@@ -96,6 +104,14 @@ export async function updateInterviewAction(
         salary:
           interviewData.salary !== undefined
             ? new Prisma.Decimal(interviewData.salary)
+            : null,
+        compensationValue:
+          interviewData.compensationValue !== undefined
+            ? new Prisma.Decimal(interviewData.compensationValue)
+            : null,
+        compensationUpper:
+          interviewData.compensationUpper !== undefined
+            ? new Prisma.Decimal(interviewData.compensationUpper)
             : null,
       },
     });

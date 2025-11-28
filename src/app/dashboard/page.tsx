@@ -24,7 +24,6 @@ export default async function DashboardPage() {
     .filter((bucket) => bucket.status !== "rejected")
     .reduce((acc, bucket) => acc + bucket.count, 0);
   const offers = dashboardData.byStatus.find((s) => s.status === "offer")?.count ?? 0;
-  const rejected = dashboardData.byStatus.find((s) => s.status === "rejected")?.count ?? 0;
 
   const action = (
     <Button asChild>
@@ -42,7 +41,11 @@ export default async function DashboardPage() {
         <MetricCard title="Total entrevistas" value={dashboardData.total} />
         <MetricCard title="En proceso" value={inProgress} />
         <MetricCard title="Ofertas" value={offers} />
-        <MetricCard title="Rechazos" value={rejected} />
+        <MetricCard
+          title="Feeling general"
+          value={`${dashboardData.recentSentiment.positive}% 👍`}
+          description="Últimos 10 procesos"
+        />
       </section>
 
       <section className="mt-8 space-y-6">

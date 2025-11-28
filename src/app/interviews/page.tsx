@@ -9,6 +9,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DeleteInterviewButton } from "@/components/interviews/delete-button";
+import { formatCompensation, formatExperience } from "@/lib/rich-text";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -38,7 +39,8 @@ export default async function InterviewsPage() {
               <th className="px-4 py-3 text-left font-medium">Puesto</th>
               <th className="px-4 py-3 text-left font-medium">Fecha</th>
               <th className="px-4 py-3 text-left font-medium">Estado</th>
-              <th className="px-4 py-3 text-left font-medium">Tags</th>
+              <th className="px-4 py-3 text-left font-medium">Compensación</th>
+              <th className="px-4 py-3 text-left font-medium">Feeling</th>
               <th className="px-4 py-3 text-right font-medium">Acciones</th>
             </tr>
           </thead>
@@ -55,18 +57,8 @@ export default async function InterviewsPage() {
                     {interview.status}
                   </Badge>
                 </td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap gap-2">
-                    {interview.tags.map((tag) => (
-                      <Badge key={tag} variant="outline">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {interview.tags.length === 0 && (
-                      <span className="text-muted-foreground">—</span>
-                    )}
-                  </div>
-                </td>
+                <td className="px-4 py-3">{formatCompensation(interview)}</td>
+                <td className="px-4 py-3 text-sm">{formatExperience(interview)}</td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <Button asChild variant="ghost" size="sm">

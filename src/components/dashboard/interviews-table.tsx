@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { Interview } from "@prisma/client";
 import { cn } from "@/lib/utils";
+import { formatCompensation, formatExperience } from "@/lib/rich-text";
 
 type InterviewsTableProps = {
   interviews: Interview[];
@@ -36,7 +37,8 @@ export function InterviewsTable({ interviews }: InterviewsTableProps) {
             <TableHead>Puesto</TableHead>
             <TableHead>Fecha</TableHead>
             <TableHead>Estado</TableHead>
-            <TableHead>Salario</TableHead>
+            <TableHead>Compensación</TableHead>
+            <TableHead>Feeling</TableHead>
             <TableHead className="text-right">Acciones</TableHead>
           </TableRow>
         </TableHeader>
@@ -54,8 +56,9 @@ export function InterviewsTable({ interviews }: InterviewsTableProps) {
                 </Badge>
               </TableCell>
               <TableCell className="tabular-nums">
-                {interview.salary ? `$${interview.salary}` : "-"}
+                {formatCompensation(interview)}
               </TableCell>
+              <TableCell className="text-sm">{formatExperience(interview)}</TableCell>
               <TableCell className="text-right">
                 <Link
                   href={`/interviews/${interview.id}/edit`}

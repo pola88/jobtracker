@@ -25,21 +25,27 @@ model User {
 }
 
 model Interview {
-  id        String          @id @default(cuid())
-  userId    String
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  company   String
-  position  String
-  recruiter String?
-  date      DateTime
-  salary    Decimal?        @db.Decimal(10, 2)
-  benefits  String?
-  status    InterviewStatus @default(applied)
-  tags      String[]        @default([])
-  notes     InterviewNote[]
-  steps     InterviewStep[]
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
+  id                String          @id @default(cuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company           String
+  position          String
+  recruiter         String?
+  date              DateTime
+  salary            Decimal?        @db.Decimal(10, 2)
+  benefits          String?
+  compensationType  CompensationType @default(fixed)
+  compensationValue Decimal?        @db.Decimal(12, 2)
+  compensationUpper Decimal?        @db.Decimal(12, 2)
+  compensationNotes String?
+  currency          String?         @default("USD")
+  experienceRating  ExperienceRating @default(neutral)
+  status            InterviewStatus @default(applied)
+  tags              String[]        @default([])
+  notes             InterviewNote[]
+  steps             InterviewStep[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 }
 
 model InterviewNote {
@@ -62,5 +68,20 @@ model InterviewStep {
   notes         String?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+}
+
+enum CompensationType {
+  fixed
+  hourly
+  range
+  contract
+}
+
+enum ExperienceRating {
+  very_negative
+  negative
+  neutral
+  positive
+  very_positive
 }
 

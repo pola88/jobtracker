@@ -12,7 +12,7 @@ export const INTERVIEW_STATUSES = [
 
 export const getDashboardData = unstable_cache(
   async (userId: string) => {
-    const [interviews, statusBuckets, recentSteps] = await Promise.all([
+    const [interviews, statusBuckets, recentSteps, sentiment] = await Promise.all([
       prisma.interview.findMany({
         where: { userId },
         orderBy: { date: "desc" },
@@ -43,6 +43,14 @@ export const getDashboardData = unstable_cache(
           },
         },
       }),
+      prisma.interview.findMany({
+        where: { userId },
+        orderBy: { updatedAt: "desc" },
+        take: 10,
+        select: {
+          experienceRating: true,
+        },
+      }),
     ]);
 
     const total = statusBuckets.reduce(
@@ -55,11 +63,20 @@ export const getDashboardData = unstable_cache(
         statusBuckets.find((row) => row.status === status)?._count?._all ?? 0,
     }));
 
+    const totalSentiments = sentiment.length || 1;
+    const positiveSentiments =
+      sentiment.filter((item) =>
+        ["positive", "very_positive"].includes(item.experienceRating)
+      ).length || 0;
+
     return {
       total,
       byStatus,
       latest: interviews,
       recentSteps,
+      recentSentiment: {
+        positive: Math.round((positiveSentiments / totalSentiments) * 100),
+      },
     };
   },
   ["dashboard-data"],
