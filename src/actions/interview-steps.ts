@@ -1,0 +1,142 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+import { prisma } from "@/lib/prisma";
+import { requireCurrentUser } from "@/lib/auth";
+import {
+  deleteStepSchema,
+  interviewStepSchema,
+  updateStepSchema,
+} from "@/lib/validators/interview-step";
+import type { ActionResponse } from "@/actions/interviews";
+
+const initialState: ActionResponse = {
+  success: false,
+};
+
+function refreshEditPage(interviewId: string) {
+  revalidatePath(`/interviews/${interviewId}/edit`);
+  revalidatePath("/dashboard");
+}
+
+export async function createInterviewStepAction(
+  _prevState: ActionResponse = initialState,
+  formData: FormData
+): Promise<ActionResponse> {
+  void _prevState;
+  try {
+    const parsed = interviewStepSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    );
+    if (!parsed.success) {
+      return { success: false, message: "Paso inválido" };
+    }
+
+    const user = await requireCurrentUser();
+    const interview = await prisma.interview.findFirst({
+      where: { id: parsed.data.interviewId, userId: user.id },
+    });
+
+    if (!interview) {
+      return { success: false, message: "Entrevista no encontrada" };
+    }
+
+    await prisma.interviewStep.create({
+      data: {
+        interviewId: interview.id,
+        title: parsed.data.title,
+        type: parsed.data.type,
+        scheduledAt: parsed.data.scheduledAt,
+        completedAt: parsed.data.completedAt,
+        outcome: parsed.data.outcome,
+        notes: parsed.data.notes,
+      },
+    });
+
+    refreshEditPage(interview.id);
+    return { success: true, message: "Paso agregado" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "No se pudo guardar el paso" };
+  }
+}
+
+export async function updateInterviewStepAction(
+  _prevState: ActionResponse = initialState,
+  formData: FormData
+): Promise<ActionResponse> {
+  void _prevState;
+  try {
+    const parsed = updateStepSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    );
+    if (!parsed.success) {
+      return { success: false, message: "Paso inválido" };
+    }
+
+    const user = await requireCurrentUser();
+    const step = await prisma.interviewStep.findFirst({
+      where: {
+        id: parsed.data.stepId,
+        interview: { id: parsed.data.interviewId, userId: user.id },
+      },
+      select: { id: true, interviewId: true },
+    });
+
+    if (!step) {
+      return { success: false, message: "Paso no encontrado" };
+    }
+
+    await prisma.interviewStep.update({
+      where: { id: step.id },
+      data: {
+        title: parsed.data.title,
+        type: parsed.data.type,
+        scheduledAt: parsed.data.scheduledAt,
+        completedAt: parsed.data.completedAt,
+        outcome: parsed.data.outcome,
+        notes: parsed.data.notes,
+      },
+    });
+
+    refreshEditPage(step.interviewId);
+    return { success: true, message: "Paso actualizado" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "No se pudo actualizar el paso" };
+  }
+}
+
+export async function deleteInterviewStepAction(formData: FormData) {
+  try {
+    const parsed = deleteStepSchema.safeParse(
+      Object.fromEntries(formData.entries())
+    );
+    if (!parsed.success) {
+      throw new Error("Paso inválido");
+    }
+
+    const user = await requireCurrentUser();
+    const step = await prisma.interviewStep.findFirst({
+      where: {
+        id: parsed.data.stepId,
+        interview: { id: parsed.data.interviewId, userId: user.id },
+      },
+    });
+
+    if (!step) {
+      return;
+    }
+
+    await prisma.interviewStep.delete({
+      where: { id: parsed.data.stepId },
+    });
+
+    refreshEditPage(parsed.data.interviewId);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+

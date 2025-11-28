@@ -12,7 +12,7 @@ export const INTERVIEW_STATUSES = [
 
 export const getDashboardData = unstable_cache(
   async (userId: string) => {
-    const [interviews, statusBuckets] = await Promise.all([
+    const [interviews, statusBuckets, recentSteps] = await Promise.all([
       prisma.interview.findMany({
         where: { userId },
         orderBy: { date: "desc" },
@@ -22,6 +22,26 @@ export const getDashboardData = unstable_cache(
         by: ["status"],
         where: { userId },
         _count: { _all: true },
+      }),
+      prisma.interviewStep.findMany({
+        where: {
+          interview: { userId },
+        },
+        orderBy: [
+          { completedAt: "desc" },
+          { scheduledAt: "desc" },
+          { createdAt: "desc" },
+        ],
+        take: 6,
+        include: {
+          interview: {
+            select: {
+              id: true,
+              company: true,
+              position: true,
+            },
+          },
+        },
       }),
     ]);
 
@@ -39,6 +59,7 @@ export const getDashboardData = unstable_cache(
       total,
       byStatus,
       latest: interviews,
+      recentSteps,
     };
   },
   ["dashboard-data"],
@@ -68,6 +89,13 @@ export async function getInterviewById(id: string, userId: string) {
     include: {
       notes: {
         orderBy: { createdAt: "desc" },
+      },
+      steps: {
+        orderBy: [
+          { completedAt: "desc" },
+          { scheduledAt: "desc" },
+          { createdAt: "desc" },
+        ],
       },
     },
   });

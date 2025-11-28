@@ -37,6 +37,7 @@ model Interview {
   status    InterviewStatus @default(applied)
   tags      String[]        @default([])
   notes     InterviewNote[]
+  steps     InterviewStep[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
 }
@@ -47,5 +48,19 @@ model InterviewNote {
   interview   Interview  @relation(fields: [interviewId], references: [id], onDelete: Cascade)
   content     String
   createdAt   DateTime   @default(now())
+}
+
+model InterviewStep {
+  id            String     @id @default(cuid())
+  interviewId   String
+  interview     Interview  @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  title         String
+  type          String
+  scheduledAt   DateTime?
+  completedAt   DateTime?
+  outcome       String?
+  notes         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 }
 

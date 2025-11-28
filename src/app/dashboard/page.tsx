@@ -8,6 +8,7 @@ import { MetricCard } from "@/components/dashboard/metric-card";
 import { StatusKanban } from "@/components/dashboard/status-kanban";
 import { InterviewsTable } from "@/components/dashboard/interviews-table";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
+import { StepsTimeline } from "@/components/dashboard/steps-timeline";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -68,6 +69,14 @@ export default async function DashboardPage() {
           <h2 className="text-lg font-semibold">Últimas entrevistas</h2>
           <RecentActivity interviews={dashboardData.latest} />
         </div>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="text-lg font-semibold">Timeline de pasos</h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Seguimiento de tus últimas instancias (challenge, técnicas, clientes, etc.).
+        </p>
+        <StepsTimeline steps={dashboardData.recentSteps} />
       </section>
     </AppShell>
   );
