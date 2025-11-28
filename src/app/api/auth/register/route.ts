@@ -1,0 +1,61 @@
+import { NextResponse } from "next/server";
+import { ZodError } from "zod";
+
+import { prisma } from "@/lib/prisma";
+import {
+  createAuthToken,
+  findUserByEmail,
+  hashPassword,
+  persistAuthToken,
+} from "@/lib/auth";
+import { registerSchema } from "@/lib/validators/auth";
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { email, password } = registerSchema.parse(body);
+
+    const existingUser = await findUserByEmail(email);
+    if (existingUser) {
+      return NextResponse.json(
+        { message: "El email ya está registrado" },
+        { status: 409 }
+      );
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        email: email.toLowerCase(),
+        passwordHash: await hashPassword(password),
+      },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+
+    const token = createAuthToken({ sub: user.id, email: user.email });
+    const response = NextResponse.json(
+      {
+        user,
+      },
+      { status: 201 }
+    );
+    persistAuthToken(token, response.cookies);
+    return response;
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        { message: "Datos inválidos", issues: error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    console.error(error);
+    return NextResponse.json(
+      { message: "Error inesperado al registrar" },
+      { status: 500 }
+    );
+  }
+}
+
