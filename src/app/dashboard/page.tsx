@@ -9,6 +9,9 @@ import { StatusKanban } from "@/components/dashboard/status-kanban";
 import { InterviewsTable } from "@/components/dashboard/interviews-table";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function DashboardPage() {
   const user = await requireCurrentUser();
   const [dashboardData, interviews] = await Promise.all([
