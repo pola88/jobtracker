@@ -3,6 +3,9 @@ import { requireCurrentUser } from "@/lib/auth";
 import { AppShell } from "@/components/layout/app-shell";
 import { InterviewForm } from "@/components/forms/interview-form";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function NewInterviewPage() {
   await requireCurrentUser();
 

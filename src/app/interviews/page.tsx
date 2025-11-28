@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DeleteInterviewButton } from "@/components/interviews/delete-button";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function InterviewsPage() {
   const user = await requireCurrentUser();
   const interviews = await getInterviews(user.id);
