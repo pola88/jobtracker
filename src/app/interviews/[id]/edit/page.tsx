@@ -7,6 +7,9 @@ import { getInterviewById } from "@/lib/data/interviews";
 import { AppShell } from "@/components/layout/app-shell";
 import { InterviewForm } from "@/components/forms/interview-form";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type EditInterviewPageProps = {
   params: {
     id: string;
