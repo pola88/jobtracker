@@ -35,10 +35,6 @@ export async function createInterviewAction(
     const interview = await prisma.interview.create({
       data: {
         ...interviewData,
-        salary:
-          interviewData.salary !== undefined
-            ? new Prisma.Decimal(interviewData.salary)
-            : undefined,
         compensationValue:
           interviewData.compensationValue !== undefined
             ? new Prisma.Decimal(interviewData.compensationValue)
@@ -101,10 +97,6 @@ export async function updateInterviewAction(
       where: { id: interviewId },
       data: {
         ...interviewData,
-        salary:
-          interviewData.salary !== undefined
-            ? new Prisma.Decimal(interviewData.salary)
-            : null,
         compensationValue:
           interviewData.compensationValue !== undefined
             ? new Prisma.Decimal(interviewData.compensationValue)
