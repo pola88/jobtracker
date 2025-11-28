@@ -1,4 +1,5 @@
-import { cookies, type ResponseCookies } from "next/headers";
+import { cookies } from "next/headers";
+import type { ResponseCookies } from "next/dist/server/web/spec-extension/cookies";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { signJwt, verifyJwt, AuthTokenPayload } from "@/lib/jwt";

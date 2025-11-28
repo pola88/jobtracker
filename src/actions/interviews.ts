@@ -94,8 +94,13 @@ export async function updateInterviewAction(
   }
 }
 
-export async function deleteInterviewAction(interviewId: string) {
+export async function deleteInterviewAction(formData: FormData): Promise<void> {
   try {
+    const interviewId = formData.get("id");
+    if (!interviewId || typeof interviewId !== "string") {
+      throw new Error("Identificador inválido");
+    }
+
     const user = await requireCurrentUser();
 
     const existingInterview = await prisma.interview.findUnique({
@@ -103,7 +108,7 @@ export async function deleteInterviewAction(interviewId: string) {
     });
 
     if (!existingInterview || existingInterview.userId !== user.id) {
-      return { success: false, message: "Entrevista no encontrada" };
+      return;
     }
 
     await prisma.interview.delete({
@@ -111,10 +116,9 @@ export async function deleteInterviewAction(interviewId: string) {
     });
 
     invalidateInterviewCaches();
-    return { success: true };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "No se pudo eliminar la entrevista" };
+    throw error;
   }
 }
 

@@ -69,7 +69,8 @@ export default async function InterviewsPage() {
                     <Button asChild variant="ghost" size="sm">
                       <Link href={`/interviews/${interview.id}/edit`}>Editar</Link>
                     </Button>
-                    <form action={deleteInterviewAction.bind(null, interview.id)}>
+                    <form action={deleteInterviewAction}>
+                      <input type="hidden" name="id" value={interview.id} />
                       <DeleteInterviewButton />
                     </form>
                   </div>

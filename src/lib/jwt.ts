@@ -1,8 +1,8 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import jwt, { type Secret, type SignOptions } from "jsonwebtoken";
 
-const EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? "7d";
+const EXPIRES_IN = (process.env.JWT_EXPIRES_IN ?? "7d") as SignOptions["expiresIn"];
 
-function getSecret() {
+function getSecret(): Secret {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new Error(
