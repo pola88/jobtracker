@@ -34,7 +34,7 @@ model Interview {
   date              DateTime
   benefits          String?
   compensationType  CompensationType @default(fixed)
-  compensationValue Decimal?        @db.Decimal(12, 2)
+  compensationLower Decimal?        @db.Decimal(12, 2)
   compensationUpper Decimal?        @db.Decimal(12, 2)
   compensationNotes String?
   currency          String?         @default("USD")

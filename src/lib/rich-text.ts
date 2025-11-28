@@ -24,11 +24,11 @@ export function formatCompensation(interview: Interview) {
     maximumFractionDigits: 0,
   });
 
-  if (!interview.compensationValue) {
+  if (!interview.compensationLower) {
     return "Sin definir";
   }
 
-  const base = formatter.format(Number(interview.compensationValue));
+  const base = formatter.format(Number(interview.compensationLower));
 
   switch (interview.compensationType) {
     case "hourly":

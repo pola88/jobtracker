@@ -8,6 +8,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { InterviewForm } from "@/components/forms/interview-form";
 import { NotesPanel } from "@/components/interviews/notes-panel";
 import { StepsPanel } from "@/components/interviews/steps-panel";
+import { CURRENCIES } from "@/lib/validators/interview";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -37,19 +38,18 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
             action={updateInterviewAction}
             submitLabel="Actualizar entrevista"
             defaultValues={{
-              id: interview.id,
               company: interview.company,
               position: interview.position,
               recruiter: interview.recruiter ?? "",
-              date: format(new Date(interview.date), "yyyy-MM-dd"),
+              date: new Date(interview.date),
               benefits: interview.benefits ?? "",
               status: interview.status,
               tags: interview.tags,
               compensationType: interview.compensationType,
-              compensationValue: interview.compensationValue?.toString() ?? "",
-              compensationUpper: interview.compensationUpper?.toString() ?? "",
+              compensationLower: interview.compensationLower?.toNumber() ?? 0,
+              compensationUpper: interview.compensationUpper?.toNumber() ?? 0,
               compensationNotes: interview.compensationNotes ?? "",
-              currency: interview.currency ?? "USD",
+              currency: interview.currency as (typeof CURRENCIES)[number],
               experienceRating: interview.experienceRating,
             }}
           />

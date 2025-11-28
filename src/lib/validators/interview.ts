@@ -1,23 +1,23 @@
 import { z } from "zod";
 
 const statusEnum = ["applied", "screening", "tech", "offer", "rejected"] as const;
-const compensationTypes = ["fixed", "hourly", "range", "contract"] as const;
-const experienceRatings = [
+export const COMPENSATION_TYPES = ["fixed", "hourly", "range", "contract"] as const;
+export const EXPERIENCE_RATINGS = [
   "very_negative",
   "negative",
   "neutral",
   "positive",
   "very_positive",
 ] as const;
-
+export const CURRENCIES = ["USD", "ARS", "EUR", "GBP"] as const;
 export const interviewSchema = z.object({
   company: z.string().min(2, "La empresa es obligatoria"),
   position: z.string().min(2, "El puesto es obligatorio"),
   recruiter: z.string().optional().transform((value) => value?.trim() || undefined),
   date: z.coerce.date({ required_error: "La fecha es obligatoria" }),
   benefits: z.string().optional().transform((value) => value?.trim() || undefined),
-  compensationType: z.enum(compensationTypes),
-  compensationValue: z
+  compensationType: z.enum(COMPENSATION_TYPES),
+  compensationLower: z
     .string()
     .optional()
     .transform((value) => {
@@ -37,8 +37,8 @@ export const interviewSchema = z.object({
     .string()
     .optional()
     .transform((value) => value?.trim() || undefined),
-  currency: z.string().optional().transform((value) => value?.trim() || "USD"),
-  experienceRating: z.enum(experienceRatings),
+  currency: z.enum(CURRENCIES),
+  experienceRating: z.enum(EXPERIENCE_RATINGS),
   initialNote: z
     .string()
     .optional()
