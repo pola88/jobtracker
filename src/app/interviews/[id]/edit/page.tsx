@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { format } from "date-fns";
 
 import { updateInterviewAction } from "@/actions/interviews";
 import { requireCurrentUser } from "@/lib/auth";

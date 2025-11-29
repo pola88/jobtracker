@@ -8,8 +8,16 @@ import { Field as FieldType } from '@/components/Form/types';
 import { interviewSchema } from '@/lib/validators/interview';
 import { useFormState } from 'react-dom';
 import { ActionResponse } from '@/actions/interviews';
-import { INTERVIEW_STATUSES } from '@/lib/data/interviews';
-import { COMPENSATION_TYPES, CURRENCIES } from '@/lib/validators/interview';
+import { CURRENCIES } from '@/lib/validators/interview';
+import {CompensationType, ExperienceRating, InterviewStatus } from "@prisma/client";
+
+const EXPERIENCE_RATINGS = [
+  { label: 'Muy negativa', value: ExperienceRating.very_negative },
+  { label: 'Negativa', value: ExperienceRating.negative },
+  { label: 'Neutral', value: ExperienceRating.neutral },
+  { label: 'Positiva', value: ExperienceRating.positive },
+  { label: 'Muy positiva', value: ExperienceRating.very_positive },
+];
 
 const DEFAULT_VALUES: z.infer<typeof interviewSchema> = {
   company: '',
@@ -57,7 +65,7 @@ const fields: FieldType<typeof interviewSchema>[] = [
     label: 'Estado',
     placeholder: 'Estado',
     type: 'select',
-    options: INTERVIEW_STATUSES.map((status) => ({ label: status, value: status })),
+    options: Object.values(InterviewStatus).map((status) => ({ label: status, value: status })),
   },
   {
     name: 'spacer-general',
@@ -80,19 +88,25 @@ const fields: FieldType<typeof interviewSchema>[] = [
   {
     name: 'compensation-row',
     type: 'group',
-    columns: 3,
+    columns: 4,
     fields: [
       {
         name: 'compensationType',
         label: 'Tipo de compensación',
         placeholder: 'Tipo de compensación',
         type: 'select',
-        options: COMPENSATION_TYPES.map((type) => ({ label: type, value: type })),
+        options: Object.values(CompensationType).map((type) => ({ label: type, value: type })),
       },
       {
         name: 'compensationLower',
-        label: 'Valor mínimo de compensación',
+        label: 'Valor mínimo',
         placeholder: 'Valor mínimo de compensación',
+        type: 'text',
+      },
+      {
+        name: 'compensationUpper',
+        label: 'Valor máximo',
+        placeholder: 'Valor máximo de compensación',
         type: 'text',
       },
       {
@@ -105,21 +119,19 @@ const fields: FieldType<typeof interviewSchema>[] = [
     ],
   },
   {
-    name: 'compensationUpper',
-    label: 'Valor máximo de compensación',
-    placeholder: 'Valor máximo de compensación',
-    type: 'text',
-    fullWidth: true,
-    shouldHide: (values) => 
-      values.compensationType === 'range' ? false : true
-  },
-  {
     name: 'compensationNotes',
     label: 'Notas de compensación',
     placeholder: 'Notas de compensación',
-    type: 'text',
+    type: 'textarea',
     fullWidth: true,
-  }
+  },
+  {
+    name: 'experienceRating',
+    label: 'Evaluación',
+    placeholder: 'Evaluación',
+    type: 'select',
+    options: EXPERIENCE_RATINGS,
+  },
 ];
 
 type InterviewFormProps = {

@@ -16,6 +16,7 @@ type BaseFieldProps<T extends z.ZodTypeAny> = {
   fullWidth?: boolean;
   options?: SelectFieldOption[];
   shouldHide?: (values: z.infer<T>) => boolean;
+  checkIfDisabled?: (values: z.infer<T>) => boolean;
 };
 
 type TextFieldProps<T extends z.ZodTypeAny> = BaseFieldProps<T> & {
@@ -69,4 +70,5 @@ export type FormProps<T extends z.ZodTypeAny> = {
 export type SelectFieldProps = {
   field: FieldValues;
   options: SelectFieldOption[];
+  disabled?: boolean;
 };

@@ -1,14 +1,7 @@
 import { unstable_cache } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
-
-export const INTERVIEW_STATUSES = [
-  "applied",
-  "screening",
-  "tech",
-  "offer",
-  "rejected",
-] as const;
+import { ExperienceRating, InterviewStatus } from "@prisma/client";
 
 export const getDashboardData = unstable_cache(
   async (userId: string) => {
@@ -57,7 +50,7 @@ export const getDashboardData = unstable_cache(
       (acc, row) => acc + (row._count?._all ?? 0),
       0
     );
-    const byStatus = INTERVIEW_STATUSES.map((status) => ({
+    const byStatus = Object.values(InterviewStatus).map((status) => ({
       status,
       count:
         statusBuckets.find((row) => row.status === status)?._count?._all ?? 0,
@@ -65,9 +58,8 @@ export const getDashboardData = unstable_cache(
 
     const totalSentiments = sentiment.length || 1;
     const positiveSentiments =
-      sentiment.filter((item) =>
-        ["positive", "very_positive"].includes(item.experienceRating)
-      ).length || 0;
+      sentiment.filter((item) => item.experienceRating === ExperienceRating.positive || item.experienceRating === ExperienceRating.very_positive)
+      .length || 0;
 
     return {
       total,

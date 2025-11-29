@@ -1,14 +1,7 @@
 import { z } from "zod";
 
-const statusEnum = ["applied", "screening", "tech", "offer", "rejected"] as const;
-export const COMPENSATION_TYPES = ["fixed", "hourly", "range", "contract"] as const;
-export const EXPERIENCE_RATINGS = [
-  "very_negative",
-  "negative",
-  "neutral",
-  "positive",
-  "very_positive",
-] as const;
+import {CompensationType, ExperienceRating, InterviewStatus } from "@prisma/client";
+
 export const CURRENCIES = ["USD", "ARS", "EUR", "GBP"] as const;
 export const interviewSchema = z.object({
   company: z.string().min(2, "La empresa es obligatoria"),
@@ -16,7 +9,7 @@ export const interviewSchema = z.object({
   recruiter: z.string().optional().transform((value) => value?.trim() || undefined),
   date: z.coerce.date({ required_error: "La fecha es obligatoria" }),
   benefits: z.string().optional().transform((value) => value?.trim() || undefined),
-  compensationType: z.enum(COMPENSATION_TYPES),
+  compensationType: z.nativeEnum(CompensationType),
   compensationLower: z
     .string()
     .optional()
@@ -38,12 +31,12 @@ export const interviewSchema = z.object({
     .optional()
     .transform((value) => value?.trim() || undefined),
   currency: z.enum(CURRENCIES),
-  experienceRating: z.enum(EXPERIENCE_RATINGS),
+  experienceRating: z.nativeEnum(ExperienceRating),
   initialNote: z
     .string()
     .optional()
     .transform((value) => value?.trim() || undefined),
-  status: z.enum(statusEnum, {
+  status: z.nativeEnum(InterviewStatus, {
     required_error: "El estado es obligatorio",
   }),
   tags: z
@@ -60,5 +53,4 @@ export const interviewSchema = z.object({
 });
 
 export type InterviewPayload = z.infer<typeof interviewSchema>;
-export type InterviewStatus = (typeof statusEnum)[number];
 

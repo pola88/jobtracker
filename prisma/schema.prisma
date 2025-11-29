@@ -72,8 +72,6 @@ model InterviewStep {
 enum CompensationType {
   fixed
   hourly
-  range
-  contract
 }
 
 enum ExperienceRating {
