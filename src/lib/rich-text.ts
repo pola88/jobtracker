@@ -1,19 +1,12 @@
 import type { Interview } from "@prisma/client";
+import { CompensationType, ExperienceRating } from "@prisma/client";
 
-const ratingLabels: Record<Interview["experienceRating"], string> = {
-  very_negative: "Muy negativa",
-  negative: "Negativa",
-  neutral: "Neutral",
-  positive: "Positiva",
-  very_positive: "Muy positiva",
-};
-
-const ratingEmoji: Record<Interview["experienceRating"], string> = {
-  very_negative: "😡",
-  negative: "😕",
-  neutral: "😐",
-  positive: "🙂",
-  very_positive: "🤩",
+const ratingLabels: Record<Interview["experienceRating"], { label: string; icon: string }> = {
+  [ExperienceRating.very_negative]: { label: "Muy negativa", icon: "😡" },
+  [ExperienceRating.negative]: { label: "Negativa", icon: "😕" },
+  [ExperienceRating.neutral]: { label: "Neutral", icon: "😐" },
+  [ExperienceRating.positive]: { label: "Positiva", icon: "🙂" },
+  [ExperienceRating.very_positive]: { label: "Muy positiva", icon: "🤩" },
 };
 
 export function formatCompensation(interview: Interview) {
@@ -28,27 +21,21 @@ export function formatCompensation(interview: Interview) {
     return "Sin definir";
   }
 
-  const base = formatter.format(Number(interview.compensationLower));
-
-  switch (interview.compensationType) {
-    case "hourly":
-      return `${base}/h`;
-    case "range":
-      if (interview.compensationUpper) {
-        const upper = formatter.format(Number(interview.compensationUpper));
-        return `${base} - ${upper}`;
-      }
-      return `${base}+`;
-    case "contract":
-      return `${base} contrato`;
-    default:
-      return base;
+  let salary = formatter.format(Number(interview.compensationLower));
+  if (interview.compensationUpper) {
+    const upper = formatter.format(Number(interview.compensationUpper));
+    salary = `${salary} - ${upper}`;
   }
+
+  if (interview.compensationType === CompensationType.hourly) {
+    salary = `${salary}/h`;
+  }
+
+  return salary;
 }
 
 export function formatExperience(interview: Interview) {
-  const label = ratingLabels[interview.experienceRating];
-  const icon = ratingEmoji[interview.experienceRating];
+  const { label, icon } = ratingLabels[interview.experienceRating];
   return `${icon} ${label}`;
 }
 
