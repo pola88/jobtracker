@@ -40,7 +40,6 @@ model Interview {
   currency          String?         @default("USD")
   experienceRating  ExperienceRating @default(neutral)
   status            InterviewStatus @default(applied)
-  tags              String[]        @default([])
   notes             InterviewNote[]
   steps             InterviewStep[]
   createdAt         DateTime        @default(now())

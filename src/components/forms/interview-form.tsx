@@ -19,7 +19,9 @@ const EXPERIENCE_RATINGS = [
   { label: 'Muy positiva', value: ExperienceRating.very_positive },
 ];
 
-const DEFAULT_VALUES: z.infer<typeof interviewSchema> = {
+type InterviewTypes = z.infer<typeof interviewSchema>;
+
+const DEFAULT_VALUES: InterviewTypes = {
   company: '',
   position: '',
   recruiter: '',
@@ -31,8 +33,7 @@ const DEFAULT_VALUES: z.infer<typeof interviewSchema> = {
   compensationNotes: '',
   currency: 'USD',
   experienceRating: 'neutral',
-  initialNote: '',
-  tags: [],
+  initialNote: ''
 };
 
 const fields: FieldType<typeof interviewSchema>[] = [
@@ -139,7 +140,7 @@ type InterviewFormProps = {
     state: ActionResponse,
     formData: FormData
   ) => Promise<ActionResponse>;
-  defaultValues?: z.infer<typeof interviewSchema>;
+  defaultValues?: InterviewTypes;
   submitLabel?: string;
   showInitialNoteField?: boolean;
 };

@@ -1,3 +1,5 @@
+'use client';
+
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -85,10 +87,18 @@ const Form = <T extends z.ZodTypeAny>({
     resolver: zodResolver(schema as T),
     defaultValues,
   });
-
+  const submitHandler = form.handleSubmit(
+    onSubmit,
+    (errors) => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error("Form validation errors:", errors);
+      }
+    }
+  );
+  
   return (
     <FormComponent {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
+      <form onSubmit={submitHandler} className={styles.form}>
         
         {fields.map((fieldConfig) => {
           if (fieldConfig.type === 'spacer') {

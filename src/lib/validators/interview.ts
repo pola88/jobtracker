@@ -11,7 +11,7 @@ export const interviewSchema = z.object({
   benefits: z.string().optional().transform((value) => value?.trim() || undefined),
   compensationType: z.nativeEnum(CompensationType),
   compensationLower: z
-    .string()
+    .coerce.number()
     .optional()
     .transform((value) => {
       if (!value) return undefined;
@@ -19,7 +19,7 @@ export const interviewSchema = z.object({
       return Number.isFinite(parsed) ? parsed : undefined;
     }),
   compensationUpper: z
-    .string()
+    .coerce.number()
     .optional()
     .transform((value) => {
       if (!value) return undefined;
@@ -39,17 +39,6 @@ export const interviewSchema = z.object({
   status: z.nativeEnum(InterviewStatus, {
     required_error: "El estado es obligatorio",
   }),
-  tags: z
-    .string()
-    .optional()
-    .transform((value) =>
-      value
-        ? value
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter(Boolean)
-        : []
-    ),
 });
 
 export type InterviewPayload = z.infer<typeof interviewSchema>;

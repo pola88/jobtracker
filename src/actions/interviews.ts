@@ -23,7 +23,7 @@ export async function createInterviewAction(
 ): Promise<ActionResponse> {
   try {
     const parsed = interviewSchema.safeParse(
-      Object.fromEntries(formData.entries())
+      formData
     );
     if (!parsed.success) {
       return { success: false, message: "Datos inválidos" };
@@ -65,17 +65,13 @@ export async function createInterviewAction(
 }
 
 export async function updateInterviewAction(
+  interviewId: string,
   _prevState: ActionResponse,
   formData: FormData
 ): Promise<ActionResponse> {
   try {
-    const interviewId = formData.get("id");
-    if (!interviewId || typeof interviewId !== "string") {
-      return { success: false, message: "Identificador inválido" };
-    }
-
     const parsed = interviewSchema.safeParse(
-      Object.fromEntries(formData.entries())
+      formData
     );
     if (!parsed.success) {
       return { success: false, message: "Datos inválidos" };

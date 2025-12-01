@@ -26,6 +26,8 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
     notFound();
   }
 
+  const updateInterview = updateInterviewAction.bind(null, interview.id);
+
   return (
     <AppShell
       title={`Editar entrevista (${interview.company})`}
@@ -34,7 +36,7 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="rounded-2xl border bg-card/80 p-6">
           <InterviewForm
-            action={updateInterviewAction}
+            action={updateInterview}
             submitLabel="Actualizar entrevista"
             defaultValues={{
               company: interview.company,
@@ -43,7 +45,6 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
               date: new Date(interview.date),
               benefits: interview.benefits ?? "",
               status: interview.status,
-              tags: interview.tags,
               compensationType: interview.compensationType,
               compensationLower: interview.compensationLower?.toNumber() ?? 0,
               compensationUpper: interview.compensationUpper?.toNumber() ?? 0,
