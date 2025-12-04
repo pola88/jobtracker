@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
 import { addInterviewNoteAction } from "@/actions/interview-notes";
@@ -14,20 +14,20 @@ const initialState = {
 
 type AddNoteFormProps = {
   interviewId: string;
+  onSuccess?: () => void;
 };
 
-export function AddNoteForm({ interviewId }: AddNoteFormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
+export function AddNoteForm({ interviewId, onSuccess }: AddNoteFormProps) {
   const [state, formAction] = useFormState(addInterviewNoteAction, initialState);
 
   useEffect(() => {
     if (state.success) {
-      formRef.current?.reset();
+      onSuccess?.();
     }
-  }, [state.success]);
+  }, [state.success, onSuccess]);
 
   return (
-    <form ref={formRef} action={formAction} className="space-y-3">
+    <form action={formAction} className="space-y-3">
       <input type="hidden" name="interviewId" value={interviewId} />
       <div className="space-y-2">
         <label className="text-sm font-medium text-muted-foreground">

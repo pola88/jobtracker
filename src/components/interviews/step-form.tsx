@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ type StepFormProps = {
     notes?: string | null;
   };
   submitLabel: string;
+  onSuccess?: () => void;
 };
 
 const initialState: ActionResponse = {
@@ -35,18 +36,18 @@ export function StepForm({
   interviewId,
   defaultValues,
   submitLabel,
+  onSuccess,
 }: StepFormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useFormState(action, initialState);
 
   useEffect(() => {
-    if (state.success && !defaultValues?.stepId) {
-      formRef.current?.reset();
+    if (state.success) {
+      onSuccess?.();
     }
-  }, [state.success, defaultValues?.stepId]);
+  }, [state.success, onSuccess]);
 
   return (
-    <form ref={formRef} action={formAction} className="space-y-3">
+    <form action={formAction} className="space-y-3">
       <input type="hidden" name="interviewId" value={interviewId} />
       {defaultValues?.stepId && (
         <input type="hidden" name="stepId" value={defaultValues.stepId} />

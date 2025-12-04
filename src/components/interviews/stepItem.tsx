@@ -10,6 +10,10 @@ import { Button } from "@/components/ui/button";
 import { DeleteStepForm } from "@/components/interviews/delete-step-form";
 import { updateInterviewStepAction } from "@/actions/interview-steps";
 
+import {
+  type TimelineItemDTO
+} from "@/lib/interviews/timeline-dto";
+
 type StepItemProps = {
   step: {
     id: string;
@@ -21,10 +25,11 @@ type StepItemProps = {
     notes?: string | null;
   };
   interviewId: string;
+  onEdit: (timeline: TimelineItemDTO) => void;
 };
 
-export function StepItem({ step, interviewId }: StepItemProps) {
-  const [isEditing, setIsEditing] = useState(false);
+export function StepItem({ step, interviewId, onEdit }: StepItemProps) {
+  // const [isEditing, setIsEditing] = useState(false);
 
   const formattedScheduled = step.scheduledAt
     ? format(step.scheduledAt, "dd MMM yyyy - HH:mm", { locale: es })
@@ -49,7 +54,7 @@ export function StepItem({ step, interviewId }: StepItemProps) {
             variant="ghost"
             size="sm"
             className="h-8 px-2 text-muted-foreground"
-            onClick={() => setIsEditing((prev) => !prev)}
+            onClick={() => onEdit(step)}
           >
             <Pencil className="h-4 w-4" />
           </Button>
@@ -76,7 +81,7 @@ export function StepItem({ step, interviewId }: StepItemProps) {
           {step.notes}
         </p>
       )}
-      {isEditing && (
+      {/* {isEditing && (
         <div className="border-t border-dashed pt-4">
           <StepForm
             action={updateInterviewStepAction}
@@ -97,7 +102,7 @@ export function StepItem({ step, interviewId }: StepItemProps) {
             }}
           />
         </div>
-      )}
+      )} */}
     </article>
   );
 }

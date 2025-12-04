@@ -10,6 +10,8 @@ import { useFormState } from 'react-dom';
 import { ActionResponse } from '@/actions/interviews';
 import { CURRENCIES } from '@/lib/validators/interview';
 import {CompensationType, ExperienceRating, InterviewStatus } from "@prisma/client";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const EXPERIENCE_RATINGS = [
   { label: 'Muy negativa', value: ExperienceRating.very_negative },
@@ -146,13 +148,20 @@ const initialState: ActionResponse = {
 };
 
 export const InterviewForm = ({ action, defaultValues = DEFAULT_VALUES, submitLabel = "Guardar", showInitialNoteField = false }: InterviewFormProps) => {
-  const [, formAction, isPending] = useFormState(action, initialState);
+  const [state, formAction, isPending] = useFormState(action, initialState);
+  const router = useRouter();
   const formFields: FieldType<typeof interviewSchema>[] = showInitialNoteField
     ? fields
     : fields.map((field) => field.name !== 'initialNote' ? field : {
       name: 'spacer-initial-note',
       type: 'spacer',
     });
+
+  useEffect(() => {
+    if (state.success && state.interviewId) {
+      router.push(`/interviews/${state.interviewId}/edit`);
+    }
+  }, [state.success, state.interviewId, router]);
 
   return (
     <Form

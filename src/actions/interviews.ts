@@ -10,6 +10,7 @@ import { requireCurrentUser } from "@/lib/auth";
 export type ActionResponse = {
   success: boolean;
   message?: string;
+  interviewId?: string;
 };
 
 function invalidateInterviewCaches() {
@@ -57,7 +58,7 @@ export async function createInterviewAction(
     }
 
     invalidateInterviewCaches();
-    return { success: true, message: "Entrevista creada" };
+    return { success: true, message: "Entrevista creada", interviewId: interview.id };
   } catch (error) {
     console.error(error);
     return { success: false, message: "No se pudo crear la entrevista" };
@@ -105,7 +106,7 @@ export async function updateInterviewAction(
     });
 
     invalidateInterviewCaches();
-    return { success: true, message: "Entrevista actualizada" };
+    return { success: true, message: "Entrevista actualizada", interviewId: interviewId };
   } catch (error) {
     console.error(error);
     return { success: false, message: "No se pudo actualizar la entrevista" };

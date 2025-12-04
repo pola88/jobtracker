@@ -2,6 +2,10 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { DeleteNoteForm } from "@/components/interviews/remove-note-form";
 
+import {
+  type TimelineItemDTO
+} from "@/lib/interviews/timeline-dto";
+
 type NoteItemProps = {
   note: {
     id: string;
@@ -9,6 +13,7 @@ type NoteItemProps = {
     createdAt: Date;
   };
   interviewId: string;
+  onEdit: (timeline: TimelineItemDTO) => void;
 };
 
 export function NoteItem({ note, interviewId }: NoteItemProps) {
