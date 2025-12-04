@@ -69,8 +69,11 @@ const fields: FieldType<typeof interviewSchema>[] = [
     options: Object.values(InterviewStatus).map((status) => ({ label: status, value: status })),
   },
   {
-    name: 'spacer-general',
-    type: 'spacer',
+    name: 'experienceRating',
+    label: 'Evaluación',
+    placeholder: 'Evaluación',
+    type: 'select',
+    options: EXPERIENCE_RATINGS,
   },
   {
     name: 'benefits',
@@ -125,14 +128,7 @@ const fields: FieldType<typeof interviewSchema>[] = [
     placeholder: 'Notas de compensación',
     type: 'textarea',
     fullWidth: true,
-  },
-  {
-    name: 'experienceRating',
-    label: 'Evaluación',
-    placeholder: 'Evaluación',
-    type: 'select',
-    options: EXPERIENCE_RATINGS,
-  },
+  }
 ];
 
 type InterviewFormProps = {

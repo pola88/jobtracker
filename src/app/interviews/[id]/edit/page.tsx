@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { updateInterviewAction } from "@/actions/interviews";
 import { requireCurrentUser } from "@/lib/auth";
 import { getInterviewById } from "@/lib/data/interviews";
+import { getInterviewTimelineDTO } from "@/lib/interviews/timeline-data";
 import { AppShell } from "@/components/layout/app-shell";
 import { InterviewForm } from "@/components/forms/interview-form";
-import { NotesPanel } from "@/components/interviews/notes-panel";
-import { StepsPanel } from "@/components/interviews/steps-panel";
 import { CURRENCIES } from "@/lib/validators/interview";
+import RightPanel from "@/components/interviews/right-panel";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -27,6 +27,7 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
   }
 
   const updateInterview = updateInterviewAction.bind(null, interview.id);
+  const timeline = await getInterviewTimelineDTO(interview.id);
 
   return (
     <AppShell
@@ -55,8 +56,7 @@ export default async function EditInterviewPage({ params }: EditInterviewPagePro
           />
         </div>
         <div className="space-y-6">
-          <StepsPanel interviewId={interview.id} steps={interview.steps ?? []} />
-          <NotesPanel interviewId={interview.id} notes={interview.notes ?? []} />
+          <RightPanel interviewId={interview.id} initialTimeline={timeline} />
         </div>
       </div>
     </AppShell>

@@ -95,18 +95,31 @@ export const getInterviews = unstable_cache(
 export async function getInterviewById(id: string, userId: string) {
   return prisma.interview.findFirst({
     where: { id, userId },
-    include: {
-      notes: {
-        orderBy: { createdAt: "desc" },
-      },
-      steps: {
-        orderBy: [
-          { completedAt: "desc" },
-          { scheduledAt: "desc" },
-          { createdAt: "desc" },
-        ],
-      },
-    },
+    // include: {
+    //   notes: {
+    //     orderBy: { createdAt: "desc" },
+    //   },
+    //   steps: {
+    //     orderBy: [
+    //       { completedAt: "desc" },
+    //       { scheduledAt: "desc" },
+    //       { createdAt: "desc" },
+    //     ],
+    //   },
+    // },
   });
+}
+
+export async function getInterviewStepsAndNotes(interviewId: string) {
+  return Promise.all([
+    prisma.interviewStep.findMany({
+      where: { interviewId },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.interviewNote.findMany({
+      where: { interviewId },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
 }
 

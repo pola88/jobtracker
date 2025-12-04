@@ -50,13 +50,18 @@ export function decodeAuthToken(token?: string) {
 }
 
 export async function getCurrentUser() {
-  const token = cookies().get(AUTH_COOKIE_NAME)?.value;
+  const token = await getTokenFromCookie();
   const decoded = decodeAuthToken(token);
   if (!decoded?.sub) return null;
 
   return prisma.user.findUnique({
     where: { id: decoded.sub },
   });
+}
+
+export async function getTokenFromCookie() {
+  const token = cookies().get(AUTH_COOKIE_NAME)?.value;
+  return token;
 }
 
 export async function requireCurrentUser() {

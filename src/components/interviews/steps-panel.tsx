@@ -1,5 +1,5 @@
 import { StepForm } from "@/components/interviews/step-form";
-import { StepItem } from "@/components/interviews/step-item";
+import { StepItem } from "@/components/interviews/stepItem";
 import { createInterviewStepAction } from "@/actions/interview-steps";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
 

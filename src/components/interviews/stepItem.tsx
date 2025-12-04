@@ -35,6 +35,7 @@ export function StepItem({ step, interviewId }: StepItemProps) {
 
   return (
     <article className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm space-y-3">
+      <div className="text-xs font-semibold">STEP</div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-semibold">{step.title}</p>
@@ -55,7 +56,7 @@ export function StepItem({ step, interviewId }: StepItemProps) {
           <DeleteStepForm stepId={step.id} interviewId={interviewId} />
         </div>
       </div>
-      <div className="grid gap-2 text-sm text-muted-foreground md:grid-cols-2">
+      <div className="row gap-2 text-sm text-muted-foreground">
         <p>
           <span className="font-medium text-foreground">Agendado:</span>{" "}
           {formattedScheduled}
