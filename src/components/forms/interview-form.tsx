@@ -28,7 +28,7 @@ const DEFAULT_VALUES: InterviewTypes = {
   position: '',
   recruiter: '',
   date: new Date(),
-  status: 'applied',
+  status: 'active',
   compensationType: 'fixed',
   compensationLower: 0,
   compensationUpper: 0,
