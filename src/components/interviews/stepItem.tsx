@@ -20,6 +20,7 @@ type StepItemProps = {
     completedAt: Date | null;
     outcome?: string | null;
     notes?: string | null;
+    createdAt: Date;
   };
   interviewId: string;
   onEdit: (timeline: TimelineItemDTO) => void;
@@ -51,7 +52,17 @@ export function StepItem({ step, interviewId, onEdit }: StepItemProps) {
             variant="ghost"
             size="sm"
             className="h-8 px-2 text-muted-foreground"
-            onClick={() => onEdit(step)}
+            onClick={() => onEdit({
+              kind: "step",
+              id: step.id,
+              title: step.title,
+              type: step.type,
+              scheduledAt: step.scheduledAt?.toISOString() ?? null,
+              completedAt: step.completedAt?.toISOString() ?? null,
+              notes: step.notes,
+              createdAt: step.createdAt?.toISOString() ?? "",
+              outcome: step.outcome,
+            })}
           >
             <Pencil className="h-4 w-4" />
           </Button>
