@@ -5,10 +5,8 @@ import { getDashboardData, getInterviews } from "@/lib/data/interviews";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { MetricCard } from "@/components/dashboard/metric-card";
-import { StatusKanban } from "@/components/dashboard/status-kanban";
 import { InterviewsTable } from "@/components/dashboard/interviews-table";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
-import { StepsTimeline } from "@/components/dashboard/steps-timeline";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -21,9 +19,10 @@ export default async function DashboardPage() {
   ]);
 
   const inProgress = dashboardData.byStatus
-    .filter((bucket) => bucket.status !== "rejected")
+    .filter((bucket) => bucket.status !== "rejected" && bucket.status !== "not_interested")
     .reduce((acc, bucket) => acc + bucket.count, 0);
-  const offers = dashboardData.byStatus.find((s) => s.status === "offer")?.count ?? 0;
+  const offers = dashboardData.byStatus.find((s) => s.status === "stand_by")?.count ?? 0;
+  const notInterested = dashboardData.byStatus.find((s) => s.status === "not_interested")?.count ?? 0;
 
   const action = (
     <Button asChild>
@@ -40,21 +39,12 @@ export default async function DashboardPage() {
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard title="Total entrevistas" value={dashboardData.total} />
         <MetricCard title="En proceso" value={inProgress} />
-        <MetricCard title="Ofertas" value={offers} />
+        <MetricCard title="Stand by" value={offers} />
+        <MetricCard title="No interesado" value={notInterested} />
         <MetricCard
           title="Feeling general"
           value={`${dashboardData.recentSentiment.positive}% 👍`}
           description="Últimos 10 procesos"
-        />
-      </section>
-
-      <section className="mt-8 space-y-6">
-        <h2 className="text-lg font-semibold">Kanban por estado</h2>
-        <StatusKanban
-          columns={dashboardData.byStatus.map((bucket) => ({
-            status: bucket.status,
-            items: interviews.filter((interview) => interview.status === bucket.status),
-          }))}
         />
       </section>
 
@@ -72,14 +62,6 @@ export default async function DashboardPage() {
           <h2 className="text-lg font-semibold">Últimas entrevistas</h2>
           <RecentActivity interviews={dashboardData.latest} />
         </div>
-      </section>
-
-      <section className="mt-10">
-        <h2 className="text-lg font-semibold">Timeline de pasos</h2>
-        <p className="text-sm text-muted-foreground mb-4">
-          Seguimiento de tus últimas instancias (challenge, técnicas, clientes, etc.).
-        </p>
-        <StepsTimeline steps={dashboardData.recentSteps} />
       </section>
     </AppShell>
   );

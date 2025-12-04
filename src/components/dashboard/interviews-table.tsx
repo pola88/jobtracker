@@ -20,10 +20,9 @@ type InterviewsTableProps = {
 };
 
 const statusVariantMap: Record<string, "success" | "info" | "warning" | "default" | "danger"> = {
-  applied: "info",
-  screening: "warning",
-  tech: "default",
-  offer: "success",
+  active: "info",
+  stand_by: "warning",
+  not_interested: "default",
   rejected: "danger",
 };
 

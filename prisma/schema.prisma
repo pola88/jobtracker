@@ -8,10 +8,9 @@ datasource db {
 }
 
 enum InterviewStatus {
-  applied
-  screening
-  tech
-  offer
+  active
+  stand_by
+  not_interested
   rejected
 }
 
@@ -39,7 +38,7 @@ model Interview {
   compensationNotes String?
   currency          String?         @default("USD")
   experienceRating  ExperienceRating @default(neutral)
-  status            InterviewStatus @default(applied)
+  status            InterviewStatus @default(active)
   notes             InterviewNote[]
   steps             InterviewStep[]
   createdAt         DateTime        @default(now())
