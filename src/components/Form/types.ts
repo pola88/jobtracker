@@ -65,6 +65,7 @@ export type FormProps<T extends z.ZodTypeAny> = {
   fields: Field<T>[];
   isLoading: boolean;
   submitLabel?: string;
+  error?: string | null;
 };
 
 export type SelectFieldProps = {

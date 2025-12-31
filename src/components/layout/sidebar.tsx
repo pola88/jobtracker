@@ -24,7 +24,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="flex h-full flex-col justify-between border-r bg-card/60 px-4 py-6">
+    <aside className="flex h-screen fixed flex-col justify-between border-r bg-card/60 px-4 py-6">
       <div className="space-y-8">
         <div>
           <p className="text-xs uppercase tracking-wide text-muted-foreground">

@@ -27,8 +27,6 @@ type StepItemProps = {
 };
 
 export function StepItem({ step, interviewId, onEdit }: StepItemProps) {
-  // const [isEditing, setIsEditing] = useState(false);
-
   const formattedScheduled = step.scheduledAt
     ? format(step.scheduledAt, "dd MMM yyyy - HH:mm", { locale: es })
     : "Sin definir";
@@ -89,28 +87,6 @@ export function StepItem({ step, interviewId, onEdit }: StepItemProps) {
           {step.notes}
         </p>
       )}
-      {/* {isEditing && (
-        <div className="border-t border-dashed pt-4">
-          <StepForm
-            action={updateInterviewStepAction}
-            interviewId={interviewId}
-            submitLabel="Guardar cambios"
-            defaultValues={{
-              stepId: step.id,
-              title: step.title,
-              type: step.type,
-              scheduledAt: step.scheduledAt
-                ? format(step.scheduledAt, "yyyy-MM-dd'T'HH:mm")
-                : "",
-              completedAt: step.completedAt
-                ? format(step.completedAt, "yyyy-MM-dd'T'HH:mm")
-                : "",
-              outcome: step.outcome ?? "",
-              notes: step.notes ?? "",
-            }}
-          />
-        </div>
-      )} */}
     </article>
   );
 }

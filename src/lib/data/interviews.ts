@@ -1,16 +1,11 @@
 import { unstable_cache } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
-import { ExperienceRating, InterviewStatus } from "@prisma/client";
+import { ExperienceRating, Interview, InterviewStatus } from "@prisma/client";
 
 export const getDashboardData = unstable_cache(
   async (userId: string) => {
-    const [interviews, statusBuckets, recentSteps, sentiment] = await Promise.all([
-      prisma.interview.findMany({
-        where: { userId },
-        orderBy: { date: "desc" },
-        take: 5,
-      }),
+    const [statusBuckets, recentSteps, sentiment] = await Promise.all([
       prisma.interview.groupBy({
         by: ["status"],
         where: { userId },
@@ -64,7 +59,6 @@ export const getDashboardData = unstable_cache(
     return {
       total,
       byStatus,
-      latest: interviews,
       recentSteps,
       recentSentiment: {
         positive: Math.round((positiveSentiments / totalSentiments) * 100),
@@ -78,10 +72,64 @@ export const getDashboardData = unstable_cache(
   }
 );
 
-export const getInterviews = unstable_cache(
+export const getLatestInterviews = unstable_cache(
   async (userId: string) => {
     return prisma.interview.findMany({
-      where: { userId },
+      where: { userId, status: InterviewStatus.active },
+      orderBy: { date: "desc" },
+      take: 5,
+    });
+  },
+  ["latest-interviews"],
+  {
+    revalidate: 60,
+    tags: ["latest-interviews"],
+  }
+);
+
+export const getMostRecentInterviews = unstable_cache(
+  async (userId: string) => {
+    const [interviewSteps, interviewsNotes] = await Promise.all([prisma.interviewStep.findMany({
+      where: { interview: { userId } },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        interview: true,
+      },
+    }), prisma.interviewNote.findMany({
+      where: { interview: { userId } },
+      orderBy: { createdAt: "desc" },
+      include: {
+        interview: true,
+      },
+      take: 5,
+    })]);
+    const mostRecentInterviews = [...interviewSteps, ...interviewsNotes];
+    const interviews = new Map<string, Interview>();
+    mostRecentInterviews
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    .forEach((item) => {
+      if (item.interview) {
+        interviews.set(item.interview.id, {
+          ...item.interview,
+          createdAt: item.createdAt,
+        });
+      }
+    });
+
+    return Array.from(interviews.values()).slice(0, 5);
+  },
+  ["most-recent-interviews"],
+  {
+    revalidate: 60,
+    tags: ["most-recent-interviews"],
+  }
+);
+
+export const getInterviews = unstable_cache(
+  async (userId: string, onlyActive: boolean = false) => {
+    return prisma.interview.findMany({
+      where: { userId, ...(onlyActive ? { status: InterviewStatus.active } : {}) },
       orderBy: { date: "desc" },
     });
   },
@@ -95,18 +143,6 @@ export const getInterviews = unstable_cache(
 export async function getInterviewById(id: string, userId: string) {
   return prisma.interview.findFirst({
     where: { id, userId },
-    // include: {
-    //   notes: {
-    //     orderBy: { createdAt: "desc" },
-    //   },
-    //   steps: {
-    //     orderBy: [
-    //       { completedAt: "desc" },
-    //       { scheduledAt: "desc" },
-    //       { createdAt: "desc" },
-    //     ],
-    //   },
-    // },
   });
 }
 

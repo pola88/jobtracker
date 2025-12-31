@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { requireCurrentUser } from "@/lib/auth";
-import { getDashboardData, getInterviews } from "@/lib/data/interviews";
+import { getDashboardData, getLatestInterviews, getMostRecentInterviews } from "@/lib/data/interviews";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { MetricCard } from "@/components/dashboard/metric-card";
@@ -13,9 +13,10 @@ export const revalidate = 0;
 
 export default async function DashboardPage() {
   const user = await requireCurrentUser();
-  const [dashboardData, interviews] = await Promise.all([
+  const [dashboardData, latestInterviews, mostRecentInterviews] = await Promise.all([
     getDashboardData(user.id),
-    getInterviews(user.id),
+    getLatestInterviews(user.id),
+    getMostRecentInterviews(user.id),
   ]);
 
   const inProgress = dashboardData.byStatus
@@ -56,11 +57,11 @@ export default async function DashboardPage() {
               <Link href="/interviews">Ver todas</Link>
             </Button>
           </div>
-          <InterviewsTable interviews={interviews.slice(0, 10)} />
+          <InterviewsTable interviews={latestInterviews} />
         </div>
         <div>
           <h2 className="text-lg font-semibold">Últimas entrevistas</h2>
-          <RecentActivity interviews={dashboardData.latest} />
+          <RecentActivity interviews={mostRecentInterviews} />
         </div>
       </section>
     </AppShell>

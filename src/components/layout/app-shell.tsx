@@ -20,9 +20,9 @@ export function AppShell({
 }: AppShellProps) {
   return (
     <div className="min-h-screen bg-muted/30">
-      <div className="grid min-h-screen gap-0 md:grid-cols-[240px_1fr]">
+      <div>
         <Sidebar />
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-col pl-[190px]">
           <header className="border-b bg-background px-6 py-6">
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>

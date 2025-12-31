@@ -82,6 +82,7 @@ const Form = <T extends z.ZodTypeAny>({
   fields,
   isLoading,
   submitLabel = 'Submit',
+  error,
 }: FormProps<T>) => {
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema as T),
@@ -111,6 +112,7 @@ const Form = <T extends z.ZodTypeAny>({
 
           return <RegularField key={fieldConfig.name} form={form} fieldConfig={fieldConfig as FieldProps<T>} />;
         })}
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <div className={styles.footer}>
           <Button variant='destructive' isLoading={isLoading} type='submit'>
             {submitLabel}
