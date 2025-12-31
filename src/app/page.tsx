@@ -1,10 +1,10 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { decodeAuthToken } from "@/lib/auth";
-import { getAuthCookieName } from "@/lib/auth/cookie";
+import { decodeAuthToken } from '@/lib/auth';
+import { getAuthCookieName } from '@/lib/auth/cookie';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default function Home() {
@@ -12,8 +12,8 @@ export default function Home() {
   const decoded = decodeAuthToken(token);
 
   if (decoded?.sub) {
-    redirect("/dashboard");
+    redirect('/dashboard');
   }
 
-  redirect("/login");
+  redirect('/login');
 }

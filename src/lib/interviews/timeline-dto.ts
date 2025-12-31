@@ -20,7 +20,7 @@ export type InterviewNoteDTO = {
 
 export type TimelineItemDTO =
   | {
-      kind: "step";
+      kind: 'step';
       id: string;
       title: string;
       type: string;
@@ -31,7 +31,7 @@ export type TimelineItemDTO =
       createdAt: string;
     }
   | {
-      kind: "note";
+      kind: 'note';
       id: string;
       content: string;
       createdAt: string;
@@ -46,24 +46,24 @@ export type InterviewTimelineResponse = {
 export type InterviewTimeline = {
   steps: (Omit<
     InterviewStepDTO,
-    "scheduledAt" | "completedAt" | "createdAt" | "updatedAt"
+    'scheduledAt' | 'completedAt' | 'createdAt' | 'updatedAt'
   > & {
     scheduledAt: Date | null;
     completedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
   })[];
-  notes: (Omit<InterviewNoteDTO, "createdAt"> & { createdAt: Date })[];
+  notes: (Omit<InterviewNoteDTO, 'createdAt'> & { createdAt: Date })[];
   timeline: (
     | (Omit<
-        Extract<TimelineItemDTO, { kind: "step" }>,
-        "scheduledAt" | "completedAt" | "createdAt"
+        Extract<TimelineItemDTO, { kind: 'step' }>,
+        'scheduledAt' | 'completedAt' | 'createdAt'
       > & {
         scheduledAt: Date | null;
         completedAt: Date | null;
         createdAt: Date;
       })
-    | (Omit<Extract<TimelineItemDTO, { kind: "note" }>, "createdAt"> & {
+    | (Omit<Extract<TimelineItemDTO, { kind: 'note' }>, 'createdAt'> & {
         createdAt: Date;
       })
   )[];
@@ -72,7 +72,7 @@ export type InterviewTimeline = {
 const parseDate = (value: DateValue) => (value ? new Date(value) : null);
 
 export const mapTimelineResponse = (
-  data: InterviewTimelineResponse
+  data: InterviewTimelineResponse,
 ): InterviewTimeline => ({
   steps: data.steps.map((step) => ({
     ...step,
@@ -87,7 +87,7 @@ export const mapTimelineResponse = (
   })),
   timeline: data.timeline
     .map((item) => {
-      if (item.kind === "step") {
+      if (item.kind === 'step') {
         return {
           ...item,
           createdAt: new Date(item.createdAt),
@@ -103,5 +103,3 @@ export const mapTimelineResponse = (
     })
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
 });
-
-

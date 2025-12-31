@@ -1,9 +1,9 @@
-import { createInterviewAction } from "@/actions/interviews";
-import { requireCurrentUser } from "@/lib/auth";
-import { AppShell } from "@/components/layout/app-shell";
-import { InterviewForm } from "@/components/forms/interview-form";
+import { createInterviewAction } from '@/actions/interviews';
+import { InterviewForm } from '@/components/forms/interview-form';
+import { AppShell } from '@/components/layout/app-shell';
+import { requireCurrentUser } from '@/lib/auth';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function NewInterviewPage() {
@@ -11,17 +11,16 @@ export default async function NewInterviewPage() {
 
   return (
     <AppShell
-      title="Nueva entrevista"
-      description="Documenta los detalles clave para tu próxima conversación"
+      title='Nueva entrevista'
+      description='Documenta los detalles clave para tu próxima conversación'
     >
-      <div className="max-w-3xl rounded-2xl border bg-card/80 p-6">
+      <div className='max-w-3xl rounded-2xl border bg-card/80 p-6'>
         <InterviewForm
           action={createInterviewAction}
-          submitLabel="Crear entrevista"
+          submitLabel='Crear entrevista'
           showInitialNoteField
         />
       </div>
     </AppShell>
   );
 }
-

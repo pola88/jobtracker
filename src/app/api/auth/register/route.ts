@@ -1,17 +1,17 @@
-import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { NextResponse } from 'next/server';
+import { ZodError } from 'zod';
 
-import { prisma } from "@/lib/prisma";
 import {
   createAuthToken,
   findUserByEmail,
   hashPassword,
   persistAuthToken,
-} from "@/lib/auth";
-import { registerSchema } from "@/lib/validators/auth";
+} from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { registerSchema } from '@/lib/validators/auth';
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
@@ -21,8 +21,8 @@ export async function POST(request: Request) {
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return NextResponse.json(
-        { message: "El email ya está registrado" },
-        { status: 409 }
+        { message: 'El email ya está registrado' },
+        { status: 409 },
       );
     }
 
@@ -42,23 +42,22 @@ export async function POST(request: Request) {
       {
         user,
       },
-      { status: 201 }
+      { status: 201 },
     );
     persistAuthToken(token, response.cookies);
     return response;
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { message: "Datos inválidos", issues: error.flatten() },
-        { status: 400 }
+        { message: 'Datos inválidos', issues: error.flatten() },
+        { status: 400 },
       );
     }
 
     console.error(error);
     return NextResponse.json(
-      { message: "Error inesperado al registrar" },
-      { status: 500 }
+      { message: 'Error inesperado al registrar' },
+      { status: 500 },
     );
   }
 }
-

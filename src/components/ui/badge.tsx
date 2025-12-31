@@ -1,31 +1,32 @@
-import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+
+import { type VariantProps, cva } from 'class-variance-authority';
+
+import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors",
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors',
   {
     variants: {
       variant: {
-        default:
-          "border-transparent bg-primary text-primary-foreground shadow",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground",
-        outline: "text-foreground",
-        success: "border-transparent bg-emerald-500/15 text-emerald-700",
-        warning: "border-transparent bg-amber-500/20 text-amber-800",
-        info: "border-transparent bg-sky-500/15 text-sky-800",
-        danger: "border-transparent bg-red-500/15 text-red-700",
+        default: 'border-transparent bg-primary text-primary-foreground shadow',
+        secondary: 'border-transparent bg-secondary text-secondary-foreground',
+        outline: 'text-foreground',
+        success: 'border-transparent bg-emerald-500/15 text-emerald-700',
+        warning: 'border-transparent bg-amber-500/20 text-amber-800',
+        info: 'border-transparent bg-sky-500/15 text-sky-800',
+        danger: 'border-transparent bg-red-500/15 text-red-700',
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: 'default',
     },
-  }
+  },
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
 export function Badge({ className, variant, ...props }: BadgeProps) {
@@ -33,4 +34,3 @@ export function Badge({ className, variant, ...props }: BadgeProps) {
     <div className={cn(badgeVariants({ variant }), className)} {...props} />
   );
 }
-

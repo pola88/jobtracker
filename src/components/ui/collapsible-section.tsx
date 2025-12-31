@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 type CollapsibleSectionProps = {
   title: string;
@@ -21,27 +21,26 @@ export function CollapsibleSection({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <section className="rounded-2xl border bg-card/80 shadow-sm">
+    <section className='rounded-2xl border bg-card/80 shadow-sm'>
       <button
-        type="button"
-        className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left"
+        type='button'
+        className='flex w-full items-center justify-between gap-4 px-6 py-4 text-left'
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <div>
-          <h3 className="text-base font-semibold">{title}</h3>
+          <h3 className='text-base font-semibold'>{title}</h3>
           {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className='text-sm text-muted-foreground'>{description}</p>
           )}
         </div>
         <ChevronDown
           className={cn(
-            "h-5 w-5 text-muted-foreground transition-transform",
-            isOpen ? "rotate-180" : "rotate-0"
+            'h-5 w-5 text-muted-foreground transition-transform',
+            isOpen ? 'rotate-180' : 'rotate-0',
           )}
         />
       </button>
-      {isOpen && <div className="border-t px-6 py-4">{children}</div>}
+      {isOpen && <div className='border-t px-6 py-4'>{children}</div>}
     </section>
   );
 }
-

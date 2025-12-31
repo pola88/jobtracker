@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
-import { Sidebar } from "@/components/layout/sidebar";
-import { cn } from "@/lib/utils";
+import { Sidebar } from '@/components/layout/sidebar';
+import { cn } from '@/lib/utils';
 
 type AppShellProps = {
   title: string;
@@ -19,27 +19,26 @@ export function AppShell({
   className,
 }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className='min-h-screen bg-muted/30'>
       <div>
         <Sidebar />
-        <div className="flex flex-col pl-[190px]">
-          <header className="border-b bg-background px-6 py-6">
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div className='flex flex-col pl-[190px]'>
+          <header className='border-b bg-background px-6 py-6'>
+            <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight">
+                <h1 className='text-2xl font-semibold tracking-tight'>
                   {title}
                 </h1>
                 {description && (
-                  <p className="text-sm text-muted-foreground">{description}</p>
+                  <p className='text-sm text-muted-foreground'>{description}</p>
                 )}
               </div>
               {actions}
             </div>
           </header>
-          <main className={cn("flex-1 px-6 py-8", className)}>{children}</main>
+          <main className={cn('flex-1 px-6 py-8', className)}>{children}</main>
         </div>
       </div>
     </div>
   );
 }
-

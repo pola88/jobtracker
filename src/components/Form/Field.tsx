@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { z } from 'zod';
 
 import {
@@ -9,10 +10,9 @@ import {
   FormMessage,
 } from '../ui/form';
 import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 import SelectField from './SelectField';
 import { FieldProps } from './types';
-import { Textarea } from '../ui/textarea';
-
 
 const Field = <T extends z.ZodType>({
   form,
@@ -24,8 +24,12 @@ const Field = <T extends z.ZodType>({
   shouldHide,
   checkIfDisabled,
 }: FieldProps<T>) => {
-  const [hidden, setHidden] = useState(shouldHide ? shouldHide(form.getValues()) : false);
-  const [disabled, setDisabled] = useState(checkIfDisabled ? checkIfDisabled(form.getValues()) : false);
+  const [hidden, setHidden] = useState(
+    shouldHide ? shouldHide(form.getValues()) : false,
+  );
+  const [disabled, setDisabled] = useState(
+    checkIfDisabled ? checkIfDisabled(form.getValues()) : false,
+  );
 
   useEffect(() => {
     if (!shouldHide && !checkIfDisabled) return;
@@ -54,11 +58,24 @@ const Field = <T extends z.ZodType>({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {type === 'select' ? (
-              <SelectField field={field} options={options || []} disabled={disabled} />
+              <SelectField
+                field={field}
+                options={options || []}
+                disabled={disabled}
+              />
             ) : type === 'textarea' ? (
-              <Textarea placeholder={placeholder} {...field} disabled={disabled} />
+              <Textarea
+                placeholder={placeholder}
+                {...field}
+                disabled={disabled}
+              />
             ) : (
-              <Input placeholder={placeholder} {...field} type={type} disabled={disabled} />
+              <Input
+                placeholder={placeholder}
+                {...field}
+                type={type}
+                disabled={disabled}
+              />
             )}
           </FormControl>
           <FormMessage />

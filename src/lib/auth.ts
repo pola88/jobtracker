@@ -1,15 +1,16 @@
-import { cookies } from "next/headers";
-import type { ResponseCookies } from "next/dist/server/web/spec-extension/cookies";
-import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
-import { signJwt, verifyJwt, AuthTokenPayload } from "@/lib/jwt";
-import { AUTH_COOKIE_NAME } from "@/lib/auth/cookie";
+import bcrypt from 'bcryptjs';
+import type { ResponseCookies } from 'next/dist/server/web/spec-extension/cookies';
+import { cookies } from 'next/headers';
+
+import { AUTH_COOKIE_NAME } from '@/lib/auth/cookie';
+import { AuthTokenPayload, signJwt, verifyJwt } from '@/lib/jwt';
+import { prisma } from '@/lib/prisma';
 
 const cookieConfig = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  path: "/",
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  path: '/',
   maxAge: 60 * 60 * 24 * 7,
 };
 
@@ -67,9 +68,7 @@ export async function getTokenFromCookie() {
 export async function requireCurrentUser() {
   const user = await getCurrentUser();
   if (!user) {
-    throw new Error("Not authenticated");
+    throw new Error('Not authenticated');
   }
   return user;
 }
-
-

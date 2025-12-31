@@ -1,15 +1,15 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
 
-import { prisma } from "@/lib/prisma";
-import { requireCurrentUser } from "@/lib/auth";
+import type { ActionResponse } from '@/actions/interviews';
+import { requireCurrentUser } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 import {
   deleteStepSchema,
   interviewStepSchema,
   updateStepSchema,
-} from "@/lib/validators/interview-step";
-import type { ActionResponse } from "@/actions/interviews";
+} from '@/lib/validators/interview-step';
 
 const initialState: ActionResponse = {
   success: false,
@@ -17,20 +17,20 @@ const initialState: ActionResponse = {
 
 function refreshEditPage(interviewId: string) {
   revalidatePath(`/interviews/${interviewId}/edit`);
-  revalidatePath("/dashboard");
+  revalidatePath('/dashboard');
 }
 
 export async function createInterviewStepAction(
   _prevState: ActionResponse = initialState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse> {
   void _prevState;
   try {
     const parsed = interviewStepSchema.safeParse(
-      Object.fromEntries(formData.entries())
+      Object.fromEntries(formData.entries()),
     );
     if (!parsed.success) {
-      return { success: false, message: "Paso inválido" };
+      return { success: false, message: 'Paso inválido' };
     }
 
     const user = await requireCurrentUser();
@@ -39,7 +39,7 @@ export async function createInterviewStepAction(
     });
 
     if (!interview) {
-      return { success: false, message: "Entrevista no encontrada" };
+      return { success: false, message: 'Entrevista no encontrada' };
     }
 
     await prisma.interviewStep.create({
@@ -55,24 +55,24 @@ export async function createInterviewStepAction(
     });
 
     refreshEditPage(interview.id);
-    return { success: true, message: "Paso agregado" };
+    return { success: true, message: 'Paso agregado' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "No se pudo guardar el paso" };
+    return { success: false, message: 'No se pudo guardar el paso' };
   }
 }
 
 export async function updateInterviewStepAction(
   _prevState: ActionResponse = initialState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse> {
   void _prevState;
   try {
     const parsed = updateStepSchema.safeParse(
-      Object.fromEntries(formData.entries())
+      Object.fromEntries(formData.entries()),
     );
     if (!parsed.success) {
-      return { success: false, message: "Paso inválido" };
+      return { success: false, message: 'Paso inválido' };
     }
 
     const user = await requireCurrentUser();
@@ -85,7 +85,7 @@ export async function updateInterviewStepAction(
     });
 
     if (!step) {
-      return { success: false, message: "Paso no encontrado" };
+      return { success: false, message: 'Paso no encontrado' };
     }
 
     await prisma.interviewStep.update({
@@ -101,20 +101,20 @@ export async function updateInterviewStepAction(
     });
 
     refreshEditPage(step.interviewId);
-    return { success: true, message: "Paso actualizado" };
+    return { success: true, message: 'Paso actualizado' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "No se pudo actualizar el paso" };
+    return { success: false, message: 'No se pudo actualizar el paso' };
   }
 }
 
 export async function deleteInterviewStepAction(formData: FormData) {
   try {
     const parsed = deleteStepSchema.safeParse(
-      Object.fromEntries(formData.entries())
+      Object.fromEntries(formData.entries()),
     );
     if (!parsed.success) {
-      throw new Error("Paso inválido");
+      throw new Error('Paso inválido');
     }
 
     const user = await requireCurrentUser();
@@ -139,4 +139,3 @@ export async function deleteInterviewStepAction(formData: FormData) {
     throw error;
   }
 }
-

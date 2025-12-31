@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { Prisma } from "@prisma/client";
-import { revalidateTag } from "next/cache";
+import { Prisma } from '@prisma/client';
+import { revalidateTag } from 'next/cache';
 
-import { prisma } from "@/lib/prisma";
-import { interviewSchema } from "@/lib/validators/interview";
-import { requireCurrentUser } from "@/lib/auth";
+import { requireCurrentUser } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { interviewSchema } from '@/lib/validators/interview';
 
 export type ActionResponse = {
   success: boolean;
@@ -14,20 +14,18 @@ export type ActionResponse = {
 };
 
 function invalidateInterviewCaches() {
-  revalidateTag("interviews");
-  revalidateTag("dashboard");
+  revalidateTag('interviews');
+  revalidateTag('dashboard');
 }
 
 export async function createInterviewAction(
   _prevState: ActionResponse,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse> {
   try {
-    const parsed = interviewSchema.safeParse(
-      formData
-    );
+    const parsed = interviewSchema.safeParse(formData);
     if (!parsed.success) {
-      return { success: false, message: "Datos inválidos" };
+      return { success: false, message: 'Datos inválidos' };
     }
 
     const { initialNote, ...interviewData } = parsed.data;
@@ -58,24 +56,26 @@ export async function createInterviewAction(
     }
 
     invalidateInterviewCaches();
-    return { success: true, message: "Entrevista creada", interviewId: interview.id };
+    return {
+      success: true,
+      message: 'Entrevista creada',
+      interviewId: interview.id,
+    };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "No se pudo crear la entrevista" };
+    return { success: false, message: 'No se pudo crear la entrevista' };
   }
 }
 
 export async function updateInterviewAction(
   interviewId: string,
   _prevState: ActionResponse,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse> {
   try {
-    const parsed = interviewSchema.safeParse(
-      formData
-    );
+    const parsed = interviewSchema.safeParse(formData);
     if (!parsed.success) {
-      return { success: false, message: "Datos inválidos" };
+      return { success: false, message: 'Datos inválidos' };
     }
 
     const { initialNote: _initialNote, ...interviewData } = parsed.data;
@@ -87,7 +87,7 @@ export async function updateInterviewAction(
       where: { id: interviewId },
     });
     if (!interview || interview.userId !== user.id) {
-      return { success: false, message: "Entrevista no encontrada" };
+      return { success: false, message: 'Entrevista no encontrada' };
     }
 
     await prisma.interview.update({
@@ -106,18 +106,22 @@ export async function updateInterviewAction(
     });
 
     invalidateInterviewCaches();
-    return { success: true, message: "Entrevista actualizada", interviewId: interviewId };
+    return {
+      success: true,
+      message: 'Entrevista actualizada',
+      interviewId: interviewId,
+    };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "No se pudo actualizar la entrevista" };
+    return { success: false, message: 'No se pudo actualizar la entrevista' };
   }
 }
 
 export async function deleteInterviewAction(formData: FormData): Promise<void> {
   try {
-    const interviewId = formData.get("id");
-    if (!interviewId || typeof interviewId !== "string") {
-      throw new Error("Identificador inválido");
+    const interviewId = formData.get('id');
+    if (!interviewId || typeof interviewId !== 'string') {
+      throw new Error('Identificador inválido');
     }
 
     const user = await requireCurrentUser();
@@ -140,4 +144,3 @@ export async function deleteInterviewAction(formData: FormData): Promise<void> {
     throw error;
   }
 }
-

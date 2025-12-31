@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -22,31 +22,23 @@ type GroupFieldProps<T extends z.ZodTypeAny> = {
   fieldConfig: GroupField<T>;
 };
 
-const Spacer = <T extends z.ZodTypeAny>({ name, fullWidth }: Pick<SpacerField<T>, 'name' | 'fullWidth'>) => {
-  const spacerClass = fullWidth
-    ? styles.fieldFullWidth
-    : styles.field;
+const Spacer = <T extends z.ZodTypeAny>({
+  name,
+  fullWidth,
+}: Pick<SpacerField<T>, 'name' | 'fullWidth'>) => {
+  const spacerClass = fullWidth ? styles.fieldFullWidth : styles.field;
 
-  return (
-    <div
-      key={name}
-      className={spacerClass}
-      aria-hidden='true'
-    />
-  );
+  return <div key={name} className={spacerClass} aria-hidden='true' />;
 };
 
-const RegularField = <T extends z.ZodTypeAny>({ form, fieldConfig }: RegularFieldProps<T>) => {
+const RegularField = <T extends z.ZodTypeAny>({
+  form,
+  fieldConfig,
+}: RegularFieldProps<T>) => {
   const { fullWidth = false, ...field } = fieldConfig;
-  const containerClass = fullWidth
-    ? styles.fieldFullWidth
-    : styles.field;
+  const containerClass = fullWidth ? styles.fieldFullWidth : styles.field;
 
-  if (
-    !('name' in field) ||
-    !('label' in field) ||
-    !('placeholder' in field)
-  ) {
+  if (!('name' in field) || !('label' in field) || !('placeholder' in field)) {
     return null;
   }
 
@@ -57,10 +49,12 @@ const RegularField = <T extends z.ZodTypeAny>({ form, fieldConfig }: RegularFiel
   );
 };
 
-const Group = <T extends z.ZodTypeAny>({ form, fieldConfig }: GroupFieldProps<T>) => {
+const Group = <T extends z.ZodTypeAny>({
+  form,
+  fieldConfig,
+}: GroupFieldProps<T>) => {
   const groupColumns =
-    groupColumnsClass[fieldConfig.columns ?? 2] ??
-    groupColumnsClass[2];
+    groupColumnsClass[fieldConfig.columns ?? 2] ?? groupColumnsClass[2];
 
   const wrapperClass = fieldConfig.fullWidth
     ? styles.fieldFullWidth
@@ -69,7 +63,13 @@ const Group = <T extends z.ZodTypeAny>({ form, fieldConfig }: GroupFieldProps<T>
   return (
     <div key={fieldConfig.name} className={wrapperClass}>
       <div className={`${styles.groupGrid} ${groupColumns}`}>
-        {fieldConfig.fields.map((groupField) => <RegularField key={groupField.name} form={form} fieldConfig={groupField as FieldProps<T>} />)}
+        {fieldConfig.fields.map((groupField) => (
+          <RegularField
+            key={groupField.name}
+            form={form}
+            fieldConfig={groupField as FieldProps<T>}
+          />
+        ))}
       </div>
     </div>
   );
@@ -88,31 +88,45 @@ const Form = <T extends z.ZodTypeAny>({
     resolver: zodResolver(schema as T),
     defaultValues,
   });
-  const submitHandler = form.handleSubmit(
-    onSubmit,
-    (errors) => {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error("Form validation errors:", errors);
-      }
+  const submitHandler = form.handleSubmit(onSubmit, (errors) => {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Form validation errors:', errors);
     }
-  );
-  
+  });
+
   return (
     <FormComponent {...form}>
       <form onSubmit={submitHandler} className={styles.form}>
-        
         {fields.map((fieldConfig) => {
           if (fieldConfig.type === 'spacer') {
-            return <Spacer key={fieldConfig.name} name={fieldConfig.name} fullWidth={fieldConfig.fullWidth} />;
+            return (
+              <Spacer
+                key={fieldConfig.name}
+                name={fieldConfig.name}
+                fullWidth={fieldConfig.fullWidth}
+              />
+            );
           }
 
           if (fieldConfig.type === 'group') {
-            return <Group key={fieldConfig.name} form={form} fieldConfig={fieldConfig as GroupField<T>} />;
+            return (
+              <Group
+                key={fieldConfig.name}
+                form={form}
+                fieldConfig={fieldConfig as GroupField<T>}
+              />
+            );
           }
 
-          return <RegularField key={fieldConfig.name} form={form} fieldConfig={fieldConfig as FieldProps<T>} />;
+          return (
+            <RegularField
+              key={fieldConfig.name}
+              form={form}
+              fieldConfig={fieldConfig as FieldProps<T>}
+            />
+          );
         })}
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && <p className='text-sm text-destructive'>{error}</p>}
         <div className={styles.footer}>
           <Button variant='destructive' isLoading={isLoading} type='submit'>
             {submitLabel}

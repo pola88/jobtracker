@@ -1,17 +1,21 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useFormState } from 'react-dom';
+
+import {
+  CompensationType,
+  ExperienceRating,
+  InterviewStatus,
+} from '@prisma/client';
+import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 
+import { ActionResponse } from '@/actions/interviews';
 import Form from '@/components/Form';
 import { Field as FieldType } from '@/components/Form/types';
-
 import { interviewSchema } from '@/lib/validators/interview';
-import { useFormState } from 'react-dom';
-import { ActionResponse } from '@/actions/interviews';
 import { CURRENCIES } from '@/lib/validators/interview';
-import {CompensationType, ExperienceRating, InterviewStatus } from "@prisma/client";
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 const EXPERIENCE_RATINGS = [
   { label: 'Muy negativa', value: ExperienceRating.very_negative },
@@ -35,7 +39,7 @@ const DEFAULT_VALUES: InterviewTypes = {
   compensationNotes: '',
   currency: 'USD',
   experienceRating: 'neutral',
-  initialNote: ''
+  initialNote: '',
 };
 
 const fields: FieldType<typeof interviewSchema>[] = [
@@ -68,7 +72,10 @@ const fields: FieldType<typeof interviewSchema>[] = [
     label: 'Estado',
     placeholder: 'Estado',
     type: 'select',
-    options: Object.values(InterviewStatus).map((status) => ({ label: status, value: status })),
+    options: Object.values(InterviewStatus).map((status) => ({
+      label: status,
+      value: status,
+    })),
   },
   {
     name: 'experienceRating',
@@ -101,7 +108,10 @@ const fields: FieldType<typeof interviewSchema>[] = [
         label: 'Tipo de compensación',
         placeholder: 'Tipo de compensación',
         type: 'select',
-        options: Object.values(CompensationType).map((type) => ({ label: type, value: type })),
+        options: Object.values(CompensationType).map((type) => ({
+          label: type,
+          value: type,
+        })),
       },
       {
         name: 'compensationLower',
@@ -120,7 +130,10 @@ const fields: FieldType<typeof interviewSchema>[] = [
         label: 'Moneda',
         placeholder: 'Moneda',
         type: 'select',
-        options: CURRENCIES.map((currency) => ({ label: currency, value: currency })),
+        options: CURRENCIES.map((currency) => ({
+          label: currency,
+          value: currency,
+        })),
       },
     ],
   },
@@ -130,13 +143,13 @@ const fields: FieldType<typeof interviewSchema>[] = [
     placeholder: 'Notas de compensación',
     type: 'textarea',
     fullWidth: true,
-  }
+  },
 ];
 
 type InterviewFormProps = {
   action: (
     state: ActionResponse,
-    formData: FormData
+    formData: FormData,
   ) => Promise<ActionResponse>;
   defaultValues?: InterviewTypes;
   submitLabel?: string;
@@ -147,15 +160,24 @@ const initialState: ActionResponse = {
   success: false,
 };
 
-export const InterviewForm = ({ action, defaultValues = DEFAULT_VALUES, submitLabel = "Guardar", showInitialNoteField = false }: InterviewFormProps) => {
+export const InterviewForm = ({
+  action,
+  defaultValues = DEFAULT_VALUES,
+  submitLabel = 'Guardar',
+  showInitialNoteField = false,
+}: InterviewFormProps) => {
   const [state, formAction, isPending] = useFormState(action, initialState);
   const router = useRouter();
   const formFields: FieldType<typeof interviewSchema>[] = showInitialNoteField
     ? fields
-    : fields.map((field) => field.name !== 'initialNote' ? field : {
-      name: 'spacer-initial-note',
-      type: 'spacer',
-    });
+    : fields.map((field) =>
+        field.name !== 'initialNote'
+          ? field
+          : {
+              name: 'spacer-initial-note',
+              type: 'spacer',
+            },
+      );
 
   useEffect(() => {
     if (state.success && state.interviewId) {

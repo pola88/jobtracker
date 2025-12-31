@@ -1,14 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { z } from "zod";
+import { useState, useTransition } from 'react';
 
-import Form from "@/components/Form";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { z } from 'zod';
 
-import { loginSchema } from "@/lib/validators/auth";
-import { Field } from "../Form/types";
-import { loginAction } from "@/actions/login";
+import { loginAction } from '@/actions/login';
+import Form from '@/components/Form';
+import { loginSchema } from '@/lib/validators/auth';
+
+import { Field } from '../Form/types';
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
@@ -37,14 +38,13 @@ const fields: Field<typeof loginSchema>[] = [
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") ?? "/dashboard";
+  const redirectTo = searchParams.get('redirectTo') ?? '/dashboard';
   const [error, setError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
   const submit = async (values: LoginSchema) => {
     setError(null);
     startTransition(async () => {
-      
       const response = await loginAction(values);
 
       if (!response.success) {
@@ -65,8 +65,7 @@ export function LoginForm() {
       fields={fields}
       isLoading={isPending}
       error={error}
-      submitLabel="Ingresar"
+      submitLabel='Ingresar'
     />
   );
 }
-

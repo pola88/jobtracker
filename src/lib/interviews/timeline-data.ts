@@ -1,10 +1,10 @@
-import type { InterviewTimelineResponse } from "@/lib/interviews/timeline-dto";
-import { getInterviewStepsAndNotes } from "@/lib/data/interviews";
+import { getInterviewStepsAndNotes } from '@/lib/data/interviews';
+import type { InterviewTimelineResponse } from '@/lib/interviews/timeline-dto';
 
 const toISOStringOrNull = (value: Date | null) => value?.toISOString() ?? null;
 
 export async function getInterviewTimelineDTO(
-  interviewId: string
+  interviewId: string,
 ): Promise<InterviewTimelineResponse> {
   const [steps, notes] = await getInterviewStepsAndNotes(interviewId);
 
@@ -28,7 +28,7 @@ export async function getInterviewTimelineDTO(
 
   const timelineDto = [
     ...stepsDto.map((step) => ({
-      kind: "step" as const,
+      kind: 'step' as const,
       id: step.id,
       title: step.title,
       type: step.type,
@@ -39,14 +39,13 @@ export async function getInterviewTimelineDTO(
       createdAt: step.createdAt,
     })),
     ...notesDto.map((note) => ({
-      kind: "note" as const,
+      kind: 'note' as const,
       id: note.id,
       content: note.content,
       createdAt: note.createdAt,
     })),
   ].sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
   return {
@@ -55,5 +54,3 @@ export async function getInterviewTimelineDTO(
     timeline: timelineDto,
   };
 }
-
-

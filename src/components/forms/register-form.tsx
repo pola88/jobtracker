@@ -1,14 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { registerSchema } from "@/lib/validators/auth";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { registerSchema } from '@/lib/validators/auth';
 
 type RegisterSchema = z.infer<typeof registerSchema>;
 
@@ -20,28 +21,28 @@ export function RegisterForm() {
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
   const submit = async (values: RegisterSchema) => {
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
+    const response = await fetch('/api/auth/register', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(values),
-      credentials: "include",
+      credentials: 'include',
     });
 
     if (!response.ok) {
       const payload = await response.json().catch(() => null);
-      setError(payload?.message ?? "No se pudo crear la cuenta");
+      setError(payload?.message ?? 'No se pudo crear la cuenta');
       return;
     }
 
-    router.replace("/dashboard");
+    router.replace('/dashboard');
     router.refresh();
   };
 
@@ -54,45 +55,44 @@ export function RegisterForm() {
 
   return (
     <form
-      className="space-y-6"
+      className='space-y-6'
       onSubmit={form.handleSubmit(handleSubmit)}
       noValidate
     >
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">
+      <div className='space-y-2'>
+        <label className='text-sm font-medium text-muted-foreground'>
           Email
         </label>
         <Input
-          type="email"
-          placeholder="talento@empresa.com"
-          {...form.register("email")}
+          type='email'
+          placeholder='talento@empresa.com'
+          {...form.register('email')}
         />
         {form.formState.errors.email && (
-          <p className="text-sm text-destructive">
+          <p className='text-sm text-destructive'>
             {form.formState.errors.email.message}
           </p>
         )}
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">
+      <div className='space-y-2'>
+        <label className='text-sm font-medium text-muted-foreground'>
           Contraseña
         </label>
-        <Input type="password" {...form.register("password")} />
+        <Input type='password' {...form.register('password')} />
         {form.formState.errors.password && (
-          <p className="text-sm text-destructive">
+          <p className='text-sm text-destructive'>
             {form.formState.errors.password.message}
           </p>
         )}
       </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className='text-sm text-destructive'>{error}</p>}
       <Button
-        type="submit"
-        className="w-full"
+        type='submit'
+        className='w-full'
         disabled={isPending || form.formState.isSubmitting}
       >
-        {isPending ? "Creando cuenta..." : "Crear cuenta"}
+        {isPending ? 'Creando cuenta...' : 'Crear cuenta'}
       </Button>
     </form>
   );
 }
-

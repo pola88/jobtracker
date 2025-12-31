@@ -1,23 +1,23 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
-import { prisma } from "@/lib/prisma";
-import { requireCurrentUser } from "@/lib/auth";
-import type { ActionResponse } from "@/actions/interviews";
+import type { ActionResponse } from '@/actions/interviews';
+import { requireCurrentUser } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
 const noteSchema = z.object({
-  interviewId: z.string().cuid("Identificador inválido"),
+  interviewId: z.string().cuid('Identificador inválido'),
   content: z
     .string()
-    .min(3, "La nota debe tener al menos 3 caracteres")
-    .max(2000, "La nota es demasiado extensa"),
+    .min(3, 'La nota debe tener al menos 3 caracteres')
+    .max(2000, 'La nota es demasiado extensa'),
 });
 
 const deleteNoteSchema = z.object({
-  noteId: z.string().cuid("Identificador inválido"),
-  interviewId: z.string().cuid("Identificador inválido"),
+  noteId: z.string().cuid('Identificador inválido'),
+  interviewId: z.string().cuid('Identificador inválido'),
 });
 
 const initialState: ActionResponse = {
@@ -26,13 +26,13 @@ const initialState: ActionResponse = {
 
 export async function addInterviewNoteAction(
   _prevState: ActionResponse = initialState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse> {
   void _prevState;
   try {
     const parsed = noteSchema.safeParse(Object.fromEntries(formData.entries()));
     if (!parsed.success) {
-      return { success: false, message: "Nota inválida" };
+      return { success: false, message: 'Nota inválida' };
     }
 
     const user = await requireCurrentUser();
@@ -44,7 +44,7 @@ export async function addInterviewNoteAction(
     });
 
     if (!interview) {
-      return { success: false, message: "Entrevista no encontrada" };
+      return { success: false, message: 'Entrevista no encontrada' };
     }
 
     await prisma.interviewNote.create({
@@ -55,22 +55,22 @@ export async function addInterviewNoteAction(
     });
 
     revalidatePath(`/interviews/${interview.id}/edit`);
-    return { success: true, message: "Nota agregada" };
+    return { success: true, message: 'Nota agregada' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: "No se pudo guardar la nota" };
+    return { success: false, message: 'No se pudo guardar la nota' };
   }
 }
 
 export async function deleteInterviewNoteAction(
-  formData: FormData
+  formData: FormData,
 ): Promise<void> {
   try {
     const parsed = deleteNoteSchema.safeParse(
-      Object.fromEntries(formData.entries())
+      Object.fromEntries(formData.entries()),
     );
     if (!parsed.success) {
-      throw new Error("Datos inválidos");
+      throw new Error('Datos inválidos');
     }
 
     const user = await requireCurrentUser();
@@ -98,4 +98,3 @@ export async function deleteInterviewNoteAction(
     throw error;
   }
 }
-
