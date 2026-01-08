@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { updateInterviewAction } from '@/actions/interviews';
+import { Card } from '@/components/card';
 import { InterviewForm } from '@/components/forms/interview-form';
 import RightPanel from '@/components/interviews/right-panel';
 import { AppShell } from '@/components/layout/app-shell';
@@ -37,7 +38,7 @@ export default async function EditInterviewPage({
       description='Actualiza el estado y notas para mantener tu pipeline al día'
     >
       <div className='grid gap-6 lg:grid-cols-[2fr_1fr]'>
-        <div className='rounded-2xl border bg-card/80 p-6'>
+        <Card>
           <InterviewForm
             action={updateInterview}
             submitLabel='Actualizar entrevista'
@@ -56,7 +57,7 @@ export default async function EditInterviewPage({
               experienceRating: interview.experienceRating,
             }}
           />
-        </div>
+        </Card>
         <div className='space-y-6'>
           <RightPanel interviewId={interview.id} initialTimeline={timeline} />
         </div>

@@ -1,2 +1,2 @@
-export { default } from './Form';
-export { default as Field } from './Field';
+export { default } from './form';
+export { default as Field } from './field';

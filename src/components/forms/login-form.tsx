@@ -6,10 +6,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 
 import { loginAction } from '@/actions/login';
-import Form from '@/components/Form';
+import Form from '@/components/form';
 import { loginSchema } from '@/lib/validators/auth';
 
-import { Field } from '../Form/types';
+import { Field } from '../form/types';
 
 type LoginSchema = z.infer<typeof loginSchema>;
 

@@ -7,8 +7,8 @@ import { z } from 'zod';
 
 import { Form as FormComponent } from '@/components/ui/form';
 
-import Button from '../Button';
-import Field from './Field';
+import Button from '../button';
+import Field from './field';
 import styles, { groupColumnsClass } from './styles';
 import { FieldProps, FormProps, GroupField, SpacerField } from './types';
 
@@ -80,6 +80,7 @@ const Form = <T extends z.ZodTypeAny>({
   onSubmit,
   schema,
   fields,
+  render,
   isLoading,
   submitLabel = 'Submit',
   error,
@@ -97,7 +98,8 @@ const Form = <T extends z.ZodTypeAny>({
   return (
     <FormComponent {...form}>
       <form onSubmit={submitHandler} className={styles.form}>
-        {fields.map((fieldConfig) => {
+        {render?.(form)}
+        {fields?.map((fieldConfig) => {
           if (fieldConfig.type === 'spacer') {
             return (
               <Spacer

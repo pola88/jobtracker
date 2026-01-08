@@ -11,7 +11,7 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import SelectField from './SelectField';
+import SelectField from './select-field';
 import { FieldProps } from './types';
 
 const Field = <T extends z.ZodType>({

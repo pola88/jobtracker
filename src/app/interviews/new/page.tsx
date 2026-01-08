@@ -1,4 +1,5 @@
 import { createInterviewAction } from '@/actions/interviews';
+import { Card } from '@/components/card';
 import { InterviewForm } from '@/components/forms/interview-form';
 import { AppShell } from '@/components/layout/app-shell';
 import { requireCurrentUser } from '@/lib/auth';
@@ -14,13 +15,13 @@ export default async function NewInterviewPage() {
       title='Nueva entrevista'
       description='Documenta los detalles clave para tu próxima conversación'
     >
-      <div className='max-w-3xl rounded-2xl border bg-card/80 p-6'>
+      <Card className='max-w-3xl mx-auto'>
         <InterviewForm
           action={createInterviewAction}
           submitLabel='Crear entrevista'
           showInitialNoteField
         />
-      </div>
+      </Card>
     </AppShell>
   );
 }

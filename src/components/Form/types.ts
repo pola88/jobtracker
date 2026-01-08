@@ -62,7 +62,8 @@ export type FormProps<T extends z.ZodTypeAny> = {
   defaultValues: z.infer<T>;
   onSubmit: (data: z.infer<T>) => void;
   schema: T;
-  fields: Field<T>[];
+  fields?: Field<T>[];
+  render?: (form: UseFormReturn<z.infer<T>>) => React.ReactNode;
   isLoading: boolean;
   submitLabel?: string;
   error?: string | null;

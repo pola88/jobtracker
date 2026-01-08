@@ -1,6 +1,9 @@
+'use client';
+
 import { ReactNode } from 'react';
 
-import { Sidebar } from '@/components/layout/sidebar';
+import { AppSidebar } from '@/components/app-sidebar/app-sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 
 type AppShellProps = {
@@ -19,12 +22,12 @@ export function AppShell({
   className,
 }: AppShellProps) {
   return (
-    <div className='min-h-screen bg-muted/30'>
-      <div>
-        <Sidebar />
-        <div className='flex flex-col pl-[190px]'>
-          <header className='border-b bg-background px-6 py-6'>
-            <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className='border-b bg-background px-6 py-6'>
+          <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
+            <div className='flex items-center gap-2'>
               <div>
                 <h1 className='text-2xl font-semibold tracking-tight'>
                   {title}
@@ -33,12 +36,12 @@ export function AppShell({
                   <p className='text-sm text-muted-foreground'>{description}</p>
                 )}
               </div>
-              {actions}
             </div>
-          </header>
-          <main className={cn('flex-1 px-6 py-8', className)}>{children}</main>
-        </div>
-      </div>
-    </div>
+            {actions}
+          </div>
+        </header>
+        <main className={cn('flex-1 px-6 py-8', className)}>{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

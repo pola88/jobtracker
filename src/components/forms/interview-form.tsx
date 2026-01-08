@@ -12,8 +12,8 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 
 import { ActionResponse } from '@/actions/interviews';
-import Form from '@/components/Form';
-import { Field as FieldType } from '@/components/Form/types';
+import Form from '@/components/form';
+import { Field as FieldType } from '@/components/form/types';
 import { interviewSchema } from '@/lib/validators/interview';
 import { CURRENCIES } from '@/lib/validators/interview';
 

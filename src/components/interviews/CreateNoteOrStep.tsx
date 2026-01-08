@@ -2,7 +2,7 @@ import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { createInterviewStepAction } from '@/actions/interview-steps';
-import Button from '@/components/Button';
+import Button from '@/components/button';
 import { AddNoteForm } from '@/components/interviews/add-note-form';
 import { StepForm } from '@/components/interviews/step-form';
 import {
