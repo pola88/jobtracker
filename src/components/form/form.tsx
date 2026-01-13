@@ -20,6 +20,7 @@ type RegularFieldProps<T extends z.ZodTypeAny> = {
 type GroupFieldProps<T extends z.ZodTypeAny> = {
   form: UseFormReturn<z.infer<T>>;
   fieldConfig: GroupField<T>;
+  isNested?: boolean;
 };
 
 const Spacer = <T extends z.ZodTypeAny>({
@@ -52,6 +53,7 @@ const RegularField = <T extends z.ZodTypeAny>({
 const Group = <T extends z.ZodTypeAny>({
   form,
   fieldConfig,
+  isNested = false,
 }: GroupFieldProps<T>) => {
   const groupColumns =
     groupColumnsClass[fieldConfig.columns ?? 2] ?? groupColumnsClass[2];
@@ -61,15 +63,30 @@ const Group = <T extends z.ZodTypeAny>({
     : styles.groupWrapper;
 
   return (
-    <div key={fieldConfig.name} className={wrapperClass}>
+    <div
+      key={fieldConfig.name}
+      className={!isNested ? wrapperClass : undefined}
+    >
+      {fieldConfig.label && (
+        <div className={styles.groupLabel}>{fieldConfig.label}</div>
+      )}
       <div className={`${styles.groupGrid} ${groupColumns}`}>
-        {fieldConfig.fields.map((groupField) => (
-          <RegularField
-            key={groupField.name}
-            form={form}
-            fieldConfig={groupField as FieldProps<T>}
-          />
-        ))}
+        {fieldConfig.fields.map((groupField) => {
+          return groupField.type === 'group' ? (
+            <Group
+              key={groupField.name}
+              form={form}
+              fieldConfig={groupField as unknown as GroupField<T>}
+              isNested={true}
+            />
+          ) : (
+            <RegularField
+              key={groupField.name}
+              form={form}
+              fieldConfig={groupField as FieldProps<T>}
+            />
+          );
+        })}
       </div>
     </div>
   );

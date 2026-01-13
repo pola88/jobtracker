@@ -47,9 +47,10 @@ export type SpacerField<T extends z.ZodTypeAny> = {
 export type GroupField<T extends z.ZodTypeAny> = {
   name: string;
   type: 'group';
-  fields: Array<Omit<FieldProps<T>, 'form'>>;
+  fields: Array<Omit<FieldProps<T>, 'form'> | GroupField<T>>;
   columns?: 1 | 2 | 3 | 4;
   fullWidth?: boolean;
+  label?: string;
   shouldHide?: (values: z.infer<T>) => boolean;
 };
 
@@ -73,4 +74,5 @@ export type SelectFieldProps = {
   field: FieldValues;
   options: SelectFieldOption[];
   disabled?: boolean;
+  placeholder?: string;
 };

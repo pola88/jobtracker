@@ -59,6 +59,7 @@ const Field = <T extends z.ZodType>({
           <FormControl>
             {type === 'select' ? (
               <SelectField
+                placeholder={placeholder}
                 field={field}
                 options={options || []}
                 disabled={disabled}

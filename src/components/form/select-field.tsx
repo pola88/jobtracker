@@ -7,11 +7,16 @@ import {
 } from '../ui/select';
 import { SelectFieldProps } from './types';
 
-const SelectField = ({ field, options, disabled }: SelectFieldProps) => {
+const SelectField = ({
+  field,
+  options,
+  disabled,
+  placeholder = 'Select an option',
+}: SelectFieldProps) => {
   return (
     <Select onValueChange={field.onChange} defaultValue={field.value}>
       <SelectTrigger disabled={disabled}>
-        <SelectValue placeholder='Select a role' />
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
