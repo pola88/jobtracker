@@ -1,8 +1,9 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 
+import { touchInterview } from '@/actions/interviews';
 import type { ActionResponse } from '@/actions/interviews';
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -47,14 +48,18 @@ export async function addInterviewNoteAction(
       return { success: false, message: 'Entrevista no encontrada' };
     }
 
-    await prisma.interviewNote.create({
-      data: {
-        interviewId: interview.id,
-        content: parsed.data.content,
-      },
-    });
+    await prisma.$transaction([
+      prisma.interviewNote.create({
+        data: {
+          interviewId: interview.id,
+          content: parsed.data.content,
+        },
+      }),
+      touchInterview(interview.id),
+    ]);
 
     revalidatePath(`/interviews/${interview.id}/edit`);
+    revalidateTag('interviews');
     return { success: true, message: 'Nota agregada' };
   } catch (error) {
     console.error(error);
@@ -88,11 +93,15 @@ export async function deleteInterviewNoteAction(
       return;
     }
 
-    await prisma.interviewNote.delete({
-      where: { id: parsed.data.noteId },
-    });
+    await prisma.$transaction([
+      prisma.interviewNote.delete({
+        where: { id: parsed.data.noteId },
+      }),
+      touchInterview(note.interviewId),
+    ]);
 
     revalidatePath(`/interviews/${parsed.data.interviewId}/edit`);
+    revalidateTag('interviews');
   } catch (error) {
     console.error(error);
     throw error;

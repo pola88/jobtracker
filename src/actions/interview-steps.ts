@@ -1,7 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
+import { touchInterview } from '@/actions/interviews';
 import type { ActionResponse } from '@/actions/interviews';
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -42,19 +43,23 @@ export async function createInterviewStepAction(
       return { success: false, message: 'Entrevista no encontrada' };
     }
 
-    await prisma.interviewStep.create({
-      data: {
-        interviewId: interview.id,
-        title: parsed.data.title,
-        type: parsed.data.type,
-        scheduledAt: parsed.data.scheduledAt,
-        completedAt: parsed.data.completedAt,
-        outcome: parsed.data.outcome,
-        notes: parsed.data.notes,
-      },
-    });
+    await prisma.$transaction([
+      prisma.interviewStep.create({
+        data: {
+          interviewId: interview.id,
+          title: parsed.data.title,
+          type: parsed.data.type,
+          scheduledAt: parsed.data.scheduledAt,
+          completedAt: parsed.data.completedAt,
+          outcome: parsed.data.outcome,
+          notes: parsed.data.notes,
+        },
+      }),
+      touchInterview(interview.id),
+    ]);
 
     refreshEditPage(interview.id);
+    revalidateTag('interviews');
     return { success: true, message: 'Paso agregado' };
   } catch (error) {
     console.error(error);
@@ -129,11 +134,15 @@ export async function deleteInterviewStepAction(formData: FormData) {
       return;
     }
 
-    await prisma.interviewStep.delete({
-      where: { id: parsed.data.stepId },
-    });
+    await prisma.$transaction([
+      prisma.interviewStep.delete({
+        where: { id: parsed.data.stepId },
+      }),
+      touchInterview(step.interviewId),
+    ]);
 
     refreshEditPage(parsed.data.interviewId);
+    revalidateTag('interviews');
   } catch (error) {
     console.error(error);
     throw error;

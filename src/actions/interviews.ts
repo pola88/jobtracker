@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma } from '@prisma/client';
+import { InterviewStatus, Prisma } from '@prisma/client';
 import { revalidateTag } from 'next/cache';
 
 import { requireCurrentUser } from '@/lib/auth';
@@ -15,8 +15,19 @@ export type ActionResponse = {
 
 function invalidateInterviewCaches() {
   revalidateTag('interviews');
-  revalidateTag('dashboard');
+  revalidateTag('applications');
+  revalidateTag('latest-interviews');
 }
+
+export const touchInterview = (interviewId: string) =>
+  prisma.interview.update({
+    where: {
+      id: interviewId,
+    },
+    data: {
+      updatedAt: new Date(),
+    },
+  });
 
 export async function createInterviewAction(
   _prevState: ActionResponse,
@@ -117,9 +128,10 @@ export async function updateInterviewAction(
   }
 }
 
-export async function deleteInterviewAction(formData: FormData): Promise<void> {
+export async function deleteInterviewAction(
+  interviewId: string,
+): Promise<void> {
   try {
-    const interviewId = formData.get('id');
     if (!interviewId || typeof interviewId !== 'string') {
       throw new Error('Identificador inválido');
     }
@@ -136,6 +148,39 @@ export async function deleteInterviewAction(formData: FormData): Promise<void> {
 
     await prisma.interview.delete({
       where: { id: interviewId },
+    });
+
+    invalidateInterviewCaches();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function updateInterviewStatus(
+  interviewId: string,
+  newStatus: InterviewStatus,
+): Promise<void> {
+  try {
+    if (!interviewId || typeof interviewId !== 'string') {
+      throw new Error('Identificador inválido');
+    }
+
+    const user = await requireCurrentUser();
+
+    const existingInterview = await prisma.interview.findUnique({
+      where: { id: interviewId, userId: user.id },
+    });
+
+    if (!existingInterview) {
+      return;
+    }
+
+    await prisma.interview.update({
+      where: { id: interviewId },
+      data: {
+        status: newStatus,
+      },
     });
 
     invalidateInterviewCaches();

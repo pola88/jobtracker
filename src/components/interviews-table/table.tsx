@@ -1,7 +1,6 @@
 import type { Interview } from '@prisma/client';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
 import {
@@ -13,7 +12,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatCompensation, formatExperience } from '@/lib/rich-text';
-import { cn } from '@/lib/utils';
+
+import { InterviewActions } from './actions';
 
 type InterviewsTableProps = {
   interviews: Interview[];
@@ -23,6 +23,8 @@ const statusVariantMap: Record<
   string,
   'success' | 'info' | 'warning' | 'default' | 'danger'
 > = {
+  applied: 'info',
+  ghosted: 'default',
   active: 'info',
   stand_by: 'warning',
   not_interested: 'default',
@@ -69,14 +71,15 @@ export function InterviewsTable({ interviews }: InterviewsTableProps) {
                 {formatExperience(interview)}
               </TableCell>
               <TableCell className='text-right'>
-                <Link
+                <InterviewActions interview={interview} />
+                {/* <Link
                   href={`/interviews/${interview.id}/edit`}
                   className={cn(
                     'text-sm font-medium text-primary underline-offset-2 hover:underline',
                   )}
                 >
                   Editar
-                </Link>
+                </Link> */}
               </TableCell>
             </TableRow>
           ))}

@@ -1,40 +1,21 @@
 import Link from 'next/link';
 
-import { InterviewsTable } from '@/components/dashboard/interviews-table';
-import { MetricCard } from '@/components/dashboard/metric-card';
-import { RecentActivity } from '@/components/dashboard/recent-activity';
+import { Card } from '@/components/card';
+import { InterviewsTable } from '@/components/interviews-table';
 import { AppShell } from '@/components/layout/app-shell';
 import { Button } from '@/components/ui/button';
 import { requireCurrentUser } from '@/lib/auth';
-import {
-  getDashboardData,
-  getLatestInterviews,
-  getMostRecentInterviews,
-} from '@/lib/data/interviews';
+import { getApplications, getLatestInterviews } from '@/lib/data/interviews';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function DashboardPage() {
   const user = await requireCurrentUser();
-  const [dashboardData, latestInterviews, mostRecentInterviews] =
-    await Promise.all([
-      getDashboardData(user.id),
-      getLatestInterviews(user.id),
-      getMostRecentInterviews(user.id),
-    ]);
-
-  const inProgress = dashboardData.byStatus
-    .filter(
-      (bucket) =>
-        bucket.status !== 'rejected' && bucket.status !== 'not_interested',
-    )
-    .reduce((acc, bucket) => acc + bucket.count, 0);
-  const offers =
-    dashboardData.byStatus.find((s) => s.status === 'stand_by')?.count ?? 0;
-  const notInterested =
-    dashboardData.byStatus.find((s) => s.status === 'not_interested')?.count ??
-    0;
+  const [applications, latestInterviews] = await Promise.all([
+    getApplications(user.id),
+    getLatestInterviews(user.id),
+  ]);
 
   const action = (
     <Button asChild>
@@ -48,33 +29,15 @@ export default async function DashboardPage() {
       description='KPIs accionables de tu pipeline de entrevistas'
       actions={action}
     >
-      <section className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
-        <MetricCard title='Total entrevistas' value={dashboardData.total} />
-        <MetricCard title='En proceso' value={inProgress} />
-        <MetricCard title='Stand by' value={offers} />
-        <MetricCard title='No interesado' value={notInterested} />
-        <MetricCard
-          title='Feeling general'
-          value={`${dashboardData.recentSentiment.positive}% 👍`}
-          description='Últimos 10 procesos'
-        />
-      </section>
-
-      <section className='mt-10 grid gap-6 lg:grid-cols-[2fr_1fr]'>
+      <Card title='Postulaciones'>
         <div className='space-y-4'>
-          <div className='flex items-center justify-between'>
-            <h2 className='text-lg font-semibold'>Tabla de entrevistas</h2>
-            <Button asChild variant='ghost' size='sm'>
-              <Link href='/interviews'>Ver todas</Link>
-            </Button>
-          </div>
-          <InterviewsTable interviews={latestInterviews} />
+          <InterviewsTable interviews={applications} />
         </div>
-        <div>
-          <h2 className='text-lg font-semibold'>Últimas entrevistas</h2>
-          <RecentActivity interviews={mostRecentInterviews} />
-        </div>
-      </section>
+      </Card>
+
+      <Card title='Entrevistas'>
+        <InterviewsTable interviews={latestInterviews} />
+      </Card>
     </AppShell>
   );
 }
