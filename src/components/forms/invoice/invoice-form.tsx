@@ -1,21 +1,27 @@
 'use client';
 
+import Link from 'next/link';
 import { z } from 'zod';
 
+import BusinessProfile from '@/components/business-profile';
 import Form from '@/components/form';
+import * as businessProfileHelpers from '@/lib/helpers/business-profile';
 
 import Field from '../../form/field';
 import Items from './items';
 import { type InvoiceFormProps, invoiceSchema } from './types';
 
-const InvoiceForm = ({ onPreview }: InvoiceFormProps) => {
+const InvoiceForm = ({ businessProfile, onPreview }: InvoiceFormProps) => {
   const defaultValues: z.infer<typeof invoiceSchema> = {
     invoiceNumber: '',
     invoiceDate: new Date().toISOString().split('T')[0],
     dueDate: '',
-    fromName: '',
-    fromEmail: '',
-    fromAddress: '',
+    fromName: businessProfileHelpers.getBusinessProfileName(businessProfile),
+    fromEmail: businessProfile?.email || '',
+    fromAddress:
+      businessProfileHelpers.getBusinessProfileAddress(businessProfile),
+    fromCity: businessProfileHelpers.getBusinessProfileCity(businessProfile),
+    fromCountry: businessProfile?.country || '',
     toName: '',
     toEmail: '',
     toAddress: '',
@@ -67,7 +73,18 @@ const InvoiceForm = ({ onPreview }: InvoiceFormProps) => {
 
           <div className='space-y-4 rounded-lg border bg-muted/50 p-4'>
             <h3 className='font-semibold text-foreground'>From</h3>
-            <div className='space-y-3'>
+            {!businessProfile && (
+              <div>
+                Business profile not found{' '}
+                <Link href='/invoices/settings' className='text-blue-500'>
+                  Set up your business profile
+                </Link>
+              </div>
+            )}
+            {businessProfile && (
+              <BusinessProfile businessProfile={businessProfile} />
+            )}
+            {/* <div className='space-y-3'>
               <div className='space-y-2'>
                 <Field
                   name='fromName'
@@ -95,7 +112,7 @@ const InvoiceForm = ({ onPreview }: InvoiceFormProps) => {
                   form={form}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className='space-y-4 rounded-lg border bg-muted/50 p-4'>

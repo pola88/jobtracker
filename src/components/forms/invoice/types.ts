@@ -1,5 +1,6 @@
 import { UseFormReturn } from 'react-hook-form';
 
+import { BusinessProfile } from '@prisma/client';
 import { z } from 'zod';
 
 const lineItemSchema = z.object({
@@ -19,6 +20,8 @@ export const invoiceSchema = z.object({
   fromName: z.string().min(1),
   fromEmail: z.string().email(),
   fromAddress: z.string().min(1),
+  fromCity: z.string().min(1),
+  fromCountry: z.string().min(1),
   toName: z.string().min(1),
   toEmail: z.string().email(),
   toAddress: z.string().min(1),
@@ -39,5 +42,6 @@ export interface LineItemProps {
 }
 
 export interface InvoiceFormProps {
+  businessProfile: BusinessProfile | null;
   onPreview: (data: Invoice) => void;
 }
