@@ -1,100 +1,35 @@
+'use client';
+
+import { useCallback } from 'react';
+
 import type { Interview } from '@prisma/client';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useRouter } from 'next/navigation';
 
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { formatCompensation, formatExperience } from '@/lib/rich-text';
-
-import { InterviewActions } from './actions';
+import DataTable from '../data-table';
+import { columns } from './columns';
 
 type InterviewsTableProps = {
   interviews: Interview[];
 };
 
-const statusVariantMap: Record<
-  string,
-  'success' | 'info' | 'warning' | 'default' | 'danger'
-> = {
-  applied: 'info',
-  ghosted: 'default',
-  active: 'info',
-  stand_by: 'warning',
-  not_interested: 'default',
-  rejected: 'danger',
-};
-
 export function InterviewsTable({ interviews }: InterviewsTableProps) {
+  const router = useRouter();
+
+  const handleOnRowClick = useCallback(
+    (row: Interview) => {
+      console.log('clicked');
+      router.push(`/interviews/${row.id}/edit`);
+    },
+    [router],
+  );
+
   return (
     <div className='glass-panel rounded-xl border'>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Empresa</TableHead>
-            <TableHead>Puesto</TableHead>
-            <TableHead>Fecha</TableHead>
-            <TableHead>Estado</TableHead>
-            <TableHead>Compensación</TableHead>
-            <TableHead>Feeling</TableHead>
-            <TableHead className='text-right'>Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {interviews.map((interview) => (
-            <TableRow key={interview.id}>
-              <TableCell className='font-medium'>{interview.company}</TableCell>
-              <TableCell>{interview.position}</TableCell>
-              <TableCell>
-                {format(new Date(interview.date), 'dd MMM yyyy', {
-                  locale: es,
-                })}
-              </TableCell>
-              <TableCell>
-                <Badge
-                  variant={statusVariantMap[interview.status] ?? 'outline'}
-                  className='capitalize'
-                >
-                  {interview.status}
-                </Badge>
-              </TableCell>
-              <TableCell className='tabular-nums'>
-                {formatCompensation(interview)}
-              </TableCell>
-              <TableCell className='text-sm'>
-                {formatExperience(interview)}
-              </TableCell>
-              <TableCell className='text-right'>
-                <InterviewActions interview={interview} />
-                {/* <Link
-                  href={`/interviews/${interview.id}/edit`}
-                  className={cn(
-                    'text-sm font-medium text-primary underline-offset-2 hover:underline',
-                  )}
-                >
-                  Editar
-                </Link> */}
-              </TableCell>
-            </TableRow>
-          ))}
-          {interviews.length === 0 && (
-            <TableRow>
-              <TableCell
-                colSpan={6}
-                className='text-center text-sm text-muted-foreground'
-              >
-                Aún no registraste entrevistas.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      <DataTable
+        columns={columns}
+        data={interviews}
+        onRowClick={handleOnRowClick}
+      />
     </div>
   );
 }

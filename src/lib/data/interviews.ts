@@ -3,30 +3,22 @@ import { unstable_cache } from 'next/cache';
 
 import { prisma } from '@/lib/prisma';
 
-export const getLatestInterviews = unstable_cache(
-  async (userId: string) => {
-    return prisma.interview.findMany({
-      where: { userId, status: InterviewStatus.active },
-      orderBy: { date: 'desc' },
-      take: 5,
-    });
-  },
-  ['latest-interviews'],
-  {
-    revalidate: 60,
-    tags: ['latest-interviews'],
-  },
-);
-
 export const getInterviews = unstable_cache(
   async (userId: string, onlyActive: boolean = false) => {
-    return prisma.interview.findMany({
+    const rows = await prisma.interview.findMany({
       where: {
         userId,
         ...(onlyActive ? { status: InterviewStatus.active } : {}),
       },
       orderBy: { date: 'desc' },
     });
+
+    return rows.map((row) => ({
+      ...row,
+      date: new Date(row.date),
+      createdAt: new Date(row.createdAt),
+      updatedAt: new Date(row.updatedAt),
+    }));
   },
   ['interviews-list'],
   {
@@ -53,18 +45,3 @@ export async function getInterviewStepsAndNotes(interviewId: string) {
     }),
   ]);
 }
-
-export const getApplications = unstable_cache(
-  async (userId: string) => {
-    return prisma.interview.findMany({
-      where: { userId, status: InterviewStatus.applied },
-      orderBy: { date: 'desc' },
-      take: 5,
-    });
-  },
-  [],
-  {
-    revalidate: false,
-    tags: ['applications'],
-  },
-);

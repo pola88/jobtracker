@@ -39,8 +39,8 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <InvoicesNav />
           <JobsNav />
+          <InvoicesNav />
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>

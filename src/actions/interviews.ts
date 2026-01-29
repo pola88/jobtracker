@@ -13,11 +13,9 @@ export type ActionResponse = {
   interviewId?: string;
 };
 
-function invalidateInterviewCaches() {
+export const invalidateInterviewCaches = async () => {
   revalidateTag('interviews');
-  revalidateTag('applications');
-  revalidateTag('latest-interviews');
-}
+};
 
 export const touchInterview = (interviewId: string) =>
   prisma.interview.update({

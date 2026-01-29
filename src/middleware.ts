@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (decoded?.sub && isAuthRoute) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/interviews', request.url));
   }
 
   const response = NextResponse.next();
@@ -39,5 +39,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/interviews/:path*', '/login', '/register'],
+  matcher: ['/interviews/:path*', '/login', '/register', '/invoices/:path*'],
 };

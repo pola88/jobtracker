@@ -10,7 +10,7 @@ const invoicesNavItems: NavItem[] = [
 ];
 
 const InvoicesNav = () => {
-  return <Nav title='Invoices' navItems={invoicesNavItems} />;
+  return <Nav title='Invoices' navItems={invoicesNavItems} collapsible />;
 };
 
 export default InvoicesNav;

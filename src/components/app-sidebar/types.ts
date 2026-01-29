@@ -9,4 +9,5 @@ export type NavItem = {
 export type NavProps = {
   title: string;
   navItems: NavItem[];
+  collapsible?: boolean;
 };

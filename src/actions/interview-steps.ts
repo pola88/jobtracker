@@ -1,8 +1,11 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 
-import { touchInterview } from '@/actions/interviews';
+import {
+  invalidateInterviewCaches,
+  touchInterview,
+} from '@/actions/interviews';
 import type { ActionResponse } from '@/actions/interviews';
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -59,7 +62,7 @@ export async function createInterviewStepAction(
     ]);
 
     refreshEditPage(interview.id);
-    revalidateTag('interviews');
+    invalidateInterviewCaches();
     return { success: true, message: 'Paso agregado' };
   } catch (error) {
     console.error(error);
@@ -142,7 +145,7 @@ export async function deleteInterviewStepAction(formData: FormData) {
     ]);
 
     refreshEditPage(parsed.data.interviewId);
-    revalidateTag('interviews');
+    invalidateInterviewCaches();
   } catch (error) {
     console.error(error);
     throw error;
