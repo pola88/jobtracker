@@ -12,7 +12,7 @@ export default function Home() {
   const decoded = decodeAuthToken(token);
 
   if (decoded?.sub) {
-    redirect('/dashboard');
+    redirect('/interviews');
   }
 
   redirect('/login');

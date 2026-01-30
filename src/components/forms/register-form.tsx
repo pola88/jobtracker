@@ -42,7 +42,7 @@ export function RegisterForm() {
       return;
     }
 
-    router.replace('/dashboard');
+    router.replace('/interviews');
     router.refresh();
   };
 

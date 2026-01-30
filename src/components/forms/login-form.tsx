@@ -38,7 +38,7 @@ const fields: Field<typeof loginSchema>[] = [
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') ?? '/dashboard';
+  const redirectTo = searchParams.get('redirectTo') ?? '/interviews';
   const [error, setError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();

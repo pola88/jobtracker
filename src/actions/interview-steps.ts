@@ -21,7 +21,6 @@ const initialState: ActionResponse = {
 
 function refreshEditPage(interviewId: string) {
   revalidatePath(`/interviews/${interviewId}/edit`);
-  revalidatePath('/dashboard');
 }
 
 export async function createInterviewStepAction(
