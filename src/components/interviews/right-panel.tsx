@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 
 import { updateInterviewStepAction } from '@/actions/interview-steps';
-import { CreateNoteOrStep } from '@/components/interviews/CreateNoteOrStep';
+import { CreateNoteOrStep } from '@/components/interviews/create-note-or-step';
 import { NoteItem } from '@/components/interviews/noteItem';
 import { StepForm } from '@/components/interviews/step-form';
 import { StepItem } from '@/components/interviews/stepItem';

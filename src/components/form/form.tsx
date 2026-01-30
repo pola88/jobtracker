@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useImperativeHandle } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,6 +23,14 @@ type GroupFieldProps<T extends z.ZodTypeAny> = {
   fieldConfig: GroupField<T>;
   isNested?: boolean;
 };
+
+type SubmitCallback = (isLoading: boolean, success: boolean) => void;
+
+export type FormRef =
+  | {
+      submit: (callback?: SubmitCallback) => void;
+    }
+  | undefined;
 
 const Spacer = <T extends z.ZodTypeAny>({
   name,
@@ -92,16 +101,19 @@ const Group = <T extends z.ZodTypeAny>({
   );
 };
 
-const Form = <T extends z.ZodTypeAny>({
-  defaultValues,
-  onSubmit,
-  schema,
-  fields,
-  render,
-  isLoading,
-  submitLabel = 'Submit',
-  error,
-}: FormProps<T>) => {
+const FormInner = <T extends z.ZodTypeAny>(
+  {
+    defaultValues,
+    onSubmit,
+    schema,
+    fields,
+    render,
+    isLoading,
+    submitLabel = 'Submit',
+    error,
+  }: FormProps<T>,
+  ref: React.ForwardedRef<FormRef | undefined>,
+) => {
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema as T),
     defaultValues,
@@ -111,6 +123,15 @@ const Form = <T extends z.ZodTypeAny>({
       console.error('Form validation errors:', errors);
     }
   });
+
+  useImperativeHandle(ref, () => ({
+    submit: (callback) => {
+      callback?.(true, false);
+      submitHandler()
+        .then(() => callback?.(false, true))
+        .catch(() => callback?.(false, false));
+    },
+  }));
 
   return (
     <FormComponent {...form}>
@@ -146,14 +167,20 @@ const Form = <T extends z.ZodTypeAny>({
           );
         })}
         {error && <p className='text-sm text-destructive'>{error}</p>}
-        <div className={styles.footer}>
-          <Button variant='destructive' isLoading={isLoading} type='submit'>
-            {submitLabel}
-          </Button>
-        </div>
+        {!ref && (
+          <div className={styles.footer}>
+            <Button variant='destructive' isLoading={isLoading} type='submit'>
+              {submitLabel}
+            </Button>
+          </div>
+        )}
       </form>
     </FormComponent>
   );
 };
+
+export const Form = React.forwardRef(FormInner) as <T extends z.ZodTypeAny>(
+  props: FormProps<T> & { ref?: React.Ref<FormRef> },
+) => React.ReactElement;
 
 export default Form;

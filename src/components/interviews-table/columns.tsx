@@ -30,7 +30,13 @@ export const columns: ColumnDef<Interview>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      return <Status interview={row.original} />;
+      return (
+        <Status
+          key={row.original.id}
+          interviewId={row.original.id}
+          status={row.original.status}
+        />
+      );
     },
   },
   {

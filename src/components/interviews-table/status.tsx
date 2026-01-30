@@ -3,7 +3,7 @@
 import { ChevronDown, Loader2 } from 'lucide-react';
 import { useCallback, useState, useTransition } from 'react';
 
-import { Interview, InterviewStatus } from '@prisma/client';
+import { InterviewStatus } from '@prisma/client';
 
 import { updateInterviewStatus } from '@/actions/interviews';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +17,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 type StatusProp = {
-  interview: Interview;
+  interviewId: string;
+  status: InterviewStatus;
 };
 
 type StatusMap = {
@@ -34,18 +35,18 @@ const statusPropsMap: Record<string, StatusMap> = {
   rejected: { variant: 'danger', text: 'Rejected' },
 };
 
-export const Status = ({ interview }: StatusProp) => {
+export const Status = ({ interviewId, status }: StatusProp) => {
   const [isPending, startUpdateTransition] = useTransition();
-  const [currentStatus, setCurrentStatus] = useState(interview.status);
+  const [currentStatus, setCurrentStatus] = useState(status);
 
   const onUpdateStatus = useCallback(
     (newStatus: string) => {
       startUpdateTransition(async () => {
-        await updateInterviewStatus(interview.id, newStatus as InterviewStatus);
+        await updateInterviewStatus(interviewId, newStatus as InterviewStatus);
         setCurrentStatus(newStatus as InterviewStatus);
       });
     },
-    [interview.id],
+    [interviewId],
   );
   const statusProps = statusPropsMap[currentStatus];
 
