@@ -97,7 +97,6 @@ type InterviewFormProps = {
   ) => Promise<ActionResponse>;
   defaultValues?: InterviewTypes;
   submitLabel?: string;
-  showInitialNoteField?: boolean;
 };
 
 const initialState: ActionResponse = {
@@ -106,25 +105,10 @@ const initialState: ActionResponse = {
 
 export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
   (
-    {
-      action,
-      defaultValues = DEFAULT_VALUES,
-      submitLabel = 'Guardar',
-      showInitialNoteField = false,
-    },
+    { action, defaultValues = DEFAULT_VALUES, submitLabel = 'Guardar' },
     ref,
   ) => {
     const [_, formAction, isPending] = useFormState(action, initialState);
-    const formFields: FieldType<typeof interviewSchema>[] = showInitialNoteField
-      ? fields
-      : fields.map((field) =>
-          field.name !== 'initialNote'
-            ? field
-            : {
-                name: 'spacer-initial-note',
-                type: 'spacer',
-              },
-        );
 
     return (
       <Form
@@ -132,7 +116,7 @@ export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
         defaultValues={defaultValues}
         onSubmit={(data) => formAction(data as unknown as FormData)}
         schema={interviewSchema}
-        fields={formFields}
+        fields={fields}
         isLoading={isPending}
         submitLabel={submitLabel}
       />

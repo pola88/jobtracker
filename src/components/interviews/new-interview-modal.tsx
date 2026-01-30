@@ -52,7 +52,6 @@ export const NewInterviewModal = () => {
             ref={formRef}
             action={createInterviewAction}
             submitLabel='Add Application'
-            showInitialNoteField
           />
         </div>
         <DialogFooter className='mt-6'>

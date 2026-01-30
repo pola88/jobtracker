@@ -37,7 +37,7 @@ export async function createInterviewAction(
       return { success: false, message: 'Datos inválidos' };
     }
 
-    const { initialNote, ...interviewData } = parsed.data;
+    const { ...interviewData } = parsed.data;
 
     const user = await requireCurrentUser();
     const interview = await prisma.interview.create({
@@ -54,15 +54,6 @@ export async function createInterviewAction(
         userId: user.id,
       },
     });
-
-    if (initialNote) {
-      await prisma.interviewNote.create({
-        data: {
-          interviewId: interview.id,
-          content: initialNote,
-        },
-      });
-    }
 
     invalidateInterviewCaches();
     revalidateTag('interviews-size');
@@ -89,8 +80,7 @@ export async function updateInterviewAction(
       return { success: false, message: 'Datos inválidos' };
     }
 
-    const { initialNote: _initialNote, ...interviewData } = parsed.data;
-    void _initialNote;
+    const { ...interviewData } = parsed.data;
 
     const user = await requireCurrentUser();
 
