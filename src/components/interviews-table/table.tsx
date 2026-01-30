@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
 import type { Interview } from '@prisma/client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { countInterview, getInterviews } from '@/lib/data/interviews';
 
@@ -17,6 +17,8 @@ interface InterviewsTableProps {
 export function InterviewsTable({ userId }: InterviewsTableProps) {
   const [isLoading, startTransaction] = useTransition();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [fetchResult, setFetchResult] = useState<{
     nextCursor?: string;
     interviews: Interview[] | null;
@@ -30,6 +32,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
     undefined,
   );
   const [pageSize, setPageSize] = useState<number>(10);
+  const refreshParam = searchParams.get('_refresh');
 
   useEffect(() => {
     startTransaction(() => {
@@ -50,7 +53,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
       };
       fetchInterviews();
     });
-  }, [userId, currentCursor, pageSize]);
+  }, [userId, currentCursor, pageSize, refreshParam]);
 
   const handleOnRowClick = useCallback(
     (row: Interview) => {
