@@ -23,10 +23,7 @@ const DEFAULT_VALUES: InterviewTypes = {
   compensationType: 'fixed',
   compensationLower: 0,
   compensationUpper: 0,
-  compensationNotes: '',
   currency: 'USD',
-  experienceRating: 'neutral',
-  initialNote: '',
 };
 
 const fields: FieldType<typeof interviewSchema>[] = [

@@ -47,14 +47,11 @@ export default async function EditInterviewPage({
               position: interview.position,
               recruiter: interview.recruiter ?? '',
               date: new Date(interview.date),
-              benefits: interview.benefits ?? '',
               status: interview.status,
               compensationType: interview.compensationType,
               compensationLower: interview.compensationLower?.toNumber() ?? 0,
               compensationUpper: interview.compensationUpper?.toNumber() ?? 0,
-              compensationNotes: interview.compensationNotes ?? '',
               currency: interview.currency as (typeof CURRENCIES)[number],
-              experienceRating: interview.experienceRating,
             }}
           />
         </Card>

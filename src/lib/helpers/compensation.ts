@@ -1,16 +1,5 @@
 import type { Interview } from '@prisma/client';
-import { CompensationType, ExperienceRating } from '@prisma/client';
-
-const ratingLabels: Record<
-  Interview['experienceRating'],
-  { label: string; icon: string }
-> = {
-  [ExperienceRating.very_negative]: { label: 'Muy negativa', icon: '😡' },
-  [ExperienceRating.negative]: { label: 'Negativa', icon: '😕' },
-  [ExperienceRating.neutral]: { label: 'Neutral', icon: '😐' },
-  [ExperienceRating.positive]: { label: 'Positiva', icon: '🙂' },
-  [ExperienceRating.very_positive]: { label: 'Muy positiva', icon: '🤩' },
-};
+import { CompensationType } from '@prisma/client';
 
 export function formatCompensation(interview: Interview) {
   const currency = interview.currency ?? 'USD';
@@ -35,9 +24,4 @@ export function formatCompensation(interview: Interview) {
   }
 
   return salary;
-}
-
-export function formatExperience(interview: Interview) {
-  const { label, icon } = ratingLabels[interview.experienceRating];
-  return `${icon} ${label}`;
 }

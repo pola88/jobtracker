@@ -1,8 +1,4 @@
-import {
-  CompensationType,
-  ExperienceRating,
-  InterviewStatus,
-} from '@prisma/client';
+import { CompensationType, InterviewStatus } from '@prisma/client';
 import { z } from 'zod';
 
 export const CURRENCIES = ['USD', 'ARS', 'EUR', 'GBP'] as const;
@@ -14,10 +10,6 @@ export const interviewSchema = z.object({
     .optional()
     .transform((value) => value?.trim() || undefined),
   date: z.coerce.date({ required_error: 'La fecha es obligatoria' }),
-  benefits: z
-    .string()
-    .optional()
-    .transform((value) => value?.trim() || undefined),
   compensationType: z.nativeEnum(CompensationType),
   compensationLower: z.coerce
     .number()
@@ -35,16 +27,7 @@ export const interviewSchema = z.object({
       const parsed = Number(value);
       return Number.isFinite(parsed) ? parsed : undefined;
     }),
-  compensationNotes: z
-    .string()
-    .optional()
-    .transform((value) => value?.trim() || undefined),
   currency: z.enum(CURRENCIES),
-  experienceRating: z.nativeEnum(ExperienceRating),
-  initialNote: z
-    .string()
-    .optional()
-    .transform((value) => value?.trim() || undefined),
   status: z.nativeEnum(InterviewStatus, {
     required_error: 'El estado es obligatorio',
   }),
