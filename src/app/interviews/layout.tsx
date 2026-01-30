@@ -9,7 +9,7 @@ export default function InterviewsLayout({
 }>) {
   return (
     <AppShell
-      title='Interviews'
+      title='Job tracker'
       description='Manage your applications and interviews'
       actions={<AddApplicationBtn />}
     >

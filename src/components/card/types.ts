@@ -3,4 +3,5 @@ export type CardProps = {
   description?: string;
   children: React.ReactNode;
   className?: string;
+  noBorder?: boolean;
 };

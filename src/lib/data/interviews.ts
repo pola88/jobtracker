@@ -1,5 +1,6 @@
 'use server';
 
+import { InterviewStatus } from '@prisma/client';
 import { unstable_cache } from 'next/cache';
 
 import { prisma } from '@/lib/prisma';
@@ -9,6 +10,10 @@ interface GetInterviewsProps {
   cursor?: string | null;
   pageSize?: number;
 }
+
+type GetMetricResult = Record<InterviewStatus, number> & {
+  total: number;
+};
 
 export const getInterviews = ({
   userId,
@@ -86,3 +91,41 @@ export async function getInterviewStepsAndNotes(interviewId: string) {
     }),
   ]);
 }
+
+export const getMetric = (userId: string) =>
+  unstable_cache(
+    async (): Promise<GetMetricResult> => {
+      const [grouped, total] = await Promise.all([
+        prisma.interview.groupBy({
+          by: ['status'],
+          _count: { status: true },
+          where: { userId },
+        }),
+        prisma.interview.count({
+          where: { userId },
+        }),
+      ]);
+
+      const statsMap: Record<InterviewStatus, number> = Object.values(
+        InterviewStatus,
+      ).reduce(
+        (acc, status) => {
+          acc[status] = 0;
+          return acc;
+        },
+        {} as Record<InterviewStatus, number>,
+      );
+      grouped.forEach((item) => {
+        statsMap[item.status as InterviewStatus] = item._count.status || 0;
+      });
+
+      return {
+        ...statsMap,
+        total,
+      };
+    },
+    ['metric', userId],
+    {
+      tags: ['interviews', 'interviews-size'],
+    },
+  )();

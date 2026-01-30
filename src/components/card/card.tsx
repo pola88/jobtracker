@@ -14,6 +14,7 @@ export const Card = ({
   description,
   children,
   className,
+  noBorder,
 }: CardProps) => {
   const header =
     title || description ? (
@@ -23,7 +24,7 @@ export const Card = ({
       </CardHeader>
     ) : null;
   return (
-    <CardUI className={cn(styles.card, className)}>
+    <CardUI className={cn(styles.card, noBorder && styles.noBorder, className)}>
       {header}
       {children}
     </CardUI>

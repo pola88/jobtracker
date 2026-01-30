@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -11,30 +10,25 @@ import {
 type MetricCardProps = {
   title: string;
   value: ReactNode;
-  description?: string;
-  trend?: ReactNode;
+  icon: ReactNode;
 };
 
-export function MetricCard({
-  title,
-  value,
-  description,
-  trend,
-}: MetricCardProps) {
+export function MetricCard({ title, value, icon }: MetricCardProps) {
   return (
-    <Card className='glass-panel'>
-      <CardHeader className='space-y-2'>
-        <CardDescription>{title}</CardDescription>
-        <CardTitle className='text-3xl'>{value}</CardTitle>
-      </CardHeader>
-      {(description || trend) && (
-        <CardContent className='text-sm text-muted-foreground'>
-          <div className='flex items-center justify-between'>
-            <span>{description}</span>
-            {trend}
+    <Card className='glass-panel flex-1'>
+      <CardHeader>
+        <div className='flex gap-4 items-center'>
+          <div>{icon}</div>
+          <div>
+            <CardTitle className='text-sm font-medium text-gray-500 truncate'>
+              {title}
+            </CardTitle>
+            <CardDescription className='text-3xl font-semibold text-gray-900'>
+              {value}
+            </CardDescription>
           </div>
-        </CardContent>
-      )}
+        </div>
+      </CardHeader>
     </Card>
   );
 }
