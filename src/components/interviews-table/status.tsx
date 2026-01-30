@@ -28,6 +28,7 @@ type StatusMap = {
 
 const statusPropsMap: Record<string, StatusMap> = {
   applied: { variant: 'info', text: 'Applied' },
+  accepted: { variant: 'success', text: 'Accepted' },
   ghosted: { variant: 'default', text: 'Ghosted' },
   active: { variant: 'info', text: 'Active' },
   stand_by: { variant: 'warning', text: 'Stand By' },
