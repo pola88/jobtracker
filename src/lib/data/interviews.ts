@@ -27,7 +27,7 @@ export const getInterviews = ({
         where: {
           userId,
         },
-        orderBy: { date: 'desc' },
+        orderBy: { updatedAt: 'desc' },
         take: take + 1,
         cursor: cursor ? { id: cursor } : undefined,
         skip: cursor ? 1 : 0,
