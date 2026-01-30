@@ -65,6 +65,8 @@ export async function createInterviewAction(
     }
 
     invalidateInterviewCaches();
+    revalidateTag('interviews-size');
+
     return {
       success: true,
       message: 'Entrevista creada',
@@ -149,6 +151,7 @@ export async function deleteInterviewAction(
     });
 
     invalidateInterviewCaches();
+    revalidateTag('interviews-size');
   } catch (error) {
     console.error(error);
     throw error;

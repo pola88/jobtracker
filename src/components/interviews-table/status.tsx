@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronDown, Loader2 } from 'lucide-react';
-import { useCallback, useTransition } from 'react';
+import { useCallback, useState, useTransition } from 'react';
 
 import { Interview, InterviewStatus } from '@prisma/client';
 
@@ -36,16 +36,18 @@ const statusPropsMap: Record<string, StatusMap> = {
 
 export const Status = ({ interview }: StatusProp) => {
   const [isPending, startUpdateTransition] = useTransition();
+  const [currentStatus, setCurrentStatus] = useState(interview.status);
 
   const onUpdateStatus = useCallback(
     (newStatus: string) => {
       startUpdateTransition(async () => {
         await updateInterviewStatus(interview.id, newStatus as InterviewStatus);
+        setCurrentStatus(newStatus as InterviewStatus);
       });
     },
     [interview.id],
   );
-  const statusProps = statusPropsMap[interview.status];
+  const statusProps = statusPropsMap[currentStatus];
 
   return (
     <DropdownMenu>
@@ -64,7 +66,7 @@ export const Status = ({ interview }: StatusProp) => {
       <DropdownMenuContent>
         <DropdownMenuGroup>
           <DropdownMenuRadioGroup
-            value={interview.status}
+            value={currentStatus}
             onValueChange={onUpdateStatus}
           >
             {Object.values(InterviewStatus).map((status) => (

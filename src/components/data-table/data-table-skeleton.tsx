@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import { flexRender } from '@tanstack/react-table';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -16,18 +12,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { DataTableProps } from './types';
+import { DataTableSkeletonProps } from './types';
 
-export function DataTableSkeleton<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
+export function DataTableSkeleton<TData>({
+  table,
+}: DataTableSkeletonProps<TData>) {
   return (
     <div>
       <div className='rounded-md border'>
@@ -53,11 +42,13 @@ export function DataTableSkeleton<TData, TValue>({
           <TableBody>
             {Array.from({ length: 10 }).map((_, rowIndex) => (
               <TableRow key={rowIndex}>
-                {Array.from({ length: columns.length }).map((_, colIndex) => (
-                  <TableCell key={colIndex}>
-                    <Skeleton className='h-6 w-full' />
-                  </TableCell>
-                ))}
+                {Array.from({ length: table.getAllColumns().length }).map(
+                  (_, colIndex) => (
+                    <TableCell key={colIndex}>
+                      <Skeleton className='h-6 w-full' />
+                    </TableCell>
+                  ),
+                )}
               </TableRow>
             ))}
           </TableBody>

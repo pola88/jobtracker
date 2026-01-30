@@ -3,9 +3,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 
 import { Interview } from '@prisma/client';
-import { DateTime } from 'luxon';
 
 import { styles } from '@/components/data-table/styles';
+import { parseDate } from '@/lib/helpers/date';
 
 import { InterviewActions } from './actions';
 import { Status } from './status';
@@ -23,11 +23,7 @@ export const columns: ColumnDef<Interview>[] = [
     accessorKey: 'date',
     header: 'Application Date',
     cell: ({ row }) => {
-      return (
-        <span>
-          {DateTime.fromJSDate(row.original.date).toFormat('yyyy LLL dd')}
-        </span>
-      );
+      return <span>{parseDate(row.original.date)}</span>;
     },
   },
   {

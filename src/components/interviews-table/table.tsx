@@ -1,23 +1,59 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 
 import type { Interview } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 
+import { countInterview, getInterviews } from '@/lib/data/interviews';
+
 import DataTable from '../data-table';
 import { columns } from './columns';
 
-type InterviewsTableProps = {
-  interviews: Interview[];
-};
+interface InterviewsTableProps {
+  userId: string;
+}
 
-export function InterviewsTable({ interviews }: InterviewsTableProps) {
+export function InterviewsTable({ userId }: InterviewsTableProps) {
+  const [isLoading, startTransaction] = useTransition();
   const router = useRouter();
+  const [fetchResult, setFetchResult] = useState<{
+    nextCursor?: string;
+    interviews: Interview[] | null;
+    totalInterview: number;
+  }>({ interviews: null, totalInterview: 0 });
+
+  const [currentCursor, setCurrentCursor] = useState<string | null | undefined>(
+    null,
+  );
+  const [prevCursor, setPrevCursor] = useState<string | null | undefined>(
+    undefined,
+  );
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  useEffect(() => {
+    startTransaction(() => {
+      const fetchInterviews = async () => {
+        const [result, totalInterview] = await Promise.all([
+          getInterviews({
+            userId,
+            cursor: currentCursor,
+            pageSize,
+          }),
+          countInterview(userId),
+        ]);
+        setFetchResult({
+          nextCursor: result.nextCursor,
+          interviews: result.interviews,
+          totalInterview,
+        });
+      };
+      fetchInterviews();
+    });
+  }, [userId, currentCursor, pageSize]);
 
   const handleOnRowClick = useCallback(
     (row: Interview) => {
-      console.log('clicked');
       router.push(`/interviews/${row.id}/edit`);
     },
     [router],
@@ -27,8 +63,20 @@ export function InterviewsTable({ interviews }: InterviewsTableProps) {
     <div className='glass-panel rounded-xl border'>
       <DataTable
         columns={columns}
-        data={interviews}
+        data={fetchResult.interviews}
         onRowClick={handleOnRowClick}
+        isLoading={isLoading}
+        onPageSizeChange={setPageSize}
+        setCursor={(cursor) => {
+          setPrevCursor(currentCursor);
+          setCurrentCursor(cursor);
+        }}
+        pagination={{
+          prevCursor: prevCursor,
+          nextCursor: fetchResult.nextCursor,
+          pageSize,
+          countElement: fetchResult.totalInterview,
+        }}
       />
     </div>
   );
