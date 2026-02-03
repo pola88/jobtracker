@@ -55,7 +55,7 @@ export const Status = ({ interviewId, status }: StatusProp) => {
     <DropdownMenu>
       <DropdownMenuTrigger disabled={isPending}>
         <Badge
-          variant={statusProps.variant ?? 'outline'}
+          variant={statusProps.variant ?? 'outline-solid'}
           className='capitalize w-40 flex justify-end gap-0'
         >
           <div className='flex-1 flex gap-2 justify-center'>

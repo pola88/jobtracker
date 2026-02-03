@@ -33,7 +33,7 @@ export function StepItem({ step, interviewId, onEdit }: StepItemProps) {
     : 'Pendiente';
 
   return (
-    <article className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm space-y-3'>
+    <article className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-xs space-y-3'>
       <div className='text-xs font-semibold'>STEP</div>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>

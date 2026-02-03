@@ -21,7 +21,7 @@ export function CollapsibleSection({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <section className='rounded-2xl border bg-card/80 shadow-sm'>
+    <section className='rounded-2xl border bg-card/80 shadow-xs'>
       <button
         type='button'
         className='flex w-full items-center justify-between gap-4 px-6 py-4 text-left'

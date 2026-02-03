@@ -18,7 +18,7 @@ export function NoteItem({ note, interviewId }: NoteItemProps) {
   return (
     <article
       key={note.id}
-      className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm'
+      className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-xs'
     >
       <div className='text-xs font-semibold'>NOTE</div>
       <div className='flex items-center justify-between gap-4'>

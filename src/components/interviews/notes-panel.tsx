@@ -35,7 +35,7 @@ export function NotesPanel({ interviewId, notes }: NotesPanelProps) {
           {notes.map((note) => (
             <article
               key={note.id}
-              className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-sm'
+              className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-xs'
             >
               <div className='flex items-center justify-between gap-4'>
                 <p className='text-xs uppercase tracking-wide text-muted-foreground'>

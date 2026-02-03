@@ -73,7 +73,7 @@ const Preview = ({ data, open, onOpenChange }: PreviewProps) => {
           </DialogTitle>
         </DialogHeader>
 
-        <div ref={invoiceRef} className='bg-white p-8 rounded-lg shadow-sm'>
+        <div ref={invoiceRef} className='bg-white p-8 rounded-lg shadow-xs'>
           <div className='space-y-8'>
             <div className='flex items-start justify-between border-b pb-6'>
               <div>
