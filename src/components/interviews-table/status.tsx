@@ -1,12 +1,12 @@
 'use client';
 
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useCallback, useState, useTransition } from 'react';
 
 import { InterviewStatus } from '@prisma/client';
 
 import { updateInterviewStatus } from '@/actions/interviews';
-import { Badge } from '@/components/ui/badge';
+import { InterviewStatus as InterviewStatusBadge } from '@/components/interview-status';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,7 +37,7 @@ const statusPropsMap: Record<string, StatusMap> = {
 };
 
 export const Status = ({ interviewId, status }: StatusProp) => {
-  const [isPending, startUpdateTransition] = useTransition();
+  const [isLoading, startUpdateTransition] = useTransition();
   const [currentStatus, setCurrentStatus] = useState(status);
 
   const onUpdateStatus = useCallback(
@@ -49,21 +49,15 @@ export const Status = ({ interviewId, status }: StatusProp) => {
     },
     [interviewId],
   );
-  const statusProps = statusPropsMap[currentStatus];
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger disabled={isPending}>
-        <Badge
-          variant={statusProps.variant ?? 'outline-solid'}
-          className='capitalize w-40 flex justify-end gap-0'
-        >
-          <div className='flex-1 flex gap-2 justify-center'>
-            {isPending && <Loader2 className='w-4 h-4 animate-spin' />}
-            {statusProps.text}
-          </div>
-          <ChevronDown className='w-4 h-4 justify-self-end' />
-        </Badge>
+      <DropdownMenuTrigger disabled={isLoading}>
+        <InterviewStatusBadge
+          status={currentStatus}
+          isLoading={isLoading}
+          rightIcon={<ChevronDown className='w-4 h-4 justify-self-end' />}
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>

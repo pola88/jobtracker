@@ -1,57 +1,55 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
+
+import { InterviewNote } from '@prisma/client';
 
 import { addInterviewNoteAction } from '@/actions/interview-notes';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/button';
 
-const initialState = {
-  success: false,
-  message: undefined as string | undefined,
-};
+import { Card } from '../card';
+import { InterviewNoteForm } from '../forms/interview-note';
 
 type AddNoteFormProps = {
   interviewId: string;
-  onSuccess?: () => void;
+  onCreate: (note: InterviewNote) => void;
 };
 
-export function AddNoteForm({ interviewId, onSuccess }: AddNoteFormProps) {
-  const [state, formAction] = useFormState(
-    addInterviewNoteAction,
-    initialState,
-  );
+export function AddNoteForm({ interviewId, onCreate }: AddNoteFormProps) {
+  const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    if (state.success) {
-      onSuccess?.();
-    }
-  }, [state.success, onSuccess]);
+  const onSuccess = (note: InterviewNote) => {
+    onCreate(note);
+    setShowForm(false);
+  };
 
   return (
-    <form action={formAction} className='space-y-3'>
-      <input type='hidden' name='interviewId' value={interviewId} />
-      <div className='space-y-2'>
-        <label className='text-sm font-medium text-muted-foreground'>
-          Nueva nota
-        </label>
-        <Textarea
-          name='content'
-          placeholder='Seguimiento, próximos pasos, feedback recibido...'
-          required
-        />
-      </div>
-      {state.message && (
-        <p
-          className={`text-sm ${
-            state.success ? 'text-emerald-600' : 'text-destructive'
-          }`}
+    <div>
+      {!showForm && (
+        <Button
+          variant='dashed'
+          onClick={() => setShowForm(true)}
+          size='xlg'
+          className='flex items-center justify-start gap-2'
         >
-          {state.message}
-        </p>
+          <Plus className='h4 w-4' /> Add a general note about this
+          application...
+        </Button>
       )}
-      <Button type='submit'>Agregar nota</Button>
-    </form>
+      {showForm && (
+        <Card className='mb-0'>
+          <InterviewNoteForm
+            action={addInterviewNoteAction}
+            defaultValues={{
+              interviewId,
+              content: '',
+            }}
+            onCancel={() => setShowForm(false)}
+            onSuccess={onSuccess}
+          />
+        </Card>
+      )}
+    </div>
   );
 }

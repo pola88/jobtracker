@@ -2,6 +2,7 @@
 
 import { flexRender } from '@tanstack/react-table';
 
+import { DataTableSkeletonProps } from '@/components/data-table/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -11,8 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-import { DataTableSkeletonProps } from './types';
 
 export function DataTableSkeleton<TData>({
   table,

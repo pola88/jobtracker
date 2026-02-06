@@ -67,6 +67,7 @@ const Field = <T extends z.ZodType>({
             ) : type === 'textarea' ? (
               <Textarea
                 placeholder={placeholder}
+                className='min-h-25'
                 {...field}
                 disabled={disabled}
               />

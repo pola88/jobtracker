@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
 import type { Interview } from '@prisma/client';
-import { useRouter } from 'next/navigation';
 
+import { useModal } from '@/hooks/use-modal';
 import { countInterview, getInterviews } from '@/lib/data/interviews';
 import { useInterviewStore } from '@/stores/interview';
 
@@ -17,8 +17,8 @@ interface InterviewsTableProps {
 
 export function InterviewsTable({ userId }: InterviewsTableProps) {
   const [isLoading, startTransaction] = useTransition();
-  const router = useRouter();
   const updatedAt = useInterviewStore((state) => state.updatedAt);
+  const { toggleModal } = useModal({ modalName: 'ShowInterviewModal' });
 
   const [fetchResult, setFetchResult] = useState<{
     nextCursor?: string;
@@ -57,9 +57,9 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
 
   const handleOnRowClick = useCallback(
     (row: Interview) => {
-      router.push(`/interviews/${row.id}/edit`);
+      toggleModal(row.id);
     },
-    [router],
+    [toggleModal],
   );
 
   return (

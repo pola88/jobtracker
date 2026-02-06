@@ -1,26 +1,22 @@
+import { InterviewStepStatus } from '@prisma/client';
 import { z } from 'zod';
 
 export const interviewStepSchema = z.object({
   interviewId: z.string().cuid('Entrevista inválida'),
   title: z.string().min(2, 'El título es obligatorio'),
-  type: z.string().min(2, 'Define el tipo de instancia'),
-  scheduledAt: z
-    .string()
-    .optional()
-    .transform((value) => (value ? new Date(value) : undefined)),
-  completedAt: z
-    .string()
-    .optional()
-    .transform((value) => (value ? new Date(value) : undefined)),
-  outcome: z
-    .string()
-    .optional()
-    .transform((value) => value?.trim() || undefined),
+  status: z.nativeEnum(InterviewStepStatus),
+  scheduledAt: z.coerce.date(),
   notes: z
-    .string()
+    .union([z.string(), z.literal('')])
     .optional()
-    .transform((value) => value?.trim() || undefined),
+    .transform((value): string | undefined => {
+      if (!value) return undefined;
+      const trimmed = value.trim();
+      return trimmed === '' ? undefined : trimmed;
+    }),
 });
+
+export type InterviewStepType = z.infer<typeof interviewStepSchema>;
 
 export const updateStepSchema = interviewStepSchema.extend({
   stepId: z.string().cuid('Paso inválido'),

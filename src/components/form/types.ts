@@ -3,6 +3,8 @@ import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 
 import { z } from 'zod';
 
+import { ButtonProps } from '../ui/button';
+
 export type SelectFieldOption = {
   label: string;
   value: string;
@@ -68,6 +70,8 @@ export type FormProps<T extends z.ZodTypeAny> = {
   isLoading: boolean;
   submitLabel?: string;
   error?: string | null;
+  onCancel?: () => void;
+  btnSize?: ButtonProps['size'];
 };
 
 export type SelectFieldProps = {

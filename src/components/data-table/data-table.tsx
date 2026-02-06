@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-table';
 
 import Button from '@/components/button';
+import { DataTableSkeleton } from '@/components/skeletons/data-table';
 import {
   Select,
   SelectContent,
@@ -24,7 +25,6 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 
-import { DataTableSkeleton } from './data-table-skeleton';
 import { styles } from './styles';
 import { DataTableProps } from './types';
 

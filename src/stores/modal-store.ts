@@ -13,7 +13,6 @@ type ModalStore = {
 
 export const useModalStore = create<ModalStore>((set) => ({
   modalStatus: {},
-  objectId: null,
   openModal: (modalName: string, objectId?: string) =>
     set((state) => ({
       modalStatus: {

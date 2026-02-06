@@ -1,58 +1,46 @@
-import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 
-import { AddNoteForm } from '@/components/interviews/add-note-form';
-import { DeleteNoteForm } from '@/components/interviews/remove-note-form';
-import { CollapsibleSection } from '@/components/ui/collapsible-section';
+import { InterviewNote } from '@prisma/client';
 
-type Note = {
-  id: string;
-  content: string;
-  createdAt: Date;
-};
+import { getInterviewNotes } from '@/lib/data/interviews';
+
+import { InterviewNotesStepListSkeleton } from '../skeletons/interview-notes-steps-list';
+import { AddNoteForm } from './add-note-form';
+import { NoteItem } from './note-item';
 
 type NotesPanelProps = {
   interviewId: string;
-  notes: Note[];
 };
 
-export function NotesPanel({ interviewId, notes }: NotesPanelProps) {
-  return (
-    <CollapsibleSection
-      title='Notas internas'
-      description='Observaciones rápidas, feedback o recordatorios.'
-      defaultOpen={false}
-    >
-      <div className='space-y-6'>
-        <AddNoteForm interviewId={interviewId} />
+export function NotesPanel({ interviewId }: NotesPanelProps) {
+  const [allNotes, setNotes] = useState<InterviewNote[]>([]);
+  const [isLoadingNotes, startNotesTransaction] = useTransition();
 
-        <div className='space-y-3'>
-          {notes.length === 0 && (
-            <p className='text-sm text-muted-foreground'>
-              Aún no registraste notas para esta entrevista.
-            </p>
-          )}
-          {notes.map((note) => (
-            <article
-              key={note.id}
-              className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-xs'
-            >
-              <div className='flex items-center justify-between gap-4'>
-                <p className='text-xs uppercase tracking-wide text-muted-foreground'>
-                  {formatDistanceToNow(note.createdAt, {
-                    locale: es,
-                    addSuffix: true,
-                  })}
-                </p>
-                <DeleteNoteForm noteId={note.id} interviewId={interviewId} />
-              </div>
-              <p className='mt-2 text-sm leading-relaxed text-foreground/90 whitespace-pre-line'>
-                {note.content}
-              </p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </CollapsibleSection>
+  // const handleOnEdit = () => {};
+  const onCreate = useCallback((note: InterviewNote) => {
+    setNotes((prev) => [note, ...prev]);
+  }, []);
+
+  useEffect(() => {
+    startNotesTransaction(() => {
+      const loadNotes = async () => {
+        const notes = await getInterviewNotes(interviewId);
+        setNotes(notes);
+      };
+      loadNotes();
+    });
+  }, [interviewId]);
+
+  return (
+    <div className='no-scrollbar h-[50vh] overflow-y-auto flex flex-col gap-4'>
+      {!isLoadingNotes && (
+        <AddNoteForm interviewId={interviewId} onCreate={onCreate} />
+      )}
+      {isLoadingNotes && <InterviewNotesStepListSkeleton />}
+
+      {allNotes.map((note) => (
+        <NoteItem key={note.id} note={note} onEdit={() => {}} />
+      ))}
+    </div>
   );
 }

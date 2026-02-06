@@ -1,12 +1,12 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { InterviewStep } from '@prisma/client';
+import { revalidateTag } from 'next/cache';
 
 import {
   invalidateInterviewCaches,
   touchInterview,
 } from '@/actions/interviews';
-import type { ActionResponse } from '@/actions/interviews';
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import {
@@ -15,23 +15,18 @@ import {
   updateStepSchema,
 } from '@/lib/validators/interview-step';
 
-const initialState: ActionResponse = {
-  success: false,
+export type ActionResponse = {
+  success: boolean;
+  message?: string;
+  step?: InterviewStep;
 };
 
-function refreshEditPage(interviewId: string) {
-  revalidatePath(`/interviews/${interviewId}/edit`);
-}
-
-export async function createInterviewStepAction(
-  _prevState: ActionResponse = initialState,
+export async function addInterviewStepAction(
+  _prevState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
-  void _prevState;
   try {
-    const parsed = interviewStepSchema.safeParse(
-      Object.fromEntries(formData.entries()),
-    );
+    const parsed = interviewStepSchema.safeParse(formData);
     if (!parsed.success) {
       return { success: false, message: 'Paso inválido' };
     }
@@ -45,23 +40,21 @@ export async function createInterviewStepAction(
       return { success: false, message: 'Entrevista no encontrada' };
     }
 
-    await prisma.$transaction([
-      prisma.interviewStep.create({
+    await prisma.$transaction(async (tx) => {
+      await tx.interviewStep.create({
         data: {
           interviewId: interview.id,
           title: parsed.data.title,
-          type: parsed.data.type,
           scheduledAt: parsed.data.scheduledAt,
-          completedAt: parsed.data.completedAt,
-          outcome: parsed.data.outcome,
+          status: parsed.data.status,
           notes: parsed.data.notes,
         },
-      }),
-      touchInterview(interview.id),
-    ]);
+      });
+      await touchInterview(interview.id, tx);
+    });
 
-    refreshEditPage(interview.id);
     invalidateInterviewCaches();
+    revalidateTag(`interviews-steps-${parsed.data.interviewId}`);
     return { success: true, message: 'Paso agregado' };
   } catch (error) {
     console.error(error);
@@ -70,14 +63,12 @@ export async function createInterviewStepAction(
 }
 
 export async function updateInterviewStepAction(
-  _prevState: ActionResponse = initialState,
+  _prevState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
   void _prevState;
   try {
-    const parsed = updateStepSchema.safeParse(
-      Object.fromEntries(formData.entries()),
-    );
+    const parsed = updateStepSchema.safeParse(formData);
     if (!parsed.success) {
       return { success: false, message: 'Paso inválido' };
     }
@@ -99,15 +90,13 @@ export async function updateInterviewStepAction(
       where: { id: step.id },
       data: {
         title: parsed.data.title,
-        type: parsed.data.type,
         scheduledAt: parsed.data.scheduledAt,
-        completedAt: parsed.data.completedAt,
-        outcome: parsed.data.outcome,
+        status: parsed.data.status,
         notes: parsed.data.notes,
       },
     });
 
-    refreshEditPage(step.interviewId);
+    revalidateTag(`interviews-steps-${step.id}`);
     return { success: true, message: 'Paso actualizado' };
   } catch (error) {
     console.error(error);
@@ -136,14 +125,14 @@ export async function deleteInterviewStepAction(formData: FormData) {
       return;
     }
 
-    await prisma.$transaction([
-      prisma.interviewStep.delete({
+    await prisma.$transaction(async (tx) => {
+      await tx.interviewStep.delete({
         where: { id: parsed.data.stepId },
-      }),
-      touchInterview(step.interviewId),
-    ]);
+      });
+      await touchInterview(step.interviewId, tx);
+    });
 
-    refreshEditPage(parsed.data.interviewId);
+    revalidateTag(`interviews-steps-${step.interviewId}`);
     invalidateInterviewCaches();
   } catch (error) {
     console.error(error);

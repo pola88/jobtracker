@@ -3,6 +3,7 @@
 import { InterviewStatus } from '@prisma/client';
 import { unstable_cache } from 'next/cache';
 
+import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 interface GetInterviewsProps {
@@ -73,11 +74,20 @@ export const countInterview = (userId: string) =>
     },
   )();
 
-export async function getInterviewById(id: string, userId: string) {
-  return prisma.interview.findFirst({
-    where: { id, userId },
-  });
-}
+export const getInterviewById = async (id: string) => {
+  const user = await requireCurrentUser();
+  return unstable_cache(
+    async () => {
+      return prisma.interview.findFirst({
+        where: { id, userId: user.id },
+      });
+    },
+    ['getInterview', id, user.id],
+    {
+      tags: [`interview:${id}`],
+    },
+  )();
+};
 
 export async function getInterviewStepsAndNotes(interviewId: string) {
   return Promise.all([
@@ -91,6 +101,36 @@ export async function getInterviewStepsAndNotes(interviewId: string) {
     }),
   ]);
 }
+
+export const getInterviewSteps = (interviewId: string) =>
+  unstable_cache(
+    async () => {
+      return prisma.interviewStep.findMany({
+        where: { interviewId },
+        orderBy: { createdAt: 'desc' },
+      });
+    },
+    ['interviews-count', interviewId],
+    {
+      revalidate: false,
+      tags: [`interviews-steps-${interviewId}`],
+    },
+  )();
+
+export const getInterviewNotes = (interviewId: string) =>
+  unstable_cache(
+    async () => {
+      return prisma.interviewNote.findMany({
+        where: { interviewId },
+        orderBy: { createdAt: 'desc' },
+      });
+    },
+    ['interviews-count', interviewId],
+    {
+      revalidate: false,
+      tags: [`interviews-notes-${interviewId}`],
+    },
+  )();
 
 export const getMetric = (userId: string) =>
   unstable_cache(

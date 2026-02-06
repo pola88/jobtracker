@@ -1,6 +1,7 @@
 import { Card } from '@/components/card';
 import { InterviewsTable } from '@/components/interviews-table';
 import { Metrics } from '@/components/interviews/metrics';
+import { ShowInterviewModal } from '@/components/interviews/show-interview-modal';
 import { requireCurrentUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
@@ -19,6 +20,7 @@ export default async function InterviewsPage() {
       >
         <InterviewsTable userId={user.id} />
       </Card>
+      <ShowInterviewModal />
     </>
   );
 }

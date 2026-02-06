@@ -111,6 +111,8 @@ const FormInner = <T extends z.ZodTypeAny>(
     isLoading,
     submitLabel = 'Submit',
     error,
+    onCancel,
+    btnSize = 'default',
   }: FormProps<T>,
   ref: React.ForwardedRef<FormRef | undefined>,
 ) => {
@@ -132,6 +134,8 @@ const FormInner = <T extends z.ZodTypeAny>(
         .catch(() => callback?.(false, false));
     },
   }));
+
+  const loadingState = isLoading || form.formState.isSubmitted;
 
   return (
     <FormComponent {...form}>
@@ -169,7 +173,22 @@ const FormInner = <T extends z.ZodTypeAny>(
         {error && <p className='text-sm text-destructive'>{error}</p>}
         {!ref && (
           <div className={styles.footer}>
-            <Button variant='destructive' isLoading={isLoading} type='submit'>
+            {onCancel && (
+              <Button
+                size={btnSize}
+                variant='outline'
+                disabled={loadingState}
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              size={btnSize}
+              variant='default'
+              isLoading={loadingState}
+              type='submit'
+            >
               {submitLabel}
             </Button>
           </div>

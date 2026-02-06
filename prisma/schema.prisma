@@ -60,18 +60,25 @@ model InterviewNote {
   createdAt   DateTime   @default(now())
 }
 
+enum InterviewStepStatus {
+  passed
+  neutral
+  failed
+  canceled
+  scheduled
+  waiting
+}
+
 model InterviewStep {
-  id            String     @id @default(cuid())
+  id            String                @id @default(cuid())
   interviewId   String
-  interview     Interview  @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  interview     Interview             @relation(fields: [interviewId], references: [id], onDelete: Cascade)
   title         String
-  type          String
   scheduledAt   DateTime?
-  completedAt   DateTime?
-  outcome       String?
+  status        InterviewStepStatus   @default(scheduled)
   notes         String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
 }
 
 enum CompensationType {

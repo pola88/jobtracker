@@ -13,12 +13,18 @@ export type ActionResponse = {
   interviewId?: string;
 };
 
-export const invalidateInterviewCaches = async () => {
+export const invalidateInterviewCaches = async (id?: string) => {
   revalidateTag('interviews');
+  if (id) {
+    revalidateTag(`interview:${id}`);
+  }
 };
 
-export const touchInterview = (interviewId: string) =>
-  prisma.interview.update({
+export const touchInterview = (
+  interviewId: string,
+  tx: Prisma.TransactionClient = prisma,
+) =>
+  tx.interview.update({
     where: {
       id: interviewId,
     },
@@ -106,7 +112,7 @@ export async function updateInterviewAction(
       },
     });
 
-    invalidateInterviewCaches();
+    invalidateInterviewCaches(interviewId);
     return {
       success: true,
       message: 'Entrevista actualizada',
@@ -174,7 +180,7 @@ export async function updateInterviewStatus(
       },
     });
 
-    invalidateInterviewCaches();
+    invalidateInterviewCaches(interviewId);
   } catch (error) {
     console.error(error);
     throw error;
