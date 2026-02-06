@@ -4,6 +4,7 @@ import React, { useImperativeHandle } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Form as FormComponent } from '@/components/ui/form';
@@ -110,9 +111,10 @@ const FormInner = <T extends z.ZodTypeAny>(
     render,
     isLoading,
     submitLabel = 'Submit',
-    error,
     onCancel,
     btnSize = 'default',
+    toastMsg,
+    skipToast = false,
   }: FormProps<T>,
   ref: React.ForwardedRef<FormRef | undefined>,
 ) => {
@@ -120,11 +122,29 @@ const FormInner = <T extends z.ZodTypeAny>(
     resolver: zodResolver(schema as T),
     defaultValues,
   });
-  const submitHandler = form.handleSubmit(onSubmit, (errors) => {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('Form validation errors:', errors);
-    }
-  });
+  const submitHandler = form.handleSubmit(
+    async (data) => {
+      const result = await onSubmit(data);
+      if (!result.success) {
+        form.setError('root', {
+          type: 'server',
+          message: result.message || 'Something got wrong, try again!',
+        });
+      } else if (!skipToast) {
+        toast.success(toastMsg || 'Saved correctly', {
+          position: 'top-right',
+          classNames: {
+            toast: '!bg-emerald-500/90 !text-black',
+          },
+        });
+      }
+    },
+    (errors) => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Form validation errors:', errors);
+      }
+    },
+  );
 
   useImperativeHandle(ref, () => ({
     submit: (callback) => {
@@ -135,7 +155,7 @@ const FormInner = <T extends z.ZodTypeAny>(
     },
   }));
 
-  const loadingState = isLoading || form.formState.isSubmitted;
+  const loadingState = isLoading || form.formState.isSubmitting;
 
   return (
     <FormComponent {...form}>
@@ -170,7 +190,11 @@ const FormInner = <T extends z.ZodTypeAny>(
             />
           );
         })}
-        {error && <p className='text-sm text-destructive'>{error}</p>}
+        {form.formState.errors.root?.message && (
+          <p className='text-sm text-destructive'>
+            {form.formState.errors.root.message}
+          </p>
+        )}
         {!ref && (
           <div className={styles.footer}>
             {onCancel && (

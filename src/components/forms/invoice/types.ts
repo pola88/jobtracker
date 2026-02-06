@@ -3,6 +3,8 @@ import { UseFormReturn } from 'react-hook-form';
 import { BusinessProfile } from '@prisma/client';
 import { z } from 'zod';
 
+import { ActionResponseBase } from '@/lib/types';
+
 const lineItemSchema = z.object({
   id: z.string().min(1),
   description: z.string().min(1),
@@ -43,5 +45,5 @@ export interface LineItemProps {
 
 export interface InvoiceFormProps {
   businessProfile: BusinessProfile | null;
-  onPreview: (data: Invoice) => void;
+  onPreview: (data: FormData) => Promise<ActionResponseBase>;
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { useFormState } from 'react-dom';
 
 import { CompensationType } from '@prisma/client';
 import { z } from 'zod';
@@ -91,16 +90,9 @@ const fields: FieldType<typeof interviewSchema>[] = [
 ];
 
 type InterviewFormProps = {
-  action: (
-    state: ActionResponse,
-    formData: FormData,
-  ) => Promise<ActionResponse>;
+  action: (formData: FormData) => Promise<ActionResponse>;
   defaultValues?: InterviewTypes;
   submitLabel?: string;
-};
-
-const initialState: ActionResponse = {
-  success: false,
 };
 
 export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
@@ -108,16 +100,13 @@ export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
     { action, defaultValues = DEFAULT_VALUES, submitLabel = 'Guardar' },
     ref,
   ) => {
-    const [_, formAction, isPending] = useFormState(action, initialState);
-
     return (
       <Form
         ref={ref}
         defaultValues={defaultValues}
-        onSubmit={(data) => formAction(data as unknown as FormData)}
+        onSubmit={action}
         schema={interviewSchema}
         fields={fields}
-        isLoading={isPending}
         submitLabel={submitLabel}
       />
     );

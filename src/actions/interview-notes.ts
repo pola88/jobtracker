@@ -10,6 +10,7 @@ import {
 } from '@/actions/interviews';
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { ActionResponseBase } from '@/lib/types';
 import { interviewNoteSchema } from '@/lib/validators/interview-note';
 
 const deleteNoteSchema = z.object({
@@ -17,14 +18,11 @@ const deleteNoteSchema = z.object({
   interviewId: z.string().cuid('Identificador inválido'),
 });
 
-export interface ActionResponse {
-  success: boolean;
-  message?: string;
+export type ActionResponse = ActionResponseBase & {
   note?: InterviewNote;
-}
+};
 
 export async function addInterviewNoteAction(
-  _prevState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
   try {
@@ -60,7 +58,6 @@ export async function addInterviewNoteAction(
 
     invalidateInterviewCaches();
     revalidateTag(`interviews-notes-${parsed.data.interviewId}`);
-    await new Promise((res) => setTimeout(res, 10000));
 
     return { success: true, message: 'Nota agregada', note };
   } catch (error) {

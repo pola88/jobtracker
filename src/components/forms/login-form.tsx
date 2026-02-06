@@ -1,19 +1,14 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-
 import { useRouter, useSearchParams } from 'next/navigation';
-import { z } from 'zod';
 
 import { loginAction } from '@/actions/login';
 import Form from '@/components/form';
-import { loginSchema } from '@/lib/validators/auth';
+import { LoginSchemaType, loginSchema } from '@/lib/validators/auth';
 
 import { Field } from '../form/types';
 
-type LoginSchema = z.infer<typeof loginSchema>;
-
-const DEFAULT_VALUES: LoginSchema = {
+const DEFAULT_VALUES: LoginSchemaType = {
   email: '',
   password: '',
 };
@@ -39,33 +34,24 @@ export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirectTo') ?? '/interviews';
-  const [error, setError] = useState<string | null>(null);
 
-  const [isPending, startTransition] = useTransition();
-  const submit = async (values: LoginSchema) => {
-    setError(null);
-    startTransition(async () => {
-      const response = await loginAction(values);
-
-      if (!response.success) {
-        setError(response.message);
-        return;
-      }
-
+  const onSubmit = async (data: FormData) => {
+    const result = await loginAction(data);
+    if (result.success) {
       router.replace(redirectTo);
       router.refresh();
-    });
+    }
+    return result;
   };
 
   return (
     <Form
       defaultValues={DEFAULT_VALUES}
-      onSubmit={(data) => submit(data as unknown as LoginSchema)}
+      onSubmit={onSubmit}
       schema={loginSchema}
       fields={fields}
-      isLoading={isPending}
-      error={error}
-      submitLabel='Ingresar'
+      submitLabel='Login'
+      skipToast
     />
   );
 }

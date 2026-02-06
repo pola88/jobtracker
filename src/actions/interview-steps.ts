@@ -9,20 +9,18 @@ import {
 } from '@/actions/interviews';
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { ActionResponseBase } from '@/lib/types';
 import {
   deleteStepSchema,
   interviewStepSchema,
   updateStepSchema,
 } from '@/lib/validators/interview-step';
 
-export type ActionResponse = {
-  success: boolean;
-  message?: string;
+export type ActionResponse = ActionResponseBase & {
   step?: InterviewStep;
 };
 
 export async function addInterviewStepAction(
-  _prevState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
   try {
@@ -63,10 +61,8 @@ export async function addInterviewStepAction(
 }
 
 export async function updateInterviewStepAction(
-  _prevState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
-  void _prevState;
   try {
     const parsed = updateStepSchema.safeParse(formData);
     if (!parsed.success) {

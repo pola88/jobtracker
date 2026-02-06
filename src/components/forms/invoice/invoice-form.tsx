@@ -34,9 +34,7 @@ const InvoiceForm = ({ businessProfile, onPreview }: InvoiceFormProps) => {
     <Form
       defaultValues={defaultValues}
       isLoading={false}
-      onSubmit={(data) => {
-        onPreview(data);
-      }}
+      onSubmit={onPreview}
       schema={invoiceSchema}
       render={(form) => (
         <>

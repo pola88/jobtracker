@@ -1,7 +1,6 @@
 'use client';
 
-import { forwardRef, useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { forwardRef } from 'react';
 
 import { InterviewNote } from '@prisma/client';
 
@@ -29,39 +28,31 @@ const fields: FieldType<typeof interviewNoteSchema>[] = [
 ];
 
 type InterviewNoteFormProps = {
-  action: (
-    state: ActionResponse,
-    formData: FormData,
-  ) => Promise<ActionResponse>;
+  action: (formData: FormData) => Promise<ActionResponse>;
   defaultValues?: InterviewNoteType;
   onCancel: () => void;
   onSuccess?: (note: InterviewNote) => void;
 };
 
-const initialState: ActionResponse = {
-  success: false,
-};
-
 export const InterviewNoteForm = forwardRef<FormRef, InterviewNoteFormProps>(
   ({ action, defaultValues = DEFAULT_VALUES, onCancel, onSuccess }, ref) => {
-    const [state, formAction, isPending] = useFormState(action, initialState);
-    useEffect(() => {
-      if (state.success && state.note) {
-        onSuccess?.(state.note);
+    const onSubmit = async (data: FormData) => {
+      const result = await action(data);
+      if (result.success && result.note) {
+        onSuccess?.(result.note);
       }
-    }, [state, onSuccess]);
+      return result;
+    };
 
     return (
       <Form
         ref={ref}
         defaultValues={defaultValues}
-        onSubmit={(data) => formAction(data as unknown as FormData)}
+        onSubmit={onSubmit}
         schema={interviewNoteSchema}
         fields={fields}
-        isLoading={isPending}
         submitLabel='Add note'
         onCancel={onCancel}
-        error={!state.success ? state.message : null}
         btnSize='sm'
       />
     );

@@ -11,6 +11,10 @@ type BusinessProfileProps = {
 const BusinessProfile = async ({ isOrganization }: BusinessProfileProps) => {
   const businessProfile = await getBusinessProfile(isOrganization);
 
+  const handleOnSubmit = async (data: FormData) => {
+    return updateOrCreateBusinessProfileAction(isOrganization, data);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -22,13 +26,7 @@ const BusinessProfile = async ({ isOrganization }: BusinessProfileProps) => {
       </CardHeader>
       <CardContent>
         <BusinessProfileForm
-          action={async (_, formData) => {
-            'use server';
-            return updateOrCreateBusinessProfileAction(
-              isOrganization,
-              formData,
-            );
-          }}
+          action={handleOnSubmit}
           isOrganization={isOrganization}
           defaultValues={{
             firstName: businessProfile?.firstName || '',

@@ -5,11 +5,10 @@ import { revalidateTag } from 'next/cache';
 
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { ActionResponseBase } from '@/lib/types';
 import { interviewSchema } from '@/lib/validators/interview';
 
-export type ActionResponse = {
-  success: boolean;
-  message?: string;
+export type ActionResponse = ActionResponseBase & {
   interviewId?: string;
 };
 
@@ -34,7 +33,6 @@ export const touchInterview = (
   });
 
 export async function createInterviewAction(
-  _prevState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
   try {
@@ -77,7 +75,6 @@ export async function createInterviewAction(
 
 export async function updateInterviewAction(
   interviewId: string,
-  _prevState: ActionResponse,
   formData: FormData,
 ): Promise<ActionResponse> {
   try {

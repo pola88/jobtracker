@@ -1,21 +1,21 @@
-import { z } from 'zod';
-
+import { ActionResponseBase } from '@/lib/types';
 import { loginSchema } from '@/lib/validators/auth';
 
-type LoginSchema = z.infer<typeof loginSchema>;
-
-export type ActionResponse = {
-  success: boolean;
-  message: string;
-};
-
 export async function loginAction(
-  values: LoginSchema,
-): Promise<ActionResponse> {
+  values: FormData,
+): Promise<ActionResponseBase> {
   try {
+    const parsed = loginSchema.safeParse(values);
+    if (!parsed.success) {
+      return { success: false, message: 'Invalid fields' };
+    }
+
     const response = await fetch('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify(values),
+      body: JSON.stringify({
+        email: parsed.data.email,
+        password: parsed.data.password,
+      }),
     });
 
     if (!response.ok) {

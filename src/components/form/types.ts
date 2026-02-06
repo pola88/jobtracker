@@ -3,6 +3,8 @@ import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 
 import { z } from 'zod';
 
+import { ActionResponseBase } from '@/lib/types';
+
 import { ButtonProps } from '../ui/button';
 
 export type SelectFieldOption = {
@@ -63,15 +65,16 @@ export type Field<T extends z.ZodTypeAny> =
 
 export type FormProps<T extends z.ZodTypeAny> = {
   defaultValues: z.infer<T>;
-  onSubmit: (data: z.infer<T>) => void;
+  onSubmit: (data: FormData) => Promise<ActionResponseBase>;
   schema: T;
   fields?: Field<T>[];
   render?: (form: UseFormReturn<z.infer<T>>) => React.ReactNode;
-  isLoading: boolean;
+  isLoading?: boolean;
   submitLabel?: string;
-  error?: string | null;
   onCancel?: () => void;
   btnSize?: ButtonProps['size'];
+  toastMsg?: string;
+  skipToast?: boolean;
 };
 
 export type SelectFieldProps = {

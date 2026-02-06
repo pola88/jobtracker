@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
-import { useFormState } from 'react-dom';
+import { useMemo } from 'react';
 
 import countriesList from 'country-list';
-import { toast } from 'sonner';
 
 import { ActionResponse } from '@/actions/invoices-settings';
 import Form from '@/components/form';
@@ -15,10 +13,7 @@ import {
 } from '@/lib/validators/business-profile-individual';
 
 type BusinessProfileFormProps = {
-  action: (
-    state: ActionResponse,
-    formData: FormData,
-  ) => Promise<ActionResponse>;
+  action: (formData: FormData) => Promise<ActionResponse>;
   isOrganization: boolean;
   defaultValues?: BusinessProfileIndividualTypes;
 };
@@ -36,10 +31,6 @@ const DEFAULT_VALUES: BusinessProfileIndividualTypes = {
   state: '',
   postalCode: '',
   country: 'US',
-};
-
-const initialState: ActionResponse = {
-  success: false,
 };
 
 const fields: FieldType<typeof businessProfileIndividualSchema>[] = [
@@ -165,13 +156,10 @@ const BusinessProfileForm = ({
   isOrganization,
   defaultValues = DEFAULT_VALUES,
 }: BusinessProfileFormProps) => {
-  const [state, formAction, isPending] = useFormState(action, initialState);
-
-  useEffect(() => {
-    if (state.success) {
-      toast.success('Información guardada correctamente');
-    }
-  }, [state.success]);
+  const onSubmit = async (data: FormData) => {
+    const result = await action(data);
+    return result;
+  };
 
   const values = useMemo(() => {
     return {
@@ -183,10 +171,9 @@ const BusinessProfileForm = ({
   return (
     <Form
       defaultValues={values}
-      onSubmit={(data) => formAction(data as unknown as FormData)}
+      onSubmit={onSubmit}
       schema={businessProfileIndividualSchema}
       fields={fields}
-      isLoading={isPending}
       submitLabel='Guardar'
     />
   );

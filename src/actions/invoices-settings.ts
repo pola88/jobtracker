@@ -2,11 +2,10 @@
 
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { ActionResponseBase } from '@/lib/types';
 import { businessProfileIndividualSchema } from '@/lib/validators/business-profile-individual';
 
-export type ActionResponse = {
-  success: boolean;
-  message?: string;
+export type ActionResponse = ActionResponseBase & {
   businessProfileId?: string;
 };
 
