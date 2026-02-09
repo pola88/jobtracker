@@ -16,6 +16,11 @@ import {
   updateStepSchema,
 } from '@/lib/validators/interview-step';
 
+type DeleteInterviewStepAttrs = {
+  stepId: string;
+  interviewId: string;
+};
+
 export type ActionResponse = ActionResponseBase & {
   step?: InterviewStep;
 };
@@ -100,20 +105,16 @@ export async function updateInterviewStepAction(
   }
 }
 
-export async function deleteInterviewStepAction(formData: FormData) {
+export async function deleteInterviewStepAction({
+  stepId,
+  interviewId,
+}: DeleteInterviewStepAttrs) {
   try {
-    const parsed = deleteStepSchema.safeParse(
-      Object.fromEntries(formData.entries()),
-    );
-    if (!parsed.success) {
-      throw new Error('Paso inválido');
-    }
-
     const user = await requireCurrentUser();
     const step = await prisma.interviewStep.findFirst({
       where: {
-        id: parsed.data.stepId,
-        interview: { id: parsed.data.interviewId, userId: user.id },
+        id: stepId,
+        interview: { id: interviewId, userId: user.id },
       },
     });
 
@@ -123,7 +124,7 @@ export async function deleteInterviewStepAction(formData: FormData) {
 
     await prisma.$transaction(async (tx) => {
       await tx.interviewStep.delete({
-        where: { id: parsed.data.stepId },
+        where: { id: stepId },
       });
       await touchInterview(step.interviewId, tx);
     });

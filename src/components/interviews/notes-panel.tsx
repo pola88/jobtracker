@@ -16,9 +16,12 @@ export function NotesPanel({ interviewId }: NotesPanelProps) {
   const [allNotes, setNotes] = useState<InterviewNote[]>([]);
   const [isLoadingNotes, startNotesTransaction] = useTransition();
 
-  // const handleOnEdit = () => {};
   const onCreate = useCallback((note: InterviewNote) => {
     setNotes((prev) => [note, ...prev]);
+  }, []);
+
+  const handleOnDelete = useCallback((noteId: string) => {
+    setNotes((prev) => prev.filter((note) => note.id !== noteId));
   }, []);
 
   useEffect(() => {
@@ -39,7 +42,12 @@ export function NotesPanel({ interviewId }: NotesPanelProps) {
       {isLoadingNotes && <InterviewNotesStepListSkeleton />}
 
       {allNotes.map((note) => (
-        <NoteItem key={note.id} note={note} onEdit={() => {}} />
+        <NoteItem
+          key={note.id}
+          note={note}
+          onEdit={() => {}}
+          onDelete={handleOnDelete}
+        />
       ))}
     </div>
   );

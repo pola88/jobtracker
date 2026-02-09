@@ -13,10 +13,10 @@ import { prisma } from '@/lib/prisma';
 import { ActionResponseBase } from '@/lib/types';
 import { interviewNoteSchema } from '@/lib/validators/interview-note';
 
-const deleteNoteSchema = z.object({
-  noteId: z.string().cuid('Identificador inválido'),
-  interviewId: z.string().cuid('Identificador inválido'),
-});
+type DeleteInterviewNoteAttrs = {
+  noteId: string;
+  interviewId: string;
+};
 
 export type ActionResponse = ActionResponseBase & {
   note?: InterviewNote;
@@ -66,23 +66,17 @@ export async function addInterviewNoteAction(
   }
 }
 
-export async function deleteInterviewNoteAction(
-  formData: FormData,
-): Promise<void> {
+export async function deleteInterviewNoteAction({
+  noteId,
+  interviewId,
+}: DeleteInterviewNoteAttrs): Promise<void> {
   try {
-    const parsed = deleteNoteSchema.safeParse(
-      Object.fromEntries(formData.entries()),
-    );
-    if (!parsed.success) {
-      throw new Error('Datos inválidos');
-    }
-
     const user = await requireCurrentUser();
     const note = await prisma.interviewNote.findFirst({
       where: {
-        id: parsed.data.noteId,
+        id: noteId,
         interview: {
-          id: parsed.data.interviewId,
+          id: interviewId,
           userId: user.id,
         },
       },
@@ -94,13 +88,13 @@ export async function deleteInterviewNoteAction(
 
     await prisma.$transaction(async (tx) => {
       await tx.interviewNote.delete({
-        where: { id: parsed.data.noteId },
+        where: { id: noteId },
       });
       await touchInterview(note.interviewId, tx);
     });
 
     invalidateInterviewCaches();
-    revalidateTag(`interviews-notes-${parsed.data.interviewId}`);
+    revalidateTag(`interviews-notes-${interviewId}`);
   } catch (error) {
     console.error(error);
     throw error;

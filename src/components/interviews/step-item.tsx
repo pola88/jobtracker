@@ -1,17 +1,21 @@
 'use client';
 
 import { Calendar, Clock, FileText, Pencil } from 'lucide-react';
+import { useCallback } from 'react';
 
 import { InterviewStep } from '@prisma/client';
 
+import { deleteInterviewStepAction } from '@/actions/interview-steps';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/helpers/date';
 
+import { DeleteButtonWithConfirm } from '../button/delete-btn';
 import { Badge, type BadgeProps } from '../ui/badge';
 
 type StepItemProps = {
   step: InterviewStep;
   onEdit: () => void;
+  onDelete: (stepId: string) => void;
 };
 
 type StatusMap = {
@@ -28,9 +32,17 @@ const statusPropsMap: Record<string, StatusMap> = {
   waiting: { variant: 'warning', text: 'Waiting' },
 };
 
-export function StepItem({ step, onEdit }: StepItemProps) {
+export function StepItem({ step, onEdit, onDelete }: StepItemProps) {
+  const handleOnDelete = useCallback(async () => {
+    await deleteInterviewStepAction({
+      stepId: step.id,
+      interviewId: step.interviewId,
+    });
+    onDelete(step.id);
+  }, [step, onDelete]);
+
   return (
-    <article className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-xs space-y-3'>
+    <article className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-xs space-y-3 group/interview-note relative'>
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <div>
           <h4 className='text-base font-semibold text-gray-900 mb-1'>
@@ -47,12 +59,11 @@ export function StepItem({ step, onEdit }: StepItemProps) {
             {step.type}
           </p> */}
         </div>
-        <div className='flex items-center gap-2'>
+        <div className='flex gap-1 group-hover/interview-note:visible invisible absolute right-1 top-1'>
           <Button
             type='button'
             variant='ghost'
-            size='sm'
-            className='h-8 px-2 text-muted-foreground'
+            size='icon'
             onClick={
               () => {
                 onEdit();
@@ -72,6 +83,7 @@ export function StepItem({ step, onEdit }: StepItemProps) {
           >
             <Pencil className='h-4 w-4' />
           </Button>
+          <DeleteButtonWithConfirm onConfirm={handleOnDelete} />
         </div>
       </div>
       <div className='flex flex-col gap-2 text-sm text-muted-foreground'>

@@ -4,7 +4,7 @@ import { Interview } from '@prisma/client';
 
 import { cn } from '@/lib/utils';
 
-import { ConfirmDelete } from './deleteBtn';
+import { DeleteBtn } from './deleteBtn';
 
 type InterviewActionsProps = {
   interview: Interview;
@@ -17,7 +17,7 @@ export const InterviewActions = ({
 }: InterviewActionsProps) => {
   return (
     <div className={cn(className)} onClick={(evt) => evt.stopPropagation()}>
-      <ConfirmDelete interview={interview} />
+      <DeleteBtn interview={interview} />
     </div>
   );
 };

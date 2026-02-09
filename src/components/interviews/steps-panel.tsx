@@ -19,6 +19,10 @@ export const StepsPanel = ({ interviewId }: StepsPanelProps) => {
   const [isLoadingSteps, startStepsTransaction] = useTransition();
 
   const handleOnEdit = () => {};
+  const handleOnDelete = useCallback((stepId: string) => {
+    setSteps((prev) => prev.filter((step) => step.id !== stepId));
+  }, []);
+
   const onCreate = useCallback((step: InterviewStep) => {
     setSteps((prev) => [step, ...prev]);
   }, []);
@@ -40,7 +44,12 @@ export const StepsPanel = ({ interviewId }: StepsPanelProps) => {
       )}
       {isLoadingSteps && <InterviewNotesStepListSkeleton />}
       {allSteps?.map((step) => (
-        <StepItem key={step.id} step={step} onEdit={handleOnEdit} />
+        <StepItem
+          key={step.id}
+          step={step}
+          onEdit={handleOnEdit}
+          onDelete={handleOnDelete}
+        />
       ))}
     </div>
   );
