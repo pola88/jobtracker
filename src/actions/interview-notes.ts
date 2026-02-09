@@ -66,6 +66,46 @@ export async function addInterviewNoteAction(
   }
 }
 
+export async function updateInterviewNote(
+  noteId: string,
+  formData: FormData,
+): Promise<ActionResponse> {
+  const parsed = interviewNoteSchema.safeParse(formData);
+  if (!parsed.success) {
+    return { success: false, message: 'Invalid note' };
+  }
+
+  const user = await requireCurrentUser();
+  const interview = await prisma.interview.findFirst({
+    where: {
+      id: parsed.data.interviewId,
+      userId: user.id,
+    },
+  });
+
+  if (!interview) {
+    return { success: false, message: 'Invalid note' };
+  }
+
+  const note = await prisma.interviewNote.update({
+    where: {
+      id: noteId,
+      interview: {
+        id: interview.id,
+      },
+    },
+    data: {
+      content: parsed.data.content,
+    },
+  });
+
+  if (!note) {
+    return { success: false, message: 'Invalid note' };
+  }
+
+  return { success: true, note };
+}
+
 export async function deleteInterviewNoteAction({
   noteId,
   interviewId,

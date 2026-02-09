@@ -1,20 +1,19 @@
 'use client';
 
-import { Calendar, Clock, FileText, Pencil } from 'lucide-react';
+import { Calendar, Clock, FileText } from 'lucide-react';
 import { useCallback } from 'react';
 
 import { InterviewStep } from '@prisma/client';
 
 import { deleteInterviewStepAction } from '@/actions/interview-steps';
-import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/helpers/date';
 
 import { DeleteButtonWithConfirm } from '../button/delete-btn';
+import { EditButton } from '../button/edit-btn';
 import { Badge, type BadgeProps } from '../ui/badge';
 
 type StepItemProps = {
   step: InterviewStep;
-  onEdit: () => void;
   onDelete: (stepId: string) => void;
 };
 
@@ -32,7 +31,7 @@ const statusPropsMap: Record<string, StatusMap> = {
   waiting: { variant: 'warning', text: 'Waiting' },
 };
 
-export function StepItem({ step, onEdit, onDelete }: StepItemProps) {
+export function StepItem({ step, onDelete }: StepItemProps) {
   const handleOnDelete = useCallback(async () => {
     await deleteInterviewStepAction({
       stepId: step.id,
@@ -40,6 +39,8 @@ export function StepItem({ step, onEdit, onDelete }: StepItemProps) {
     });
     onDelete(step.id);
   }, [step, onDelete]);
+
+  const handleOnEditBtn = () => {};
 
   return (
     <article className='rounded-2xl border border-border/60 bg-card/80 p-4 shadow-xs space-y-3 group/interview-note relative'>
@@ -60,29 +61,7 @@ export function StepItem({ step, onEdit, onDelete }: StepItemProps) {
           </p> */}
         </div>
         <div className='flex gap-1 group-hover/interview-note:visible invisible absolute right-1 top-1'>
-          <Button
-            type='button'
-            variant='ghost'
-            size='icon'
-            onClick={
-              () => {
-                onEdit();
-              }
-              // onEdit({
-              //   kind: 'step',
-              //   id: step.id,
-              //   title: step.title,
-              //   type: step.type,
-              //   scheduledAt: step.scheduledAt?.toISOString() ?? null,
-              //   completedAt: step.completedAt?.toISOString() ?? null,
-              //   notes: step.notes,
-              //   createdAt: step.createdAt?.toISOString() ?? '',
-              //   outcome: step.outcome,
-              // })
-            }
-          >
-            <Pencil className='h-4 w-4' />
-          </Button>
+          <EditButton onClick={handleOnEditBtn} />
           <DeleteButtonWithConfirm onConfirm={handleOnDelete} />
         </div>
       </div>

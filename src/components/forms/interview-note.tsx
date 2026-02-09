@@ -51,7 +51,7 @@ export const InterviewNoteForm = forwardRef<FormRef, InterviewNoteFormProps>(
         onSubmit={onSubmit}
         schema={interviewNoteSchema}
         fields={fields}
-        submitLabel='Add note'
+        submitLabel='Save'
         onCancel={onCancel}
         btnSize='sm'
       />

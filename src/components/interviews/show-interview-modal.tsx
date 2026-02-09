@@ -18,6 +18,7 @@ import { useModal } from '@/hooks/use-modal';
 import { getInterviewById } from '@/lib/data/interviews';
 import { formatDate } from '@/lib/helpers/date';
 
+import { FlipCard } from '../flipCard';
 import { InterviewStatus } from '../interview-status';
 import { NotesPanel } from './notes-panel';
 import { ShowPanel } from './show-panel';
@@ -86,6 +87,7 @@ export const ShowInterviewModal = () => {
             <hr className='-mx-6' />
             <div className='no-scrollbar -mx-4 max-h-9/10 px-4 py-4 flex'>
               <ShowPanel title='Interview timeline'>
+                {/* <FlipCard /> */}
                 <StepsPanel interviewId={modalStatus.id} />
               </ShowPanel>
               <ShowPanel title='Notes'>
