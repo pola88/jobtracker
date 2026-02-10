@@ -11,7 +11,6 @@ import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ActionResponseBase } from '@/lib/types';
 import {
-  deleteStepSchema,
   interviewStepSchema,
   updateStepSchema,
 } from '@/lib/validators/interview-step';

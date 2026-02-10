@@ -18,7 +18,6 @@ import { useModal } from '@/hooks/use-modal';
 import { getInterviewById } from '@/lib/data/interviews';
 import { formatDate } from '@/lib/helpers/date';
 
-import { FlipCard } from '../flipCard';
 import { InterviewStatus } from '../interview-status';
 import { NotesPanel } from './notes-panel';
 import { ShowPanel } from './show-panel';

@@ -2,7 +2,6 @@
 
 import { InterviewNote } from '@prisma/client';
 import { revalidateTag } from 'next/cache';
-import { z } from 'zod';
 
 import {
   invalidateInterviewCaches,
