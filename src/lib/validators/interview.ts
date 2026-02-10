@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const CURRENCIES = ['USD', 'ARS', 'EUR', 'GBP'] as const;
 export const interviewSchema = z.object({
   company: z.string().min(2, 'La empresa es obligatoria'),
-  position: z.string().min(2, 'El puesto es obligatorio'),
+  position: z.string().optional(),
   recruiter: z
     .string()
     .optional()

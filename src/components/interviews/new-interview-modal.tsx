@@ -47,7 +47,7 @@ export const NewInterviewModal = () => {
           <DialogTitle>Add Application</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div className='no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4 py-4'>
+        <div className='no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4 pt-4'>
           <InterviewForm
             ref={formRef}
             action={createInterviewAction}

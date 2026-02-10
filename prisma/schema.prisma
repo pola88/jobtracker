@@ -35,7 +35,7 @@ model Interview {
   userId            String
   user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   company           String
-  position          String
+  position          String?
   recruiter         String?
   date              DateTime
 

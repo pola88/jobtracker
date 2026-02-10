@@ -11,6 +11,7 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
+import { DateField } from './date-field';
 import SelectField from './select-field';
 import { FieldProps } from './types';
 
@@ -71,6 +72,8 @@ const Field = <T extends z.ZodType>({
                 {...field}
                 disabled={disabled}
               />
+            ) : type === 'date' ? (
+              <DateField field={field} />
             ) : (
               <Input
                 placeholder={placeholder}

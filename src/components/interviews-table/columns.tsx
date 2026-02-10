@@ -18,6 +18,7 @@ export const columns: ColumnDef<Interview>[] = [
   {
     accessorKey: 'position',
     header: 'Role',
+    cell: ({ row }) => row.original.position || '-',
   },
   {
     accessorKey: 'date',
