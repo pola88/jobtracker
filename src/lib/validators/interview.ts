@@ -33,4 +33,4 @@ export const interviewSchema = z.object({
   }),
 });
 
-export type InterviewPayload = z.infer<typeof interviewSchema>;
+export type InterviewType = z.infer<typeof interviewSchema>;

@@ -1,5 +1,5 @@
 import type { HTMLInputTypeAttribute } from 'react';
-import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
+import { FieldErrors, FieldValues, Path, UseFormReturn } from 'react-hook-form';
 
 import { z } from 'zod';
 
@@ -75,6 +75,7 @@ export type FormProps<T extends z.ZodTypeAny> = {
   btnSize?: ButtonProps['size'];
   toastMsg?: string;
   skipToast?: boolean;
+  afterSubmit?: (success: boolean, errors?: FieldErrors<z.TypeOf<T>>) => void;
 };
 
 export type SelectFieldProps = {

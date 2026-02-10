@@ -3,17 +3,14 @@
 import { forwardRef } from 'react';
 
 import { CompensationType } from '@prisma/client';
-import { z } from 'zod';
 
 import { ActionResponse } from '@/actions/interviews';
 import Form, { type FormRef } from '@/components/form';
 import { Field as FieldType } from '@/components/form/types';
-import { interviewSchema } from '@/lib/validators/interview';
+import { InterviewType, interviewSchema } from '@/lib/validators/interview';
 import { CURRENCIES } from '@/lib/validators/interview';
 
-type InterviewTypes = z.infer<typeof interviewSchema>;
-
-const DEFAULT_VALUES: InterviewTypes = {
+const DEFAULT_VALUES: InterviewType = {
   company: '',
   position: '',
   recruiter: '',
@@ -28,7 +25,7 @@ const DEFAULT_VALUES: InterviewTypes = {
 const fields: FieldType<typeof interviewSchema>[] = [
   {
     name: 'company',
-    label: 'Empresa',
+    label: 'Empresa*',
     placeholder: 'Empresa',
     type: 'text',
     fullWidth: true,
@@ -42,7 +39,7 @@ const fields: FieldType<typeof interviewSchema>[] = [
   },
   {
     name: 'date',
-    label: 'Fecha',
+    label: 'Fecha*',
     placeholder: 'Fecha',
     type: 'date',
     fullWidth: true,
@@ -91,13 +88,19 @@ const fields: FieldType<typeof interviewSchema>[] = [
 
 type InterviewFormProps = {
   action: (formData: FormData) => Promise<ActionResponse>;
-  defaultValues?: InterviewTypes;
+  defaultValues?: InterviewType;
   submitLabel?: string;
+  afterSubmit: (success: boolean) => void;
 };
 
 export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
   (
-    { action, defaultValues = DEFAULT_VALUES, submitLabel = 'Guardar' },
+    {
+      action,
+      defaultValues = DEFAULT_VALUES,
+      submitLabel = 'Guardar',
+      afterSubmit,
+    },
     ref,
   ) => {
     return (
@@ -108,6 +111,7 @@ export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
         schema={interviewSchema}
         fields={fields}
         submitLabel={submitLabel}
+        afterSubmit={afterSubmit}
       />
     );
   },

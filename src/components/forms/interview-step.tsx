@@ -22,7 +22,7 @@ const DEFAULT_VALUES: InterviewStepType = {
 const fields: FieldType<typeof interviewStepSchema>[] = [
   {
     name: 'title',
-    label: 'Title',
+    label: 'Title*',
     placeholder: 'Technical, HR, etc..',
     type: 'text',
     fullWidth: true,

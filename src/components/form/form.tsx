@@ -25,11 +25,9 @@ type GroupFieldProps<T extends z.ZodTypeAny> = {
   isNested?: boolean;
 };
 
-type SubmitCallback = (isLoading: boolean, success: boolean) => void;
-
 export type FormRef =
   | {
-      submit: (callback?: SubmitCallback) => void;
+      submit: () => void;
     }
   | undefined;
 
@@ -115,6 +113,7 @@ const FormInner = <T extends z.ZodTypeAny>(
     btnSize = 'default',
     toastMsg,
     skipToast = false,
+    afterSubmit,
   }: FormProps<T>,
   ref: React.ForwardedRef<FormRef | undefined>,
 ) => {
@@ -138,21 +137,19 @@ const FormInner = <T extends z.ZodTypeAny>(
           },
         });
       }
+
+      afterSubmit?.(result.success);
     },
     (errors) => {
       if (process.env.NODE_ENV !== 'production') {
         console.error('Form validation errors:', errors);
       }
+      afterSubmit?.(false, errors);
     },
   );
 
   useImperativeHandle(ref, () => ({
-    submit: (callback) => {
-      callback?.(true, false);
-      submitHandler()
-        .then(() => callback?.(false, true))
-        .catch(() => callback?.(false, false));
-    },
+    submit: submitHandler,
   }));
 
   const loadingState = isLoading || form.formState.isSubmitting;

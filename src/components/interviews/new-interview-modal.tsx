@@ -28,12 +28,12 @@ export const NewInterviewModal = () => {
   });
 
   const submitCallback = useCallback(
-    (_isLoading: boolean, success: boolean) => {
-      setIsLoading(_isLoading);
+    (success: boolean) => {
       if (success) {
         touch();
         toggleModal();
       }
+      setIsLoading(false);
     },
     [toggleModal, touch],
   );
@@ -52,12 +52,16 @@ export const NewInterviewModal = () => {
             ref={formRef}
             action={createInterviewAction}
             submitLabel='Add Application'
+            afterSubmit={submitCallback}
           />
         </div>
         <DialogFooter className='mt-6'>
           <Button
             isLoading={isLoading}
-            onClick={() => formRef.current?.submit(submitCallback)}
+            onClick={() => {
+              setIsLoading(true);
+              formRef.current?.submit();
+            }}
           >
             Save
           </Button>
