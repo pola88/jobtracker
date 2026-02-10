@@ -16,7 +16,7 @@ type GetMetricResult = Record<InterviewStatus, number> & {
   total: number;
 };
 
-export const getInterviews = ({
+export const getInterviews = async ({
   userId,
   cursor,
   pageSize = 10,
@@ -60,7 +60,7 @@ export const getInterviews = ({
     },
   )();
 
-export const countInterview = (userId: string) =>
+export const countInterview = async (userId: string) =>
   unstable_cache(
     async () => {
       return prisma.interview.count({
@@ -102,7 +102,7 @@ export async function getInterviewStepsAndNotes(interviewId: string) {
   ]);
 }
 
-export const getInterviewSteps = (interviewId: string) =>
+export const getInterviewSteps = async (interviewId: string) =>
   unstable_cache(
     async () => {
       return prisma.interviewStep.findMany({
@@ -117,7 +117,7 @@ export const getInterviewSteps = (interviewId: string) =>
     },
   )();
 
-export const getInterviewNotes = (interviewId: string) =>
+export const getInterviewNotes = async (interviewId: string) =>
   unstable_cache(
     async () => {
       return prisma.interviewNote.findMany({
@@ -132,7 +132,7 @@ export const getInterviewNotes = (interviewId: string) =>
     },
   )();
 
-export const getMetric = (userId: string) =>
+export const getMetric = async (userId: string) =>
   unstable_cache(
     async (): Promise<GetMetricResult> => {
       const [grouped, total] = await Promise.all([

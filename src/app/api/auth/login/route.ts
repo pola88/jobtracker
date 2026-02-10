@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     const response = NextResponse.json({
       user: { id: user.id, email: user.email },
     });
-    persistAuthToken(token, response.cookies);
+    await persistAuthToken(token, response.cookies);
     return response;
   } catch (error) {
     if (error instanceof ZodError) {

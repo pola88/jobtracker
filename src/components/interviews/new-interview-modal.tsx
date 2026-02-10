@@ -20,7 +20,7 @@ import { useInterviewStore } from '@/stores/interview';
 const MODAL_NAME = 'NewInterviewModal';
 
 export const NewInterviewModal = () => {
-  const formRef = useRef<FormRef>();
+  const formRef = useRef<FormRef>(null);
   const touch = useInterviewStore((state) => state.touch);
   const [isLoading, setIsLoading] = useState(false);
   const { modalStatus, toggleModal } = useModal({

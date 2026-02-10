@@ -56,7 +56,7 @@ export async function addInterviewStepAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag(`interviews-steps-${parsed.data.interviewId}`);
+    revalidateTag(`interviews-steps-${parsed.data.interviewId}`, 'max');
     return { success: true, message: 'Paso agregado' };
   } catch (error) {
     console.error(error);
@@ -96,7 +96,7 @@ export async function updateInterviewStepAction(
       },
     });
 
-    revalidateTag(`interviews-steps-${step.id}`);
+    revalidateTag(`interviews-steps-${step.id}`, 'max');
     return { success: true, message: 'Paso actualizado' };
   } catch (error) {
     console.error(error);
@@ -128,7 +128,7 @@ export async function deleteInterviewStepAction({
       await touchInterview(step.interviewId, tx);
     });
 
-    revalidateTag(`interviews-steps-${step.interviewId}`);
+    revalidateTag(`interviews-steps-${step.interviewId}`, 'max');
     invalidateInterviewCaches();
   } catch (error) {
     console.error(error);

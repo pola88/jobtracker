@@ -13,13 +13,13 @@ export type ActionResponse = ActionResponseBase & {
 };
 
 export const invalidateInterviewCaches = async (id?: string) => {
-  revalidateTag('interviews');
+  revalidateTag('interviews', 'max');
   if (id) {
-    revalidateTag(`interview:${id}`);
+    revalidateTag(`interview:${id}`, 'max');
   }
 };
 
-export const touchInterview = (
+export const touchInterview = async (
   interviewId: string,
   tx: Prisma.TransactionClient = prisma,
 ) =>
@@ -60,7 +60,7 @@ export async function createInterviewAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag('interviews-size');
+    revalidateTag('interviews-size', 'max');
 
     return {
       success: true,
@@ -144,7 +144,7 @@ export async function deleteInterviewAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag('interviews-size');
+    revalidateTag('interviews-size', 'max');
   } catch (error) {
     console.error(error);
     throw error;

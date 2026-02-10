@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       },
       { status: 201 },
     );
-    persistAuthToken(token, response.cookies);
+    await persistAuthToken(token, response.cookies);
     return response;
   } catch (error) {
     if (error instanceof ZodError) {

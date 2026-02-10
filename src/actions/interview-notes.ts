@@ -56,7 +56,7 @@ export async function addInterviewNoteAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag(`interviews-notes-${parsed.data.interviewId}`);
+    revalidateTag(`interviews-notes-${parsed.data.interviewId}`, 'max');
 
     return { success: true, message: 'Nota agregada', note };
   } catch (error) {
@@ -133,7 +133,7 @@ export async function deleteInterviewNoteAction({
     });
 
     invalidateInterviewCaches();
-    revalidateTag(`interviews-notes-${interviewId}`);
+    revalidateTag(`interviews-notes-${interviewId}`, 'max');
   } catch (error) {
     console.error(error);
     throw error;

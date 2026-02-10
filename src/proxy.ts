@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { AUTH_COOKIE_NAME } from '@/lib/auth/cookie';
+import { AUTH_COOKIE_NAME } from '@/lib/auth';
 import { verifyTokenOnEdge } from '@/lib/edge-auth';
 
 const PUBLIC_ROUTES = [
@@ -12,7 +12,7 @@ const PUBLIC_ROUTES = [
 ];
 const AUTH_ROUTES = ['/login', '/register'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
   const decoded = await verifyTokenOnEdge(token);

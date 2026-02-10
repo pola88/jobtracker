@@ -1,14 +1,12 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { decodeAuthToken } from '@/lib/auth';
-import { getAuthCookieName } from '@/lib/auth/cookie';
+import { decodeAuthToken, getTokenFromCookie } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function Home() {
-  const token = cookies().get(getAuthCookieName())?.value;
+export default async function Home() {
+  const token = await getTokenFromCookie();
   const decoded = decodeAuthToken(token);
 
   if (decoded?.sub) {

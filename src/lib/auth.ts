@@ -2,10 +2,10 @@ import bcrypt from 'bcryptjs';
 import type { ResponseCookies } from 'next/dist/server/web/spec-extension/cookies';
 import { cookies } from 'next/headers';
 
-import { AUTH_COOKIE_NAME } from '@/lib/auth/cookie';
 import { AuthTokenPayload, signJwt, verifyJwt } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
 
+export const AUTH_COOKIE_NAME = 'jobtrack_token';
 const cookieConfig = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
@@ -14,7 +14,7 @@ const cookieConfig = {
   maxAge: 60 * 60 * 24 * 7,
 };
 
-type CookieJar = ReturnType<typeof cookies> | ResponseCookies;
+type CookieJar = Awaited<ReturnType<typeof cookies>> | ResponseCookies;
 
 export async function hashPassword(password: string) {
   const salt = await bcrypt.genSalt(10);
@@ -35,13 +35,13 @@ export function createAuthToken(payload: AuthTokenPayload) {
   return signJwt(payload);
 }
 
-export function persistAuthToken(token: string, jar?: CookieJar) {
-  const target = jar ?? cookies();
+export async function persistAuthToken(token: string, jar?: CookieJar) {
+  const target = jar ?? (await cookies());
   target.set(AUTH_COOKIE_NAME, token, cookieConfig);
 }
 
-export function clearAuthToken(jar?: CookieJar) {
-  const target = jar ?? cookies();
+export async function clearAuthToken(jar?: CookieJar) {
+  const target = jar ?? (await cookies());
   target.delete(AUTH_COOKIE_NAME);
 }
 
@@ -61,7 +61,7 @@ export async function getCurrentUser() {
 }
 
 export async function getTokenFromCookie() {
-  const token = cookies().get(AUTH_COOKIE_NAME)?.value;
+  const token = (await cookies()).get(AUTH_COOKIE_NAME)?.value;
   return token;
 }
 
