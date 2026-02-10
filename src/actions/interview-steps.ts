@@ -1,7 +1,7 @@
 'use server';
 
 import { InterviewStep } from '@prisma/client';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 
 import {
   invalidateInterviewCaches,
@@ -56,7 +56,7 @@ export async function addInterviewStepAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag(`interviews-steps-${parsed.data.interviewId}`, 'max');
+    updateTag(`interviews-steps-${parsed.data.interviewId}`);
     return { success: true, message: 'Paso agregado' };
   } catch (error) {
     console.error(error);
@@ -96,7 +96,7 @@ export async function updateInterviewStepAction(
       },
     });
 
-    revalidateTag(`interviews-steps-${step.id}`, 'max');
+    updateTag(`interviews-steps-${step.id}`);
     return { success: true, message: 'Paso actualizado' };
   } catch (error) {
     console.error(error);
@@ -128,7 +128,7 @@ export async function deleteInterviewStepAction({
       await touchInterview(step.interviewId, tx);
     });
 
-    revalidateTag(`interviews-steps-${step.interviewId}`, 'max');
+    updateTag(`interviews-steps-${step.interviewId}`);
     invalidateInterviewCaches();
   } catch (error) {
     console.error(error);

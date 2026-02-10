@@ -1,7 +1,7 @@
 'use server';
 
 import { InterviewNote } from '@prisma/client';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 
 import {
   invalidateInterviewCaches,
@@ -56,7 +56,7 @@ export async function addInterviewNoteAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag(`interviews-notes-${parsed.data.interviewId}`, 'max');
+    updateTag(`interviews-notes-${parsed.data.interviewId}`);
 
     return { success: true, message: 'Nota agregada', note };
   } catch (error) {
@@ -133,7 +133,7 @@ export async function deleteInterviewNoteAction({
     });
 
     invalidateInterviewCaches();
-    revalidateTag(`interviews-notes-${interviewId}`, 'max');
+    updateTag(`interviews-notes-${interviewId}`);
   } catch (error) {
     console.error(error);
     throw error;

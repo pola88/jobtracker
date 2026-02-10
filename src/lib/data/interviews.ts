@@ -41,6 +41,8 @@ export const getInterviews = async ({
       return {
         interviews: sliced.map((row) => ({
           ...row,
+          compensationUpper: Number(row.compensationUpper),
+          compensationLower: Number(row.compensationLower),
           date: new Date(row.date),
           createdAt: new Date(row.createdAt),
           updatedAt: new Date(row.updatedAt),

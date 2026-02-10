@@ -1,7 +1,7 @@
 'use server';
 
 import { InterviewStatus, Prisma } from '@prisma/client';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -13,9 +13,9 @@ export type ActionResponse = ActionResponseBase & {
 };
 
 export const invalidateInterviewCaches = async (id?: string) => {
-  revalidateTag('interviews', 'max');
+  updateTag('interviews');
   if (id) {
-    revalidateTag(`interview:${id}`, 'max');
+    updateTag(`interview:${id}`);
   }
 };
 
@@ -60,7 +60,7 @@ export async function createInterviewAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag('interviews-size', 'max');
+    updateTag('interviews-size');
 
     return {
       success: true,
@@ -144,7 +144,7 @@ export async function deleteInterviewAction(
     });
 
     invalidateInterviewCaches();
-    revalidateTag('interviews-size', 'max');
+    updateTag('interviews-size');
   } catch (error) {
     console.error(error);
     throw error;
