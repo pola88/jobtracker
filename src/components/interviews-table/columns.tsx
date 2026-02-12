@@ -1,6 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
+import { ExternalLink } from 'lucide-react';
 
 import { styles } from '@/components/data-table/styles';
 import { daysFromNow, formatDate } from '@/lib/helpers/date';
@@ -36,6 +37,25 @@ export const columns: ColumnDef<InterviewDTO>[] = [
           interviewId={row.original.id}
           status={row.original.status}
         />
+      );
+    },
+  },
+  {
+    accessorKey: 'link',
+    header: 'Link',
+    cell: ({ row }) => {
+      return row.original.link ? (
+        <a
+          target='_blank'
+          href={row.original.link}
+          rel='noopener noreferrer'
+          onClick={(evt) => evt.stopPropagation()}
+          className='flex gap-2 items-center'
+        >
+          Link <ExternalLink className='h-4 w-4' />
+        </a>
+      ) : (
+        '-'
       );
     },
   },

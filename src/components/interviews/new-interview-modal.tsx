@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { createInterviewAction } from '@/actions/interviews';
 import { Button } from '@/components/button';
@@ -27,16 +27,18 @@ export const NewInterviewModal = () => {
     modalName: MODAL_NAME,
   });
 
-  const submitCallback = useCallback(
-    (success: boolean) => {
-      if (success) {
-        touch();
-        toggleModal();
-      }
-      setIsLoading(false);
-    },
-    [toggleModal, touch],
-  );
+  const submitCallback = (success: boolean) => {
+    if (success) {
+      touch();
+      toggleModal();
+    }
+    setIsLoading(false);
+  };
+
+  const onSubmit = () => {
+    setIsLoading(true);
+    formRef.current?.submit();
+  };
 
   if (!modalStatus.isOpen) return null;
 
@@ -56,13 +58,7 @@ export const NewInterviewModal = () => {
           />
         </div>
         <DialogFooter className='mt-6'>
-          <Button
-            isLoading={isLoading}
-            onClick={() => {
-              setIsLoading(true);
-              formRef.current?.submit();
-            }}
-          >
+          <Button isLoading={isLoading} onClick={onSubmit}>
             Save
           </Button>
         </DialogFooter>

@@ -117,7 +117,8 @@ const FormInner = <T extends FieldValues>(
   ref: React.ForwardedRef<FormRef | undefined>,
 ) => {
   const form = useForm<T>({
-    resolver: zodResolver(schema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(schema as any),
     defaultValues,
   });
   const submitHandler = form.handleSubmit(

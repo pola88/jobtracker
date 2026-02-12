@@ -28,29 +28,36 @@ const DEFAULT_VALUES: InterviewFormDTO = {
 const fields: FieldType<InterviewFormDTO>[] = [
   {
     name: 'company',
-    label: 'Empresa*',
-    placeholder: 'Empresa',
+    label: 'Company name*',
+    placeholder: 'Company name',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'position',
-    label: 'Puesto',
+    label: 'Position',
+    placeholder: 'Position',
+    type: 'text',
+    fullWidth: true,
+  },
+  {
+    name: 'link',
+    label: 'URL Application',
     placeholder: 'Puesto',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'date',
-    label: 'Fecha*',
-    placeholder: 'Fecha',
+    label: 'Date*',
+    placeholder: 'Date',
     type: 'date',
     fullWidth: true,
   },
   {
     name: 'compensationType',
-    label: 'Tipo de compensación',
-    placeholder: 'Tipo de compensación',
+    label: 'Compensation type',
+    placeholder: 'Compensation type',
     type: 'select',
     options: Object.values(CompensationType).map((type) => ({
       label: type,
@@ -65,20 +72,20 @@ const fields: FieldType<InterviewFormDTO>[] = [
     fields: [
       {
         name: 'compensationLower',
-        label: 'Valor mínimo',
-        placeholder: 'Valor mínimo de compensación',
+        label: 'Min',
+        placeholder: 'Min',
         type: 'text',
       },
       {
         name: 'compensationUpper',
-        label: 'Valor máximo',
-        placeholder: 'Valor máximo de compensación',
+        label: 'Max',
+        placeholder: 'Max',
         type: 'text',
       },
       {
         name: 'currency',
-        label: 'Moneda',
-        placeholder: 'Moneda',
+        label: 'Currency',
+        placeholder: 'Currency',
         type: 'select',
         options: CURRENCIES.map((currency) => ({
           label: currency,

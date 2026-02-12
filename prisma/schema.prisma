@@ -38,6 +38,7 @@ model Interview {
   position          String?
   recruiter         String?
   date              DateTime
+  link              String?
 
   compensationType  CompensationType @default(fixed)
   compensationLower Decimal?        @db.Decimal(12, 2)

@@ -32,6 +32,7 @@ export const interviewBaseSchema = z.object({
   status: z.nativeEnum(InterviewStatus, {
     error: 'El estado es obligatorio',
   }),
+  link: z.url().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
