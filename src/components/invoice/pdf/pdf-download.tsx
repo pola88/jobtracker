@@ -1,12 +1,14 @@
 import { Document, Page, Text, View } from '@react-pdf/renderer';
 
+import { LineItemDTO } from '@/lib/validators/invoice';
+
 import { styles } from './styles';
 import { PdfDownloadProps } from './types';
 
 export function PdfDownload({ data }: PdfDownloadProps) {
   const lineItems = data.lineItems || [];
   const subtotal = lineItems.reduce(
-    (sum, item) => sum + item.quantity * item.rate,
+    (sum: number, item: LineItemDTO) => sum + item.quantity * item.rate,
     0,
   );
   const tax = subtotal * 0.1;
@@ -63,7 +65,7 @@ export function PdfDownload({ data }: PdfDownloadProps) {
               Amount
             </Text>
           </View>
-          {lineItems.map((item) => (
+          {lineItems.map((item: LineItemDTO) => (
             <View key={item.id} style={styles.tableRow}>
               <Text style={[styles.tableCell, styles.colDescription]}>
                 {item.description}

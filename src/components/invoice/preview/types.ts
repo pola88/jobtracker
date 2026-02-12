@@ -1,7 +1,7 @@
-import { Invoice } from '@/components/forms/invoice/types';
+import { InvoiceDTO } from '@/lib/validators/invoice';
 
 export interface PreviewProps {
-  data: Invoice;
+  data: InvoiceDTO;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }

@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useImperativeHandle } from 'react';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { FieldValues, UseFormReturn, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { z } from 'zod';
 
 import { Form as FormComponent } from '@/components/ui/form';
 
@@ -14,13 +13,13 @@ import Field from './field';
 import styles, { groupColumnsClass } from './styles';
 import { FieldProps, FormProps, GroupField, SpacerField } from './types';
 
-type RegularFieldProps<T extends z.ZodTypeAny> = {
-  form: UseFormReturn<z.infer<T>>;
+type RegularFieldProps<T extends FieldValues> = {
+  form: UseFormReturn<T>;
   fieldConfig: Omit<FieldProps<T>, 'form'>;
 };
 
-type GroupFieldProps<T extends z.ZodTypeAny> = {
-  form: UseFormReturn<z.infer<T>>;
+type GroupFieldProps<T extends FieldValues> = {
+  form: UseFormReturn<T>;
   fieldConfig: GroupField<T>;
   isNested?: boolean;
 };
@@ -31,7 +30,7 @@ export type FormRef =
     }
   | undefined;
 
-const Spacer = <T extends z.ZodTypeAny>({
+const Spacer = <T extends FieldValues>({
   name,
   fullWidth,
 }: Pick<SpacerField<T>, 'name' | 'fullWidth'>) => {
@@ -40,7 +39,7 @@ const Spacer = <T extends z.ZodTypeAny>({
   return <div key={name} className={spacerClass} aria-hidden='true' />;
 };
 
-const RegularField = <T extends z.ZodTypeAny>({
+const RegularField = <T extends FieldValues>({
   form,
   fieldConfig,
 }: RegularFieldProps<T>) => {
@@ -58,7 +57,7 @@ const RegularField = <T extends z.ZodTypeAny>({
   );
 };
 
-const Group = <T extends z.ZodTypeAny>({
+const Group = <T extends FieldValues>({
   form,
   fieldConfig,
   isNested = false,
@@ -100,7 +99,7 @@ const Group = <T extends z.ZodTypeAny>({
   );
 };
 
-const FormInner = <T extends z.ZodTypeAny>(
+const FormInner = <T extends FieldValues>(
   {
     defaultValues,
     onSubmit,
@@ -117,8 +116,8 @@ const FormInner = <T extends z.ZodTypeAny>(
   }: FormProps<T>,
   ref: React.ForwardedRef<FormRef | undefined>,
 ) => {
-  const form = useForm<z.infer<T>>({
-    resolver: zodResolver(schema as T),
+  const form = useForm<T>({
+    resolver: zodResolver(schema),
     defaultValues,
   });
   const submitHandler = form.handleSubmit(
@@ -219,7 +218,7 @@ const FormInner = <T extends z.ZodTypeAny>(
   );
 };
 
-export const Form = React.forwardRef(FormInner) as <T extends z.ZodTypeAny>(
+export const Form = React.forwardRef(FormInner) as <T extends FieldValues>(
   props: FormProps<T> & { ref?: React.Ref<FormRef> },
 ) => React.ReactElement;
 

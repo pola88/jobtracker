@@ -2,15 +2,14 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 
-import { Interview } from '@prisma/client';
-
 import { styles } from '@/components/data-table/styles';
 import { daysFromNow, formatDate } from '@/lib/helpers/date';
+import { InterviewDTO } from '@/lib/validators/interview';
 
 import { InterviewActions } from './actions';
 import { Status } from './status';
 
-export const columns: ColumnDef<Interview>[] = [
+export const columns: ColumnDef<InterviewDTO>[] = [
   {
     accessorKey: 'company',
     header: 'Company',

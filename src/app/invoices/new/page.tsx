@@ -2,24 +2,23 @@
 
 import { useEffect, useState, useTransition } from 'react';
 
-import { BusinessProfile } from '@prisma/client';
-
 import { getBusinessProfile } from '@/actions/invoices-settings';
 import { Card } from '@/components/card';
 import InvoiceForm from '@/components/forms/invoice/invoice-form';
-import { Invoice } from '@/components/forms/invoice/types';
 import Preview from '@/components/invoice/preview/preview';
 import { AppShell } from '@/components/layout/app-shell';
 import InvoiceFormSkeleton from '@/components/skeletons/invoice-form';
 import { ActionResponseBase } from '@/lib/types';
+import { BusinessProfileDTO } from '@/lib/validators/business-profile-individual';
+import { InvoiceDTO } from '@/lib/validators/invoice';
 
 const NewInvoicePage = () => {
   const [isPending, startTransition] = useTransition();
   // const [isOrganization, setIsOrganization] = useState(false);
-  const [invoice, setInvoice] = useState<Invoice | null>(null);
+  const [invoice, setInvoice] = useState<InvoiceDTO | null>(null);
 
   const [businessProfile, setBusinessProfile] =
-    useState<BusinessProfile | null>(null);
+    useState<BusinessProfileDTO | null>(null);
 
   useEffect(() => {
     startTransition(async () => {
@@ -34,9 +33,9 @@ const NewInvoicePage = () => {
   }, []);
 
   const handleOnPreview = async (
-    newInvoice: FormData,
+    newInvoice: InvoiceDTO,
   ): Promise<ActionResponseBase> => {
-    setInvoice(newInvoice as unknown as Invoice);
+    setInvoice(newInvoice as unknown as InvoiceDTO);
     return { success: true };
   };
 

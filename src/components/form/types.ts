@@ -1,7 +1,13 @@
 import type { HTMLInputTypeAttribute } from 'react';
-import { FieldErrors, FieldValues, Path, UseFormReturn } from 'react-hook-form';
+import {
+  DefaultValues,
+  FieldErrors,
+  FieldValues,
+  Path,
+  UseFormReturn,
+} from 'react-hook-form';
 
-import { z } from 'zod';
+import { ZodSchema } from 'zod';
 
 import { ActionResponseBase } from '@/lib/types';
 
@@ -12,70 +18,70 @@ export type SelectFieldOption = {
   value: string;
 };
 
-type BaseFieldProps<T extends z.ZodTypeAny> = {
-  form: UseFormReturn<z.infer<T>>;
-  name: Path<z.infer<T>>;
+type BaseFieldProps<T extends FieldValues> = {
+  form: UseFormReturn<T>;
+  name: Path<T>;
   label: string;
   placeholder: string;
   fullWidth?: boolean;
   options?: SelectFieldOption[];
-  shouldHide?: (values: z.infer<T>) => boolean;
-  checkIfDisabled?: (values: z.infer<T>) => boolean;
+  shouldHide?: (values: T) => boolean;
+  checkIfDisabled?: (values: T) => boolean;
 };
 
-type TextFieldProps<T extends z.ZodTypeAny> = BaseFieldProps<T> & {
+type TextFieldProps<T extends FieldValues> = BaseFieldProps<T> & {
   type: HTMLInputTypeAttribute;
 };
 
-type TextareaFieldProps<T extends z.ZodTypeAny> = BaseFieldProps<T> & {
+type TextareaFieldProps<T extends FieldValues> = BaseFieldProps<T> & {
   type: 'textarea';
 };
 
-type SelectFieldVariant<T extends z.ZodTypeAny> = BaseFieldProps<T> & {
+type SelectFieldVariant<T extends FieldValues> = BaseFieldProps<T> & {
   type: 'select';
   options: SelectFieldOption[];
 };
 
-export type FieldProps<T extends z.ZodTypeAny> =
+export type FieldProps<T extends FieldValues> =
   | TextFieldProps<T>
   | TextareaFieldProps<T>
   | SelectFieldVariant<T>;
 
-export type SpacerField<T extends z.ZodTypeAny> = {
+export type SpacerField<T extends FieldValues> = {
   name: string;
   type: 'spacer';
   fullWidth?: boolean;
-  shouldHide?: (values: z.infer<T>) => boolean;
+  shouldHide?: (values: T) => boolean;
 };
 
-export type GroupField<T extends z.ZodTypeAny> = {
+export type GroupField<T extends FieldValues> = {
   name: string;
   type: 'group';
   fields: Array<Omit<FieldProps<T>, 'form'> | GroupField<T>>;
   columns?: 1 | 2 | 3 | 4;
   fullWidth?: boolean;
   label?: string;
-  shouldHide?: (values: z.infer<T>) => boolean;
+  shouldHide?: (values: T) => boolean;
 };
 
-export type Field<T extends z.ZodTypeAny> =
+export type Field<T extends FieldValues> =
   | Omit<FieldProps<T>, 'form'>
   | SpacerField<T>
   | GroupField<T>;
 
-export type FormProps<T extends z.ZodTypeAny> = {
-  defaultValues: z.infer<T>;
-  onSubmit: (data: FormData) => Promise<ActionResponseBase>;
-  schema: T;
+export type FormProps<T extends FieldValues> = {
+  defaultValues: DefaultValues<T>;
+  onSubmit: (data: T) => Promise<ActionResponseBase>;
+  schema: ZodSchema<T>;
   fields?: Field<T>[];
-  render?: (form: UseFormReturn<z.infer<T>>) => React.ReactNode;
+  render?: (form: UseFormReturn<T>) => React.ReactNode;
   isLoading?: boolean;
   submitLabel?: string;
   onCancel?: () => void;
   btnSize?: ButtonProps['size'];
   toastMsg?: string;
   skipToast?: boolean;
-  afterSubmit?: (success: boolean, errors?: FieldErrors<z.TypeOf<T>>) => void;
+  afterSubmit?: (success: boolean, errors?: FieldErrors<T>) => void;
 };
 
 export type SelectFieldProps = {

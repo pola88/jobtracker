@@ -6,7 +6,10 @@ import { updateTag } from 'next/cache';
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ActionResponseBase } from '@/lib/types';
-import { interviewSchema } from '@/lib/validators/interview';
+import {
+  InterviewFormDTO,
+  interviewFormSchema,
+} from '@/lib/validators/interview';
 
 export type ActionResponse = ActionResponseBase & {
   interviewId?: string;
@@ -33,10 +36,10 @@ export const touchInterview = async (
   });
 
 export async function createInterviewAction(
-  formData: FormData,
+  formData: InterviewFormDTO,
 ): Promise<ActionResponse> {
   try {
-    const parsed = interviewSchema.safeParse(formData);
+    const parsed = interviewFormSchema.safeParse(formData);
     if (!parsed.success) {
       return { success: false, message: 'Datos inválidos' };
     }
@@ -75,10 +78,10 @@ export async function createInterviewAction(
 
 export async function updateInterviewAction(
   interviewId: string,
-  formData: FormData,
+  formData: InterviewFormDTO,
 ): Promise<ActionResponse> {
   try {
-    const parsed = interviewSchema.safeParse(formData);
+    const parsed = interviewFormSchema.safeParse(formData);
     if (!parsed.success) {
       return { success: false, message: 'Datos inválidos' };
     }

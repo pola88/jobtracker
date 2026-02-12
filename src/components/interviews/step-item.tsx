@@ -3,17 +3,16 @@
 import { Calendar, Clock, FileText } from 'lucide-react';
 import { useCallback } from 'react';
 
-import { InterviewStep } from '@prisma/client';
-
 import { deleteInterviewStepAction } from '@/actions/interview-steps';
 import { formatDate } from '@/lib/helpers/date';
+import { InterviewStepDTO } from '@/lib/validators/interview-step';
 
 import { DeleteButtonWithConfirm } from '../button/delete-btn';
 import { EditButton } from '../button/edit-btn';
 import { Badge, type BadgeProps } from '../ui/badge';
 
 type StepItemProps = {
-  step: InterviewStep;
+  step: InterviewStepDTO;
   onDelete: (stepId: string) => void;
 };
 

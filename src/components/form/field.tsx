@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-
-import { z } from 'zod';
+import { FieldValues } from 'react-hook-form';
 
 import {
   FormControl,
@@ -15,7 +14,7 @@ import { DateField } from './date-field';
 import SelectField from './select-field';
 import { FieldProps } from './types';
 
-const Field = <T extends z.ZodType>({
+const Field = <T extends FieldValues>({
   form,
   name,
   label,

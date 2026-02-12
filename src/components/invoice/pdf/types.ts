@@ -1,5 +1,5 @@
-import { Invoice } from '@/components/forms/invoice/types';
+import { InvoiceDTO } from '@/lib/validators/invoice';
 
 export interface PdfDownloadProps {
-  data: Invoice;
+  data: InvoiceDTO;
 }

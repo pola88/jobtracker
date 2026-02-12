@@ -2,22 +2,20 @@
 
 import { forwardRef } from 'react';
 
-import { InterviewNote } from '@prisma/client';
-
 import type { ActionResponse } from '@/actions/interview-notes';
 import Form, { type FormRef } from '@/components/form';
-import { Field as FieldType } from '@/components/form/types';
+import { Field } from '@/components/form/types';
 import {
-  InterviewNoteType,
-  interviewNoteSchema,
+  InterviewNoteDTO,
+  InterviewNoteFormDTO,
+  interviewNoteFormSchema,
 } from '@/lib/validators/interview-note';
 
-const DEFAULT_VALUES: InterviewNoteType = {
-  interviewId: '',
+const DEFAULT_VALUES: InterviewNoteFormDTO = {
   content: '',
 };
 
-const fields: FieldType<typeof interviewNoteSchema>[] = [
+const fields: Field<InterviewNoteFormDTO>[] = [
   {
     name: 'content',
     label: '',
@@ -28,15 +26,15 @@ const fields: FieldType<typeof interviewNoteSchema>[] = [
 ];
 
 type InterviewNoteFormProps = {
-  action: (formData: FormData) => Promise<ActionResponse>;
-  defaultValues?: InterviewNoteType;
+  action: (formData: InterviewNoteFormDTO) => Promise<ActionResponse>;
+  defaultValues?: InterviewNoteFormDTO;
   onCancel: () => void;
-  onSuccess?: (note: InterviewNote) => void;
+  onSuccess?: (note: InterviewNoteDTO) => void;
 };
 
 export const InterviewNoteForm = forwardRef<FormRef, InterviewNoteFormProps>(
   ({ action, defaultValues = DEFAULT_VALUES, onCancel, onSuccess }, ref) => {
-    const onSubmit = async (data: FormData) => {
+    const onSubmit = async (data: InterviewNoteFormDTO) => {
       const result = await action(data);
       if (result.success && result.note) {
         onSuccess?.(result.note);
@@ -45,11 +43,11 @@ export const InterviewNoteForm = forwardRef<FormRef, InterviewNoteFormProps>(
     };
 
     return (
-      <Form
+      <Form<InterviewNoteFormDTO>
         ref={ref}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
-        schema={interviewNoteSchema}
+        schema={interviewNoteFormSchema}
         fields={fields}
         submitLabel='Save'
         onCancel={onCancel}

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
-import { InterviewNote } from '@prisma/client';
-
 import { getInterviewNotes } from '@/lib/data/interviews';
+import { InterviewNoteDTO } from '@/lib/validators/interview-note';
 
 import { InterviewNotesStepListSkeleton } from '../skeletons/interview-notes-steps-list';
 import { AddNoteForm } from './add-note-form';
@@ -13,10 +12,10 @@ type NotesPanelProps = {
 };
 
 export function NotesPanel({ interviewId }: NotesPanelProps) {
-  const [allNotes, setNotes] = useState<InterviewNote[]>([]);
+  const [allNotes, setNotes] = useState<InterviewNoteDTO[]>([]);
   const [isLoadingNotes, startNotesTransaction] = useTransition();
 
-  const onCreate = useCallback((note: InterviewNote) => {
+  const onCreate = useCallback((note: InterviewNoteDTO) => {
     setNotes((prev) => [note, ...prev]);
   }, []);
 

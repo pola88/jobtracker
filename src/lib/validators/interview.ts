@@ -2,14 +2,15 @@ import { CompensationType, InterviewStatus } from '@prisma/client';
 import { z } from 'zod';
 
 export const CURRENCIES = ['USD', 'ARS', 'EUR', 'GBP'] as const;
-export const interviewSchema = z.object({
+export const interviewBaseSchema = z.object({
+  id: z.uuid(),
   company: z.string().min(2, 'La empresa es obligatoria'),
   position: z.string().optional(),
   recruiter: z
     .string()
     .optional()
     .transform((value) => value?.trim() || undefined),
-  date: z.coerce.date({ required_error: 'La fecha es obligatoria' }),
+  date: z.coerce.date({ error: 'La fecha es obligatoria' }),
   compensationType: z.nativeEnum(CompensationType),
   compensationLower: z.coerce
     .number()
@@ -29,8 +30,17 @@ export const interviewSchema = z.object({
     }),
   currency: z.enum(CURRENCIES),
   status: z.nativeEnum(InterviewStatus, {
-    required_error: 'El estado es obligatorio',
+    error: 'El estado es obligatorio',
   }),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
-export type InterviewType = z.infer<typeof interviewSchema>;
+export const interviewFormSchema = interviewBaseSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InterviewFormDTO = z.infer<typeof interviewFormSchema>;
+export type InterviewDTO = z.infer<typeof interviewBaseSchema>;

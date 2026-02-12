@@ -4,7 +4,7 @@ const baseSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   companyName: z.string().optional(),
-  email: z.string().email('Email inválido'),
+  email: z.email('Email inválido'),
   website: z.string().optional(),
   phoneNumber: z.string().optional(),
   addressLine1: z.string().min(2, 'La dirección es obligatoria'),
@@ -16,10 +16,12 @@ const baseSchema = z.object({
   isOrganization: z.boolean(),
 });
 
-const conditionalRefinements = <T extends z.ZodTypeAny>(schema: T) =>
+type ConditionalRefinementsOpts = typeof baseSchema;
+
+const conditionalRefinements = (schema: ConditionalRefinementsOpts) =>
   schema
     .refine(
-      (data: z.infer<typeof baseSchema>) => {
+      (data) => {
         if (data.isOrganization) {
           return (
             data.companyName !== undefined &&
@@ -35,7 +37,7 @@ const conditionalRefinements = <T extends z.ZodTypeAny>(schema: T) =>
       },
     )
     .refine(
-      (data: z.infer<typeof baseSchema>) => {
+      (data) => {
         if (!data.isOrganization) {
           return (
             data.firstName !== undefined &&
@@ -51,7 +53,7 @@ const conditionalRefinements = <T extends z.ZodTypeAny>(schema: T) =>
       },
     )
     .refine(
-      (data: z.infer<typeof baseSchema>) => {
+      (data) => {
         if (!data.isOrganization) {
           return (
             data.lastName !== undefined &&
@@ -70,10 +72,9 @@ const conditionalRefinements = <T extends z.ZodTypeAny>(schema: T) =>
 export const businessProfileIndividualSchema =
   conditionalRefinements(baseSchema);
 
-export type BusinessProfileIndividualTypes = z.infer<
+export type BusinessProfileDTO = z.infer<
   typeof businessProfileIndividualSchema
 >;
 
-export const updateBusinessProfileIndividualSchema = conditionalRefinements(
-  baseSchema.partial(),
-);
+export const updateBusinessProfileIndividualSchema =
+  conditionalRefinements(baseSchema);

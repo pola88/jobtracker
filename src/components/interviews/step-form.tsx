@@ -3,23 +3,22 @@
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
-import { InterviewStep } from '@prisma/client';
-
 import { addInterviewStepAction } from '@/actions/interview-steps';
 import { Button } from '@/components/button';
+import { InterviewStepDTO } from '@/lib/validators/interview-step';
 
 import { Card } from '../card';
 import { InterviewStepForm } from '../forms/interview-step';
 
 type AddStepFormProps = {
   interviewId: string;
-  onCreate: (step: InterviewStep) => void;
+  onCreate: (step: InterviewStepDTO) => void;
 };
 
 export function AddStepForm({ interviewId, onCreate }: AddStepFormProps) {
   const [showForm, setShowForm] = useState(false);
 
-  const onSuccess = (step: InterviewStep) => {
+  const onSuccess = (step: InterviewStepDTO) => {
     onCreate(step);
     setShowForm(false);
   };
@@ -40,9 +39,8 @@ export function AddStepForm({ interviewId, onCreate }: AddStepFormProps) {
       {showForm && (
         <Card className='mb-0'>
           <InterviewStepForm
-            action={addInterviewStepAction}
+            action={(data) => addInterviewStepAction(interviewId, data)}
             defaultValues={{
-              interviewId,
               title: '',
               status: 'scheduled',
               notes: '',

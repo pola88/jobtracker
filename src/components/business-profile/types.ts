@@ -1,5 +1,5 @@
-import { BusinessProfile } from '@prisma/client';
+import { BusinessProfileDTO } from '@/lib/validators/business-profile-individual';
 
 export type BusinessProfileProps = {
-  businessProfile: BusinessProfile;
+  businessProfile: BusinessProfileDTO;
 };

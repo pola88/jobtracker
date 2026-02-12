@@ -7,10 +7,13 @@ import { CompensationType } from '@prisma/client';
 import { ActionResponse } from '@/actions/interviews';
 import Form, { type FormRef } from '@/components/form';
 import { Field as FieldType } from '@/components/form/types';
-import { InterviewType, interviewSchema } from '@/lib/validators/interview';
+import {
+  InterviewFormDTO,
+  interviewFormSchema,
+} from '@/lib/validators/interview';
 import { CURRENCIES } from '@/lib/validators/interview';
 
-const DEFAULT_VALUES: InterviewType = {
+const DEFAULT_VALUES: InterviewFormDTO = {
   company: '',
   position: '',
   recruiter: '',
@@ -22,7 +25,7 @@ const DEFAULT_VALUES: InterviewType = {
   currency: 'USD',
 };
 
-const fields: FieldType<typeof interviewSchema>[] = [
+const fields: FieldType<InterviewFormDTO>[] = [
   {
     name: 'company',
     label: 'Empresa*',
@@ -87,8 +90,8 @@ const fields: FieldType<typeof interviewSchema>[] = [
 ];
 
 type InterviewFormProps = {
-  action: (formData: FormData) => Promise<ActionResponse>;
-  defaultValues?: InterviewType;
+  action: (formData: InterviewFormDTO) => Promise<ActionResponse>;
+  defaultValues?: InterviewFormDTO;
   submitLabel?: string;
   afterSubmit: (success: boolean) => void;
 };
@@ -104,11 +107,11 @@ export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
     ref,
   ) => {
     return (
-      <Form
+      <Form<InterviewFormDTO>
         ref={ref}
         defaultValues={defaultValues}
         onSubmit={action}
-        schema={interviewSchema}
+        schema={interviewFormSchema}
         fields={fields}
         submitLabel={submitLabel}
         afterSubmit={afterSubmit}

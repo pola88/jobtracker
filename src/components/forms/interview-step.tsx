@@ -2,24 +2,24 @@
 
 import { forwardRef } from 'react';
 
-import { InterviewStep, InterviewStepStatus } from '@prisma/client';
-
 import type { ActionResponse } from '@/actions/interview-steps';
 import Form, { type FormRef } from '@/components/form';
 import { Field as FieldType } from '@/components/form/types';
 import {
-  InterviewStepType,
-  interviewStepSchema,
+  InterviewStepDTO,
+  type InterviewStepFormDTO,
+  InterviewStepStatus,
+  interviewStepFormSchema,
 } from '@/lib/validators/interview-step';
 
-const DEFAULT_VALUES: InterviewStepType = {
-  interviewId: '',
+const DEFAULT_VALUES: InterviewStepFormDTO = {
   title: '',
   status: 'waiting',
+  notes: '',
   scheduledAt: new Date(),
 };
 
-const fields: FieldType<typeof interviewStepSchema>[] = [
+const fields: FieldType<InterviewStepFormDTO>[] = [
   {
     name: 'title',
     label: 'Title*',
@@ -55,15 +55,15 @@ const fields: FieldType<typeof interviewStepSchema>[] = [
 ];
 
 type InterviewStepFormProps = {
-  action: (formData: FormData) => Promise<ActionResponse>;
-  defaultValues?: InterviewStepType;
+  action: (formData: InterviewStepFormDTO) => Promise<ActionResponse>;
+  defaultValues?: InterviewStepFormDTO;
   onCancel: () => void;
-  onSuccess?: (note: InterviewStep) => void;
+  onSuccess?: (note: InterviewStepDTO) => void;
 };
 
 export const InterviewStepForm = forwardRef<FormRef, InterviewStepFormProps>(
   ({ action, defaultValues = DEFAULT_VALUES, onCancel, onSuccess }, ref) => {
-    const onSubmit = async (data: FormData) => {
+    const onSubmit = async (data: InterviewStepFormDTO) => {
       const result = await action(data);
       if (result.success && result.step) {
         onSuccess?.(result.step);
@@ -72,11 +72,11 @@ export const InterviewStepForm = forwardRef<FormRef, InterviewStepFormProps>(
     };
 
     return (
-      <Form
+      <Form<InterviewStepFormDTO>
         ref={ref}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
-        schema={interviewStepSchema}
+        schema={interviewStepFormSchema}
         fields={fields}
         submitLabel='Add note'
         onCancel={onCancel}

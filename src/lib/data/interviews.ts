@@ -5,6 +5,9 @@ import { unstable_cache } from 'next/cache';
 
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { InterviewDTO } from '@/lib/validators/interview';
+import { InterviewNoteDTO } from '@/lib/validators/interview-note';
+import { InterviewStepDTO } from '@/lib/validators/interview-step';
 
 interface GetInterviewsProps {
   userId: string;
@@ -16,13 +19,18 @@ type GetMetricResult = Record<InterviewStatus, number> & {
   total: number;
 };
 
+interface GetInterviewResult {
+  interviews: InterviewDTO[];
+  nextCursor?: string;
+}
+
 export const getInterviews = async ({
   userId,
   cursor,
   pageSize = 10,
 }: GetInterviewsProps) =>
   unstable_cache(
-    async () => {
+    async (): Promise<GetInterviewResult> => {
       const take = Math.min(pageSize ?? 10, 100);
       const rows = await prisma.interview.findMany({
         where: {
@@ -39,14 +47,17 @@ export const getInterviews = async ({
       const nextCursor = hasMore ? sliced[sliced.length - 1]?.id : undefined;
 
       return {
-        interviews: sliced.map((row) => ({
-          ...row,
-          compensationUpper: Number(row.compensationUpper),
-          compensationLower: Number(row.compensationLower),
-          date: new Date(row.date),
-          createdAt: new Date(row.createdAt),
-          updatedAt: new Date(row.updatedAt),
-        })),
+        interviews: sliced.map(
+          (row) =>
+            ({
+              ...row,
+              compensationUpper: Number(row.compensationUpper),
+              compensationLower: Number(row.compensationLower),
+              date: new Date(row.date),
+              createdAt: new Date(row.createdAt),
+              updatedAt: new Date(row.updatedAt),
+            }) as InterviewDTO,
+        ),
         nextCursor,
       };
     },
@@ -106,11 +117,11 @@ export async function getInterviewStepsAndNotes(interviewId: string) {
 
 export const getInterviewSteps = async (interviewId: string) =>
   unstable_cache(
-    async () => {
-      return prisma.interviewStep.findMany({
+    async (): Promise<InterviewStepDTO[]> => {
+      return (await prisma.interviewStep.findMany({
         where: { interviewId },
         orderBy: { createdAt: 'desc' },
-      });
+      })) as InterviewStepDTO[];
     },
     ['interviews-count', interviewId],
     {
@@ -121,11 +132,11 @@ export const getInterviewSteps = async (interviewId: string) =>
 
 export const getInterviewNotes = async (interviewId: string) =>
   unstable_cache(
-    async () => {
-      return prisma.interviewNote.findMany({
+    async (): Promise<InterviewNoteDTO[]> => {
+      return (await prisma.interviewNote.findMany({
         where: { interviewId },
         orderBy: { createdAt: 'desc' },
-      });
+      })) as InterviewNoteDTO[];
     },
     ['interviews-count', interviewId],
     {

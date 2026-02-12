@@ -1,7 +1,7 @@
-import { BusinessProfile } from '@prisma/client';
+import { BusinessProfileDTO } from '@/lib/validators/business-profile-individual';
 
 export const getBusinessProfileName = (
-  businessProfile: BusinessProfile | null,
+  businessProfile: BusinessProfileDTO | null,
 ): string => {
   if (!businessProfile) {
     return '';
@@ -14,7 +14,7 @@ export const getBusinessProfileName = (
 };
 
 export const getBusinessProfileAddress = (
-  businessProfile: BusinessProfile | null,
+  businessProfile: BusinessProfileDTO | null,
 ): string => {
   if (!businessProfile) {
     return '';
@@ -24,7 +24,7 @@ export const getBusinessProfileAddress = (
 };
 
 export const getBusinessProfileCity = (
-  businessProfile: BusinessProfile | null,
+  businessProfile: BusinessProfileDTO | null,
 ): string => {
   if (!businessProfile) {
     return '';
@@ -34,7 +34,7 @@ export const getBusinessProfileCity = (
 };
 
 export const getBusinessProfileFullAddress = (
-  businessProfile: BusinessProfile | null,
+  businessProfile: BusinessProfileDTO | null,
 ): string => {
   return `${getBusinessProfileAddress(businessProfile)}, ${getBusinessProfileCity(businessProfile)}`.trim();
 };

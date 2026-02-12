@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
-import { InterviewStep } from '@prisma/client';
-
 import { InterviewNotesStepListSkeleton } from '@/components/skeletons/interview-notes-steps-list';
 import { getInterviewSteps } from '@/lib/data/interviews';
+import { InterviewStepDTO } from '@/lib/validators/interview-step';
 
 import { AddStepForm } from './step-form';
 import { StepItem } from './step-item';
@@ -15,14 +14,14 @@ interface StepsPanelProps {
 }
 
 export const StepsPanel = ({ interviewId }: StepsPanelProps) => {
-  const [allSteps, setSteps] = useState<InterviewStep[]>([]);
+  const [allSteps, setSteps] = useState<InterviewStepDTO[]>([]);
   const [isLoadingSteps, startStepsTransaction] = useTransition();
 
   const handleOnDelete = useCallback((stepId: string) => {
     setSteps((prev) => prev.filter((step) => step.id !== stepId));
   }, []);
 
-  const onCreate = useCallback((step: InterviewStep) => {
+  const onCreate = useCallback((step: InterviewStepDTO) => {
     setSteps((prev) => [step, ...prev]);
   }, []);
 

@@ -1,10 +1,13 @@
 import { InterviewStepStatus } from '@prisma/client';
 import { z } from 'zod';
 
-export const interviewStepSchema = z.object({
-  interviewId: z.string().cuid('Entrevista inválida'),
-  title: z.string().min(2, 'El título es obligatorio'),
-  status: z.nativeEnum(InterviewStepStatus),
+export { InterviewStepStatus };
+
+export const interviewStepBaseSchema = z.object({
+  id: z.uuid(),
+  interviewId: z.uuid('Interview ID is invalid'),
+  title: z.string().min(2, 'Title is required'),
+  status: z.enum(InterviewStepStatus, { error: 'Status is invalid' }),
   scheduledAt: z.coerce.date(),
   notes: z
     .union([z.string(), z.literal('')])
@@ -16,13 +19,18 @@ export const interviewStepSchema = z.object({
     }),
 });
 
-export type InterviewStepType = z.infer<typeof interviewStepSchema>;
-
-export const updateStepSchema = interviewStepSchema.extend({
-  stepId: z.string().cuid('Paso inválido'),
+export const interviewStepFormSchema = interviewStepBaseSchema.omit({
+  id: true,
+  interviewId: true,
 });
 
-export const deleteStepSchema = z.object({
-  stepId: z.string().cuid('Paso inválido'),
-  interviewId: z.string().cuid('Entrevista inválida'),
-});
+export type InterviewStepDTO = z.infer<typeof interviewStepBaseSchema>;
+export type InterviewStepFormDTO = z.infer<typeof interviewStepFormSchema>;
+// export const updateStepSchema = interviewStepSchema.extend({
+//   stepId: z.string().cuid('Paso inválido'),
+// });
+
+// export const deleteStepSchema = z.object({
+//   stepId: z.string().cuid('Paso inválido'),
+//   interviewId: z.string().cuid('Entrevista inválida'),
+// });

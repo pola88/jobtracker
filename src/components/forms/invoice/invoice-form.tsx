@@ -1,18 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { z } from 'zod';
 
 import BusinessProfile from '@/components/business-profile';
 import Form from '@/components/form';
 import * as businessProfileHelpers from '@/lib/helpers/business-profile';
+import { InvoiceDTO, invoiceSchema } from '@/lib/validators/invoice';
 
 import Field from '../../form/field';
 import Items from './items';
-import { type InvoiceFormProps, invoiceSchema } from './types';
+import { type InvoiceFormProps } from './types';
 
 const InvoiceForm = ({ businessProfile, onPreview }: InvoiceFormProps) => {
-  const defaultValues: z.infer<typeof invoiceSchema> = {
+  const defaultValues: InvoiceDTO = {
     invoiceNumber: '',
     invoiceDate: new Date().toISOString().split('T')[0],
     dueDate: '',
@@ -31,7 +31,7 @@ const InvoiceForm = ({ businessProfile, onPreview }: InvoiceFormProps) => {
   };
 
   return (
-    <Form
+    <Form<InvoiceDTO>
       defaultValues={defaultValues}
       isLoading={false}
       onSubmit={onPreview}

@@ -4,7 +4,6 @@ import { pdf } from '@react-pdf/renderer';
 import { Download } from 'lucide-react';
 import { useRef, useState } from 'react';
 
-import { LineItem } from '@/components/forms/invoice/types';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { LineItemDTO } from '@/lib/validators/invoice';
 
 import { PdfDownload } from '../pdf';
 import { PreviewProps } from './types';
@@ -24,7 +24,7 @@ const Preview = ({ data, open, onOpenChange }: PreviewProps) => {
 
   const lineItems = data.lineItems || [];
   const subtotal = lineItems.reduce(
-    (sum: number, item: LineItem) => sum + item.quantity * item.rate,
+    (sum: number, item: LineItemDTO) => sum + item.quantity * item.rate,
     0,
   );
   const tax = subtotal * 0.1;
@@ -149,7 +149,7 @@ const Preview = ({ data, open, onOpenChange }: PreviewProps) => {
                   </tr>
                 </thead>
                 <tbody className='divide-y'>
-                  {lineItems.map((item: LineItem) => (
+                  {lineItems.map((item: LineItemDTO) => (
                     <tr key={item.id}>
                       <td className='py-4 text-sm text-[#1e293b]'>
                         {item.description}

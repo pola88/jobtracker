@@ -1,8 +1,8 @@
 import { ActionResponseBase } from '@/lib/types';
-import { loginSchema } from '@/lib/validators/auth';
+import { LoginSchemaDTO, loginSchema } from '@/lib/validators/auth';
 
 export async function loginAction(
-  values: FormData,
+  values: LoginSchemaDTO,
 ): Promise<ActionResponseBase> {
   try {
     const parsed = loginSchema.safeParse(values);

@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
-import type { Interview } from '@prisma/client';
-
 import { useModal } from '@/hooks/use-modal';
 import { countInterview, getInterviews } from '@/lib/data/interviews';
+import { InterviewDTO } from '@/lib/validators/interview';
 import { useInterviewStore } from '@/stores/interview';
 
 import DataTable from '../data-table';
@@ -22,7 +21,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
 
   const [fetchResult, setFetchResult] = useState<{
     nextCursor?: string;
-    interviews: Interview[] | null;
+    interviews: InterviewDTO[] | null;
     totalInterview: number;
   }>({ interviews: null, totalInterview: 0 });
 
@@ -56,7 +55,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
   }, [userId, currentCursor, pageSize, updatedAt]);
 
   const handleOnRowClick = useCallback(
-    (row: Interview) => {
+    (row: InterviewDTO) => {
       toggleModal(row.id);
     },
     [toggleModal],

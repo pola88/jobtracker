@@ -4,7 +4,7 @@ import { useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 
 import LineItemComponent from './line-item';
-import { ItemsProps, LineItem } from './types';
+import { ItemsProps } from './types';
 
 const Items = ({ form }: ItemsProps) => {
   const { fields, append, remove } = useFieldArray({
@@ -56,7 +56,7 @@ const Items = ({ form }: ItemsProps) => {
           <LineItemComponent
             key={item.id as string}
             index={index}
-            item={item as LineItem}
+            item={item}
             removeLineItem={() => remove(index)}
           />
         ))}

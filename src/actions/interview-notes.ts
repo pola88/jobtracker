@@ -1,6 +1,5 @@
 'use server';
 
-import { InterviewNote } from '@prisma/client';
 import { updateTag } from 'next/cache';
 
 import {
@@ -10,7 +9,12 @@ import {
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ActionResponseBase } from '@/lib/types';
-import { interviewNoteSchema } from '@/lib/validators/interview-note';
+import {
+  InterviewNoteDTO,
+  InterviewNoteFormDTO,
+  interviewNoteBaseSchema,
+  interviewNoteFormSchema,
+} from '@/lib/validators/interview-note';
 
 type DeleteInterviewNoteAttrs = {
   noteId: string;
@@ -18,14 +22,15 @@ type DeleteInterviewNoteAttrs = {
 };
 
 export type ActionResponse = ActionResponseBase & {
-  note?: InterviewNote;
+  note?: InterviewNoteDTO;
 };
 
 export async function addInterviewNoteAction(
-  formData: FormData,
+  interviewId: string,
+  formData: InterviewNoteFormDTO,
 ): Promise<ActionResponse> {
   try {
-    const parsed = interviewNoteSchema.safeParse(formData);
+    const parsed = interviewNoteFormSchema.safeParse(formData);
     if (!parsed.success) {
       return { success: false, message: 'Nota inválida' };
     }
@@ -33,7 +38,7 @@ export async function addInterviewNoteAction(
     const user = await requireCurrentUser();
     const interview = await prisma.interview.findFirst({
       where: {
-        id: parsed.data.interviewId,
+        id: interviewId,
         userId: user.id,
       },
     });
@@ -56,9 +61,13 @@ export async function addInterviewNoteAction(
     });
 
     invalidateInterviewCaches();
-    updateTag(`interviews-notes-${parsed.data.interviewId}`);
+    updateTag(`interviews-notes-${interviewId}`);
 
-    return { success: true, message: 'Nota agregada', note };
+    return {
+      success: true,
+      message: 'Nota agregada',
+      note: note as InterviewNoteDTO,
+    };
   } catch (error) {
     console.error(error);
     return { success: false, message: 'No se pudo guardar la nota' };
@@ -66,10 +75,11 @@ export async function addInterviewNoteAction(
 }
 
 export async function updateInterviewNote(
+  interviewId: string,
   noteId: string,
-  formData: FormData,
+  formData: InterviewNoteFormDTO,
 ): Promise<ActionResponse> {
-  const parsed = interviewNoteSchema.safeParse(formData);
+  const parsed = interviewNoteFormSchema.safeParse(formData);
   if (!parsed.success) {
     return { success: false, message: 'Invalid note' };
   }
@@ -77,7 +87,7 @@ export async function updateInterviewNote(
   const user = await requireCurrentUser();
   const interview = await prisma.interview.findFirst({
     where: {
-      id: parsed.data.interviewId,
+      id: interviewId,
       userId: user.id,
     },
   });
@@ -102,7 +112,9 @@ export async function updateInterviewNote(
     return { success: false, message: 'Invalid note' };
   }
 
-  return { success: true, note };
+  const parsedNote = interviewNoteBaseSchema.safeParse(note);
+
+  return { success: true, note: parsedNote.data };
 }
 
 export async function deleteInterviewNoteAction({

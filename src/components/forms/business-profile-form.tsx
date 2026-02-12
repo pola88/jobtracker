@@ -1,24 +1,21 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import countriesList from 'country-list';
 
 import { ActionResponse } from '@/actions/invoices-settings';
 import Form from '@/components/form';
 import { Field as FieldType } from '@/components/form/types';
 import {
-  BusinessProfileIndividualTypes,
+  BusinessProfileDTO,
   businessProfileIndividualSchema,
 } from '@/lib/validators/business-profile-individual';
 
 type BusinessProfileFormProps = {
-  action: (formData: FormData) => Promise<ActionResponse>;
-  isOrganization: boolean;
-  defaultValues?: BusinessProfileIndividualTypes;
+  action: (formData: BusinessProfileDTO) => Promise<ActionResponse>;
+  defaultValues?: BusinessProfileDTO;
 };
 
-const DEFAULT_VALUES: BusinessProfileIndividualTypes = {
+const DEFAULT_VALUES: BusinessProfileDTO = {
   firstName: '',
   lastName: '',
   companyName: '',
@@ -31,9 +28,10 @@ const DEFAULT_VALUES: BusinessProfileIndividualTypes = {
   state: '',
   postalCode: '',
   country: 'US',
+  isOrganization: false,
 };
 
-const fields: FieldType<typeof businessProfileIndividualSchema>[] = [
+const fields: FieldType<BusinessProfileDTO>[] = [
   {
     name: 'contact-row',
     type: 'group',
@@ -153,24 +151,16 @@ const fields: FieldType<typeof businessProfileIndividualSchema>[] = [
 
 const BusinessProfileForm = ({
   action,
-  isOrganization,
   defaultValues = DEFAULT_VALUES,
 }: BusinessProfileFormProps) => {
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: BusinessProfileDTO) => {
     const result = await action(data);
     return result;
   };
 
-  const values = useMemo(() => {
-    return {
-      ...defaultValues,
-      isOrganization,
-    };
-  }, [defaultValues, isOrganization]);
-
   return (
-    <Form
-      defaultValues={values}
+    <Form<BusinessProfileDTO>
+      defaultValues={defaultValues}
       onSubmit={onSubmit}
       schema={businessProfileIndividualSchema}
       fields={fields}

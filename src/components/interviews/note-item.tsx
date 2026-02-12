@@ -1,27 +1,29 @@
 import { Clock } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
-import { InterviewNote } from '@prisma/client';
-
 import {
   deleteInterviewNoteAction,
   updateInterviewNote,
 } from '@/actions/interview-notes';
 import { InterviewNoteForm } from '@/components/forms/interview-note';
 import { daysFromNow } from '@/lib/helpers/date';
+import {
+  InterviewNoteDTO,
+  InterviewNoteFormDTO,
+} from '@/lib/validators/interview-note';
 
 import { DeleteButtonWithConfirm } from '../button/delete-btn';
 import { EditButton } from '../button/edit-btn';
 
 type NoteItemProps = {
-  note: InterviewNote;
+  note: InterviewNoteDTO;
   onEdit: () => void;
   onDelete: (noteId: string) => void;
 };
 
 export function NoteItem({ note, onDelete }: NoteItemProps) {
   const [editMode, setEditMode] = useState(false);
-  const [currentNote, setNote] = useState<InterviewNote>(note);
+  const [currentNote, setNote] = useState<InterviewNoteDTO>(note);
   const handleOnDelete = useCallback(async () => {
     await deleteInterviewNoteAction({
       noteId: note.id,
@@ -35,15 +37,19 @@ export function NoteItem({ note, onDelete }: NoteItemProps) {
   }, []);
 
   const handleEdit = useCallback(
-    async (formData: FormData) => {
-      const result = await updateInterviewNote(note.id, formData);
+    async (formData: InterviewNoteFormDTO) => {
+      const result = await updateInterviewNote(
+        note.interviewId,
+        note.id,
+        formData,
+      );
       if (result.success && result.note) {
         setEditMode(false);
         setNote(result.note);
       }
       return result;
     },
-    [note.id],
+    [note.id, note.interviewId],
   );
 
   return (
@@ -52,7 +58,6 @@ export function NoteItem({ note, onDelete }: NoteItemProps) {
         <InterviewNoteForm
           action={handleEdit}
           defaultValues={{
-            interviewId: currentNote.interviewId,
             content: currentNote.content,
           }}
           onCancel={() => setEditMode(false)}

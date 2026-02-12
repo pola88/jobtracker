@@ -4,16 +4,16 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { loginAction } from '@/actions/login';
 import Form from '@/components/form';
-import { LoginSchemaType, loginSchema } from '@/lib/validators/auth';
+import { LoginSchemaDTO, loginSchema } from '@/lib/validators/auth';
 
 import { Field } from '../form/types';
 
-const DEFAULT_VALUES: LoginSchemaType = {
+const DEFAULT_VALUES: LoginSchemaDTO = {
   email: '',
   password: '',
 };
 
-const fields: Field<typeof loginSchema>[] = [
+const fields: Field<LoginSchemaDTO>[] = [
   {
     name: 'email',
     label: 'Email',
@@ -35,7 +35,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirectTo') ?? '/interviews';
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: LoginSchemaDTO) => {
     const result = await loginAction(data);
     if (result.success) {
       router.replace(redirectTo);
@@ -45,7 +45,7 @@ export function LoginForm() {
   };
 
   return (
-    <Form
+    <Form<LoginSchemaDTO>
       defaultValues={DEFAULT_VALUES}
       onSubmit={onSubmit}
       schema={loginSchema}

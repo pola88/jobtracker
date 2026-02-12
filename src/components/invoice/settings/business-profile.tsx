@@ -4,6 +4,7 @@ import {
 } from '@/actions/invoices-settings';
 import BusinessProfileForm from '@/components/forms/business-profile-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BusinessProfileDTO } from '@/lib/validators/business-profile-individual';
 
 type BusinessProfileProps = {
   isOrganization: boolean;
@@ -11,7 +12,7 @@ type BusinessProfileProps = {
 const BusinessProfile = async ({ isOrganization }: BusinessProfileProps) => {
   const businessProfile = await getBusinessProfile(isOrganization);
 
-  const handleOnSubmit = async (data: FormData) => {
+  const handleOnSubmit = async (data: BusinessProfileDTO) => {
     return updateOrCreateBusinessProfileAction(isOrganization, data);
   };
 
@@ -27,8 +28,8 @@ const BusinessProfile = async ({ isOrganization }: BusinessProfileProps) => {
       <CardContent>
         <BusinessProfileForm
           action={handleOnSubmit}
-          isOrganization={isOrganization}
           defaultValues={{
+            isOrganization,
             firstName: businessProfile?.firstName || '',
             lastName: businessProfile?.lastName || '',
             companyName: businessProfile?.companyName || '',

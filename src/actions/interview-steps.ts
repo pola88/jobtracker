@@ -1,6 +1,5 @@
 'use server';
 
-import { InterviewStep } from '@prisma/client';
 import { updateTag } from 'next/cache';
 
 import {
@@ -11,8 +10,9 @@ import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ActionResponseBase } from '@/lib/types';
 import {
-  interviewStepSchema,
-  updateStepSchema,
+  InterviewStepDTO,
+  InterviewStepFormDTO,
+  interviewStepFormSchema,
 } from '@/lib/validators/interview-step';
 
 type DeleteInterviewStepAttrs = {
@@ -21,21 +21,22 @@ type DeleteInterviewStepAttrs = {
 };
 
 export type ActionResponse = ActionResponseBase & {
-  step?: InterviewStep;
+  step?: InterviewStepDTO;
 };
 
 export async function addInterviewStepAction(
-  formData: FormData,
+  interviewId: string,
+  formData: InterviewStepFormDTO,
 ): Promise<ActionResponse> {
   try {
-    const parsed = interviewStepSchema.safeParse(formData);
+    const parsed = interviewStepFormSchema.safeParse(formData);
     if (!parsed.success) {
       return { success: false, message: 'Paso inválido' };
     }
 
     const user = await requireCurrentUser();
     const interview = await prisma.interview.findFirst({
-      where: { id: parsed.data.interviewId, userId: user.id },
+      where: { id: interviewId, userId: user.id },
     });
 
     if (!interview) {
@@ -56,7 +57,7 @@ export async function addInterviewStepAction(
     });
 
     invalidateInterviewCaches();
-    updateTag(`interviews-steps-${parsed.data.interviewId}`);
+    updateTag(`interviews-steps-${interviewId}`);
     return { success: true, message: 'Paso agregado' };
   } catch (error) {
     console.error(error);
@@ -65,10 +66,12 @@ export async function addInterviewStepAction(
 }
 
 export async function updateInterviewStepAction(
-  formData: FormData,
+  interviewId: string,
+  stepId: string,
+  formData: InterviewStepFormDTO,
 ): Promise<ActionResponse> {
   try {
-    const parsed = updateStepSchema.safeParse(formData);
+    const parsed = interviewStepFormSchema.safeParse(formData);
     if (!parsed.success) {
       return { success: false, message: 'Paso inválido' };
     }
@@ -76,8 +79,8 @@ export async function updateInterviewStepAction(
     const user = await requireCurrentUser();
     const step = await prisma.interviewStep.findFirst({
       where: {
-        id: parsed.data.stepId,
-        interview: { id: parsed.data.interviewId, userId: user.id },
+        id: stepId,
+        interview: { id: interviewId, userId: user.id },
       },
       select: { id: true, interviewId: true },
     });

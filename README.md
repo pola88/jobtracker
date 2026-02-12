@@ -38,3 +38,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Tech debt
 
 - Update Shadcn Form, it uses Field and Inputs
+- Create helpers to transform Prisma objects to DTO:
+
+  ```tc
+    export function mapInterviewToDTO(
+      interview: Prisma.Interview
+    ): InterviewDTO {
+      return {
+        id: interview.id,
+        amount: interview.amount.toNumber(),
+        ...
+      };
+    }
+
+  ```

@@ -1,13 +1,12 @@
 'use client';
 
-import { Interview } from '@prisma/client';
-
 import { cn } from '@/lib/utils';
+import { InterviewDTO } from '@/lib/validators/interview';
 
 import { DeleteBtn } from './deleteBtn';
 
 type InterviewActionsProps = {
-  interview: Interview;
+  interview: InterviewDTO;
   className?: string;
 };
 
@@ -17,7 +16,7 @@ export const InterviewActions = ({
 }: InterviewActionsProps) => {
   return (
     <div className={cn(className)} onClick={(evt) => evt.stopPropagation()}>
-      <DeleteBtn interview={interview} />
+      <DeleteBtn interviewId={interview.id} />
     </div>
   );
 };

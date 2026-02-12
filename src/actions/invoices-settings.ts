@@ -3,24 +3,29 @@
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { ActionResponseBase } from '@/lib/types';
-import { businessProfileIndividualSchema } from '@/lib/validators/business-profile-individual';
+import {
+  BusinessProfileDTO,
+  businessProfileIndividualSchema,
+} from '@/lib/validators/business-profile-individual';
 
 export type ActionResponse = ActionResponseBase & {
   businessProfileId?: string;
 };
 
-export async function getBusinessProfile(isOrganization: boolean = false) {
+export async function getBusinessProfile(
+  isOrganization: boolean = false,
+): Promise<BusinessProfileDTO> {
   const user = await requireCurrentUser();
   const businessProfile = await prisma.businessProfile.findFirst({
     where: { userId: user.id, isOrganization },
   });
 
-  return businessProfile;
+  return businessProfile as BusinessProfileDTO;
 }
 
 export async function updateOrCreateBusinessProfileAction(
   isOrganization: boolean,
-  formData: FormData,
+  formData: BusinessProfileDTO,
 ): Promise<ActionResponse> {
   const user = await requireCurrentUser();
   const parsed = businessProfileIndividualSchema.safeParse(formData);
