@@ -1,1 +1,1 @@
-export { InterviewStatus } from './interview-status';
+export { InterviewStatus, InterviewStatusBadge } from './interview-status';

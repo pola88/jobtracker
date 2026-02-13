@@ -4,11 +4,11 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ExternalLink } from 'lucide-react';
 
 import { styles } from '@/components/data-table/styles';
+import { InterviewStatus } from '@/components/interview-status';
 import { daysFromNow, formatDate } from '@/lib/helpers/date';
 import { InterviewDTO } from '@/lib/validators/interview';
 
 import { InterviewActions } from './actions';
-import { Status } from './status';
 
 export const columns: ColumnDef<InterviewDTO>[] = [
   {
@@ -32,7 +32,7 @@ export const columns: ColumnDef<InterviewDTO>[] = [
     header: 'Status',
     cell: ({ row }) => {
       return (
-        <Status
+        <InterviewStatus
           key={row.original.id}
           interviewId={row.original.id}
           status={row.original.status}

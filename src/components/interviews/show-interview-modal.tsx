@@ -75,6 +75,7 @@ export const ShowInterviewModal = () => {
                     <Calendar className='mr-1.5' />
                     Applied {formatDate(interview.date, 'LLL dd, yyyy')}
                     <InterviewStatus
+                      interviewId={interview.id}
                       status={interview.status}
                       className='ml-2'
                     />
