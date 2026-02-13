@@ -87,7 +87,7 @@ const fields: FieldType<InterviewFormDTO>[] = [
         label: 'Currency',
         placeholder: 'Currency',
         type: 'select',
-        options: CURRENCIES.map((currency) => ({
+        options: Object(CURRENCIES).map((currency: string) => ({
           label: currency,
           value: currency,
         })),

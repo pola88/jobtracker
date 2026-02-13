@@ -5,7 +5,7 @@ import { unstable_cache } from 'next/cache';
 
 import { requireCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { InterviewDTO } from '@/lib/validators/interview';
+import { InterviewDTO, mapInterviewToDTO } from '@/lib/validators/interview';
 import { InterviewNoteDTO } from '@/lib/validators/interview-note';
 import { InterviewStepDTO } from '@/lib/validators/interview-step';
 
@@ -47,17 +47,7 @@ export const getInterviews = async ({
       const nextCursor = hasMore ? sliced[sliced.length - 1]?.id : undefined;
 
       return {
-        interviews: sliced.map(
-          (row) =>
-            ({
-              ...row,
-              compensationUpper: Number(row.compensationUpper),
-              compensationLower: Number(row.compensationLower),
-              date: new Date(row.date),
-              createdAt: new Date(row.createdAt),
-              updatedAt: new Date(row.updatedAt),
-            }) as InterviewDTO,
-        ),
+        interviews: sliced.map(mapInterviewToDTO),
         nextCursor,
       };
     },
@@ -90,10 +80,12 @@ export const countInterview = async (userId: string) =>
 export const getInterviewById = async (id: string) => {
   const user = await requireCurrentUser();
   return unstable_cache(
-    async () => {
-      return prisma.interview.findFirst({
+    async (): Promise<InterviewDTO | null> => {
+      const result = await prisma.interview.findFirst({
         where: { id, userId: user.id },
       });
+
+      return result ? mapInterviewToDTO(result) : null;
     },
     ['getInterview', id, user.id],
     {
@@ -101,19 +93,6 @@ export const getInterviewById = async (id: string) => {
     },
   )();
 };
-
-export async function getInterviewStepsAndNotes(interviewId: string) {
-  return Promise.all([
-    prisma.interviewStep.findMany({
-      where: { interviewId },
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.interviewNote.findMany({
-      where: { interviewId },
-      orderBy: { createdAt: 'desc' },
-    }),
-  ]);
-}
 
 export const getInterviewSteps = async (interviewId: string) =>
   unstable_cache(

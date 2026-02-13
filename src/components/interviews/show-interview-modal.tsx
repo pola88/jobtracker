@@ -3,8 +3,6 @@
 import { Building2, Calendar, Luggage } from 'lucide-react';
 import { useEffect, useState, useTransition } from 'react';
 
-import { Interview } from '@prisma/client';
-
 import { ShowInterviewModalSkeleton } from '@/components/skeletons/show-interview';
 import {
   Dialog,
@@ -17,6 +15,7 @@ import {
 import { useModal } from '@/hooks/use-modal';
 import { getInterviewById } from '@/lib/data/interviews';
 import { formatDate } from '@/lib/helpers/date';
+import { InterviewDTO } from '@/lib/validators/interview';
 
 import { InterviewStatus } from '../interview-status';
 import { NotesPanel } from './notes-panel';
@@ -26,7 +25,7 @@ import { StepsPanel } from './steps-panel';
 const MODAL_NAME = 'ShowInterviewModal';
 
 export const ShowInterviewModal = () => {
-  const [interview, setInterview] = useState<Interview | null>(null);
+  const [interview, setInterview] = useState<InterviewDTO | null>(null);
   const [isLoading, startTransaction] = useTransition();
 
   const { modalStatus, toggleModal } = useModal({
