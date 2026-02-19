@@ -13,6 +13,7 @@ interface GetInterviewsProps {
   userId: string;
   cursor?: string | null;
   pageSize?: number;
+  sortBy?: { [id: string]: string };
 }
 
 type GetMetricResult = Record<InterviewStatus, number> & {
@@ -28,6 +29,7 @@ export const getInterviews = async ({
   userId,
   cursor,
   pageSize = 10,
+  sortBy,
 }: GetInterviewsProps) =>
   unstable_cache(
     async (): Promise<GetInterviewResult> => {
@@ -36,7 +38,7 @@ export const getInterviews = async ({
         where: {
           userId,
         },
-        orderBy: { updatedAt: 'desc' },
+        orderBy: sortBy ? sortBy : { updatedAt: 'desc' },
         take: take + 1,
         cursor: cursor ? { id: cursor } : undefined,
         skip: cursor ? 1 : 0,
@@ -56,6 +58,7 @@ export const getInterviews = async ({
       userId,
       cursor?.toString() || 'empty',
       pageSize.toString(),
+      JSON.stringify(sortBy),
     ],
     {
       revalidate: false,

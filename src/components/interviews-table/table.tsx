@@ -1,5 +1,6 @@
 'use client';
 
+import { SortingState } from '@tanstack/react-table';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
 import { useModal } from '@/hooks/use-modal';
@@ -15,6 +16,9 @@ interface InterviewsTableProps {
 }
 
 export function InterviewsTable({ userId }: InterviewsTableProps) {
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'updatedAt', desc: true },
+  ]);
   const [isLoading, startTransaction] = useTransition();
   const updatedAt = useInterviewStore((state) => state.updatedAt);
   const { toggleModal } = useModal({ modalName: 'ShowInterviewModal' });
@@ -36,11 +40,15 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
   useEffect(() => {
     startTransaction(() => {
       const fetchInterviews = async () => {
+        const sortBy = {
+          [sorting[0].id]: sorting[0].desc ? 'desc' : 'asc',
+        };
         const [result, totalInterview] = await Promise.all([
           getInterviews({
             userId,
             cursor: currentCursor,
             pageSize,
+            sortBy,
           }),
           countInterview(userId),
         ]);
@@ -52,7 +60,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
       };
       fetchInterviews();
     });
-  }, [userId, currentCursor, pageSize, updatedAt]);
+  }, [userId, currentCursor, pageSize, updatedAt, sorting]);
 
   const handleOnRowClick = useCallback(
     (row: InterviewDTO) => {
@@ -73,6 +81,8 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
           setPrevCursor(currentCursor);
           setCurrentCursor(cursor);
         }}
+        sorting={sorting}
+        onSortingChange={setSorting}
         pagination={{
           prevCursor: prevCursor,
           nextCursor: fetchResult.nextCursor,

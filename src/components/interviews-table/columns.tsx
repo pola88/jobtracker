@@ -1,19 +1,25 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ExternalLink } from 'lucide-react';
+import { Building2, ExternalLink } from 'lucide-react';
 
 import { styles } from '@/components/data-table/styles';
 import { InterviewStatus } from '@/components/interview-status';
 import { daysFromNow, formatDate } from '@/lib/helpers/date';
 import { InterviewDTO } from '@/lib/validators/interview';
 
+import { SortHeader } from '../data-table/sort-header';
 import { InterviewActions } from './actions';
 
 export const columns: ColumnDef<InterviewDTO>[] = [
   {
     accessorKey: 'company',
-    header: 'Company',
+    header: ({ column }) => <SortHeader column={column} text='Company' />,
+    cell: ({ row }) => (
+      <span className='flex gap-2 items-center'>
+        <Building2 className='h-6 w-6' /> {row.original.company}
+      </span>
+    ),
   },
   {
     accessorKey: 'position',
@@ -22,14 +28,17 @@ export const columns: ColumnDef<InterviewDTO>[] = [
   },
   {
     accessorKey: 'date',
-    header: 'Application Date',
+    header: ({ column }) => (
+      <SortHeader column={column} text='Application Date' />
+    ),
     cell: ({ row }) => {
       return <span>{formatDate(row.original.date)}</span>;
     },
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: ({ column }) => <SortHeader column={column} text='Status' />,
+    enableSorting: true,
     cell: ({ row }) => {
       return (
         <InterviewStatus
@@ -61,7 +70,7 @@ export const columns: ColumnDef<InterviewDTO>[] = [
   },
   {
     accessorKey: 'updatedAt',
-    header: 'Updated at',
+    header: ({ column }) => <SortHeader column={column} text='Updated at' />,
     cell: ({ row }) => {
       return <span>{daysFromNow(row.original.updatedAt)}</span>;
     },

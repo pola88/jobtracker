@@ -36,15 +36,35 @@ const DataTable = <TData, TValue>({
   pagination,
   isLoading,
   onPageSizeChange,
+  onSortingChange,
+  sorting,
 }: DataTableProps<TData, TValue>) => {
   const table = useReactTable({
     data: data ?? [],
     columns,
+    manualSorting: true,
+    state: {
+      sorting,
+    },
+    enableSortingRemoval: false,
+    enableMultiSort: false,
     getCoreRowModel: getCoreRowModel(),
     ...(pagination && {
       manualPagination: true,
       rowCount: pagination.countElement,
     }),
+    onSortingChange: onSortingChange
+      ? (updaterOrValue) => {
+          if (typeof updaterOrValue === 'function') {
+            const oldSorting = table?.getState().sorting ?? [];
+            const newSorting = updaterOrValue(oldSorting);
+            onSortingChange(newSorting);
+          } else {
+            console.log('updaterOrValue', updaterOrValue);
+            onSortingChange(updaterOrValue);
+          }
+        }
+      : undefined,
   });
 
   const fetchingData = isLoading || data === null;
