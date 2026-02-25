@@ -1,7 +1,7 @@
 import { UseFormReturn } from 'react-hook-form';
 
 import { ActionResponseBase } from '@/lib/types';
-import { BusinessProfileDTO } from '@/lib/validators/business-profile-individual';
+import { BusinessProfileDTO } from '@/lib/validators/business-profile';
 import { InvoiceDTO, LineItemDTO } from '@/lib/validators/invoice';
 
 export interface ItemsProps {

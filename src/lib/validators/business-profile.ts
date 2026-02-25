@@ -1,24 +1,32 @@
+import { BusinessProfile } from '@prisma/client';
 import { z } from 'zod';
 
 const baseSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  companyName: z.string().optional(),
+  firstName: z.string().optional().nullable(),
+  lastName: z.string().optional().nullable(),
+  companyName: z.string().optional().nullable(),
+  isOrganization: z.boolean(),
+});
+
+const extendedSchema = baseSchema.extend({
+  id: z.string(),
   email: z.email('Email inválido'),
-  website: z.string().optional(),
-  phoneNumber: z.string().optional(),
+  website: z.string().optional().nullable(),
+  phoneNumber: z.string().optional().nullable(),
   addressLine1: z.string().min(2, 'La dirección es obligatoria'),
-  addressLine2: z.string().optional(),
+  addressLine2: z.string().optional().nullable(),
   city: z.string().min(2, 'La ciudad es obligatoria'),
   state: z.string().min(2, 'El estado es obligatorio'),
   postalCode: z.string().min(2, 'El código postal es obligatorio'),
   country: z.string().min(2, 'El país es obligatorio'),
-  isOrganization: z.boolean(),
+  isClient: z.boolean().default(false),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
-type ConditionalRefinementsOpts = typeof baseSchema;
-
-const conditionalRefinements = (schema: ConditionalRefinementsOpts) =>
+const conditionalRefinements = <TSchema extends typeof baseSchema>(
+  schema: TSchema,
+) =>
   schema
     .refine(
       (data) => {
@@ -69,12 +77,25 @@ const conditionalRefinements = (schema: ConditionalRefinementsOpts) =>
       },
     );
 
-export const businessProfileIndividualSchema =
-  conditionalRefinements(baseSchema);
+export const businessProfileSchema = conditionalRefinements(extendedSchema);
 
-export type BusinessProfileDTO = z.infer<
-  typeof businessProfileIndividualSchema
->;
+export type BusinessProfileDTO = z.infer<typeof businessProfileSchema>;
 
-export const updateBusinessProfileIndividualSchema =
-  conditionalRefinements(baseSchema);
+export const businessProfileFormSchema = conditionalRefinements(
+  extendedSchema.omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  }),
+);
+export type BusinessProfileFormDTO = z.infer<typeof businessProfileFormSchema>;
+
+export function mapBusinessProfileToDTO(
+  businessProfile: BusinessProfile,
+): BusinessProfileDTO {
+  return {
+    ...businessProfile,
+    createdAt: new Date(businessProfile.createdAt),
+    updatedAt: new Date(businessProfile.updatedAt),
+  };
+}

@@ -3,7 +3,7 @@
 import { useCallback } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
-import { useModalStore } from '@/stores/modal-store';
+import { Payload, useModalStore } from '@/stores/modal-store';
 
 interface UseModalProps {
   modalName: string;
@@ -17,11 +17,11 @@ export const useModal = ({ modalName }: UseModalProps) => {
   const closeModal = useModalStore(useShallow((state) => state.closeModal));
 
   const toggleModal = useCallback(
-    (objectId?: string) => {
+    (payload?: Payload) => {
       if (modalStatus) {
         closeModal(modalName);
       } else {
-        openModal(modalName, objectId);
+        openModal(modalName, payload);
       }
     },
     [modalStatus, openModal, closeModal, modalName],

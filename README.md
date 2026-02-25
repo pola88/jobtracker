@@ -37,8 +37,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Tech debt
 
-- Update Shadcn Form, it uses Field and Inputs
-- Create helpers to transform Prisma objects to DTO:
+- [ ] Update Shadcn Form, it uses Field and Inputs
+- [x] Create helpers to transform Prisma objects to DTO:
 
   ```tc
     export function mapInterviewToDTO(
@@ -52,3 +52,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     }
 
   ```
+
+- [ ] Get the userId from `requireCurrentUser()` on server actions
+- [ ] Refactor table to support pagination and sort. I have repeated code (Example: clint-list and interview-table)

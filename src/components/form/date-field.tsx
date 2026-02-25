@@ -14,30 +14,34 @@ import {
 
 import { Button } from '../ui/button';
 
-interface DateFieldProps {
-  field: FieldValues;
-}
+// export interface DateFieldProps {
+//   id: string;
+//   value: Date;
+//   onChange: (value?: Date) => void;
+//   required?: undefined;
+// }
 
-export function DateField({ field }: DateFieldProps) {
+export function DateField({ id, value, onChange, required }: FieldValues) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          id={field.id}
+          id={id}
           variant='outline'
-          data-empty={!field.value}
+          data-empty={!value}
           className='data-[empty=true]:text-muted-foreground w-full justify-between text-left font-normal'
         >
-          {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+          {value ? format(value, 'PPP') : <span>Pick a date</span>}
           <CalendarIcon />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0' align='start'>
         <Calendar
           mode='single'
-          selected={field.value}
-          onSelect={field.onChange}
-          defaultMonth={field.value}
+          selected={value}
+          onSelect={onChange}
+          defaultMonth={value}
+          required={required}
         />
       </PopoverContent>
     </Popover>

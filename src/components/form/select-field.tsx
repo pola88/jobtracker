@@ -8,13 +8,14 @@ import {
 import { SelectFieldProps } from './types';
 
 const SelectField = ({
-  field,
+  value,
+  onChange,
   options,
   disabled,
   placeholder = 'Select an option',
 }: SelectFieldProps) => {
   return (
-    <Select onValueChange={field.onChange} defaultValue={field.value}>
+    <Select onValueChange={onChange} defaultValue={value}>
       <SelectTrigger disabled={disabled}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

@@ -38,6 +38,7 @@ const DataTable = <TData, TValue>({
   onPageSizeChange,
   onSortingChange,
   sorting,
+  topRight,
 }: DataTableProps<TData, TValue>) => {
   const table = useReactTable({
     data: data ?? [],
@@ -71,30 +72,34 @@ const DataTable = <TData, TValue>({
 
   return (
     <div className={styles.container}>
-      {pagination?.pageSize && (
-        <Select
-          defaultValue={`${pagination?.pageSize}`}
-          onValueChange={(newPageSize) =>
-            onPageSizeChange?.(Number(newPageSize))
-          }
-        >
-          <SelectTrigger className='w-26 m-4 flex gap-2'>
-            Show
-            <SelectValue placeholder='Show' />
-          </SelectTrigger>
-          <SelectContent>
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <SelectItem key={pageSize} value={`${pageSize}`}>
-                {pageSize}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
+      <div className={styles.header}>
+        {pagination?.pageSize && (
+          <Select
+            defaultValue={`${pagination?.pageSize}`}
+            onValueChange={(newPageSize) =>
+              onPageSizeChange?.(Number(newPageSize))
+            }
+          >
+            <SelectTrigger className='w-26 flex gap-2'>
+              Show
+              <SelectValue placeholder='Show' />
+            </SelectTrigger>
+            <SelectContent>
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <SelectItem key={pageSize} value={`${pageSize}`}>
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        {topRight && <div>{topRight}</div>}
+      </div>
+
       {fetchingData && <DataTableSkeleton table={table} />}
       {!fetchingData && (
         <Table>
-          <TableHeader className={styles.header}>
+          <TableHeader className={styles.tableHeader}>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

@@ -1,4 +1,5 @@
 import { ColumnDef, SortingState, Table } from '@tanstack/react-table';
+import React from 'react';
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -15,6 +16,7 @@ export interface DataTableProps<TData, TValue> {
   };
   onPageSizeChange?: (pageSize: number) => void;
   isLoading?: boolean;
+  topRight?: React.ReactNode;
 }
 
 export interface DataTableSkeletonProps<TData> {

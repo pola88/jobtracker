@@ -1,4 +1,4 @@
-import { BusinessProfileDTO } from '@/lib/validators/business-profile-individual';
+import { BusinessProfileDTO } from '@/lib/validators/business-profile';
 
 export type BusinessProfileProps = {
   businessProfile: BusinessProfileDTO;

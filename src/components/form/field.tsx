@@ -10,9 +10,20 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
+import { CheckboxField } from './checkbox-field';
 import { DateField } from './date-field';
 import SelectField from './select-field';
 import { FieldProps } from './types';
+
+type FieldType = 'select' | 'textarea' | 'date' | 'input' | 'checkbox';
+
+const fieldComponentMap = {
+  select: SelectField,
+  textarea: Textarea,
+  date: DateField,
+  input: Input,
+  checkbox: CheckboxField,
+} as const;
 
 const Field = <T extends FieldValues>({
   form,
@@ -48,39 +59,22 @@ const Field = <T extends FieldValues>({
   }, [form, shouldHide, checkIfDisabled]);
 
   if (hidden) return null;
-
+  const Component = fieldComponentMap[type as FieldType] ?? Input;
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          {type != 'checkbox' && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            {type === 'select' ? (
-              <SelectField
-                placeholder={placeholder}
-                field={field}
-                options={options || []}
-                disabled={disabled}
-              />
-            ) : type === 'textarea' ? (
-              <Textarea
-                placeholder={placeholder}
-                className='min-h-25'
-                {...field}
-                disabled={disabled}
-              />
-            ) : type === 'date' ? (
-              <DateField field={field} />
-            ) : (
-              <Input
-                placeholder={placeholder}
-                {...field}
-                type={type}
-                disabled={disabled}
-              />
-            )}
+            <Component
+              {...field}
+              label={label}
+              disabled={disabled}
+              placeholder={placeholder}
+              options={options ?? []}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

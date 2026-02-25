@@ -1,25 +1,33 @@
 import { create } from 'zustand';
 
+export type Payload = {
+  [id: string]: string | boolean;
+};
+
 type ObjectStatus = {
-  id: string | undefined;
+  id?: string;
   isOpen: boolean;
+  payload?: Payload;
 };
 
 type ModalStore = {
   modalStatus: Record<string, ObjectStatus>;
-  openModal: (modalName: string, objectId?: string) => void;
+  openModal: (modalName: string, payload?: Payload) => void;
   closeModal: (modalName: string) => void;
 };
 
 export const useModalStore = create<ModalStore>((set) => ({
   modalStatus: {},
-  openModal: (modalName: string, objectId?: string) =>
+  openModal: (modalName: string, payload?: Payload) =>
     set((state) => ({
       modalStatus: {
         ...state.modalStatus,
-        [modalName]: { id: objectId, isOpen: true },
+        [modalName]: {
+          isOpen: true,
+          payload,
+          ...(payload?.id && { id: payload?.id.toString() }),
+        },
       },
-      objectId,
     })),
   closeModal: (modalName: string) =>
     set((state) => {

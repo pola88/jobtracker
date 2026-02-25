@@ -3,21 +3,18 @@
 import { SortingState } from '@tanstack/react-table';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
+import DataTable from '@/components/data-table';
 import { useModal } from '@/hooks/use-modal';
-import { countInterview, getInterviews } from '@/lib/data/interviews';
-import { InterviewDTO } from '@/lib/validators/interview';
+import { countClients, getClients } from '@/lib/data/business-profiles';
+import { BusinessProfileDTO } from '@/lib/validators/business-profile';
 import { useInterviewStore } from '@/stores/interview';
 
-import DataTable from '../data-table';
 import { columns } from './columns';
+import { NewButton } from './new-button';
 
-interface InterviewsTableProps {
-  userId: string;
-}
-
-export function InterviewsTable({ userId }: InterviewsTableProps) {
+export function ClientList() {
   const [sorting, setSorting] = useState<SortingState>([
-    { id: 'updatedAt', desc: true },
+    { id: 'createdAt', desc: true },
   ]);
   const [isLoading, startTransaction] = useTransition();
   const updatedAt = useInterviewStore((state) => state.updatedAt);
@@ -25,9 +22,9 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
 
   const [fetchResult, setFetchResult] = useState<{
     nextCursor?: string;
-    interviews: InterviewDTO[] | null;
-    totalInterview: number;
-  }>({ interviews: null, totalInterview: 0 });
+    clients: BusinessProfileDTO[] | null;
+    totalClients: number;
+  }>({ clients: null, totalClients: 0 });
 
   const [currentCursor, setCurrentCursor] = useState<string | null | undefined>(
     null,
@@ -43,27 +40,26 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
         const sortBy = {
           [sorting[0].id]: sorting[0].desc ? 'desc' : 'asc',
         };
-        const [result, totalInterview] = await Promise.all([
-          getInterviews({
-            userId,
+        const [result, totalClients] = await Promise.all([
+          getClients({
             cursor: currentCursor,
             pageSize,
             sortBy,
           }),
-          countInterview(userId),
+          countClients(),
         ]);
         setFetchResult({
           nextCursor: result.nextCursor,
-          interviews: result.interviews,
-          totalInterview,
+          clients: result.clients,
+          totalClients,
         });
       };
       fetchInterviews();
     });
-  }, [userId, currentCursor, pageSize, updatedAt, sorting]);
+  }, [currentCursor, pageSize, updatedAt, sorting]);
 
   const handleOnRowClick = useCallback(
-    (row: InterviewDTO) => {
+    (row: BusinessProfileDTO) => {
       toggleModal({ id: row.id });
     },
     [toggleModal],
@@ -73,7 +69,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
     <div className='glass-panel rounded-xl border'>
       <DataTable
         columns={columns}
-        data={fetchResult.interviews}
+        data={fetchResult.clients}
         onRowClick={handleOnRowClick}
         isLoading={isLoading}
         onPageSizeChange={setPageSize}
@@ -87,8 +83,9 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
           prevCursor: prevCursor,
           nextCursor: fetchResult.nextCursor,
           pageSize,
-          countElement: fetchResult.totalInterview,
+          countElement: fetchResult.totalClients,
         }}
+        topRight={<NewButton />}
       />
     </div>
   );

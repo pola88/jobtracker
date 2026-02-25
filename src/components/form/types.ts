@@ -85,7 +85,8 @@ export type FormProps<T extends FieldValues> = {
 };
 
 export type SelectFieldProps = {
-  field: FieldValues;
+  value: string;
+  onChange: (value: string) => void;
   options: SelectFieldOption[];
   disabled?: boolean;
   placeholder?: string;

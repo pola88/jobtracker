@@ -1,21 +1,24 @@
 'use client';
 
+import { forwardRef } from 'react';
+
 import countriesList from 'country-list';
 
-import { ActionResponse } from '@/actions/invoices-settings';
-import Form from '@/components/form';
+import { ActionResponse } from '@/actions/business-profiles';
+import Form, { type FormRef } from '@/components/form';
 import { Field as FieldType } from '@/components/form/types';
 import {
-  BusinessProfileDTO,
-  businessProfileIndividualSchema,
-} from '@/lib/validators/business-profile-individual';
+  BusinessProfileFormDTO,
+  businessProfileFormSchema,
+} from '@/lib/validators/business-profile';
 
 type BusinessProfileFormProps = {
-  action: (formData: BusinessProfileDTO) => Promise<ActionResponse>;
-  defaultValues?: BusinessProfileDTO;
+  action: (formData: BusinessProfileFormDTO) => Promise<ActionResponse>;
+  defaultValues?: BusinessProfileFormDTO;
+  afterSubmit?: (success: boolean) => void;
 };
 
-const DEFAULT_VALUES: BusinessProfileDTO = {
+const DEFAULT_VALUES: BusinessProfileFormDTO = {
   firstName: '',
   lastName: '',
   companyName: '',
@@ -29,78 +32,82 @@ const DEFAULT_VALUES: BusinessProfileDTO = {
   postalCode: '',
   country: 'US',
   isOrganization: false,
+  isClient: false,
 };
 
-const fields: FieldType<BusinessProfileDTO>[] = [
+const fields: FieldType<BusinessProfileFormDTO>[] = [
   {
-    name: 'contact-row',
-    type: 'group',
-    columns: 2,
-    label: 'Información básica',
-    fields: [
-      {
-        name: 'companyName',
-        label: 'Nombre de la empresa',
-        placeholder: 'Nombre de la empresa',
-        type: 'text',
-        shouldHide: (values) => !values.isOrganization,
-        fullWidth: true,
-      },
-      {
-        name: 'firstName',
-        label: 'Nombre',
-        placeholder: 'Nombre',
-        type: 'text',
-      },
-      {
-        name: 'lastName',
-        label: 'Apellido',
-        placeholder: 'Apellido',
-        type: 'text',
-      },
-      {
-        name: 'email',
-        label: 'Email',
-        placeholder: 'Email',
-        type: 'email',
-      },
-      {
-        name: 'website',
-        label: 'Sitio web',
-        placeholder: 'Sitio web',
-        type: 'url',
-      },
-    ],
+    name: 'isOrganization',
+    type: 'checkbox',
+    label: 'Organization',
+    placeholder: 'Organization',
+  },
+  // {
+  //   name: 'contact-row',
+  //   type: 'group',
+  //   columns: 2,
+  //   label: 'Información básica',
+  //   fields: [
+  {
+    name: 'companyName',
+    label: 'Nombre de la empresa',
+    placeholder: 'Nombre de la empresa',
+    type: 'text',
+    shouldHide: (values) => !values.isOrganization,
+    fullWidth: true,
+  },
+  {
+    name: 'firstName',
+    label: 'Nombre',
+    placeholder: 'Nombre',
+    type: 'text',
+    fullWidth: true,
+  },
+  {
+    name: 'lastName',
+    label: 'Apellido',
+    placeholder: 'Apellido',
+    type: 'text',
+    fullWidth: true,
+  },
+  {
+    name: 'email',
+    label: 'Email',
+    placeholder: 'Email',
+    type: 'email',
+    fullWidth: true,
+  },
+  {
+    name: 'website',
+    label: 'Sitio web',
+    placeholder: 'Sitio web',
+    type: 'url',
+    fullWidth: true,
   },
   {
     name: 'address-row',
     type: 'group',
-    columns: 2,
+    columns: 1,
     label: 'Contacto',
     fields: [
       {
-        name: 'address-info-group',
-        type: 'group',
-        columns: 1,
-        fields: [
-          {
-            name: 'addressLine1',
-            label: 'Dirección 1',
-            placeholder: 'Dirección',
-            type: 'text',
-          },
-          {
-            name: 'addressLine2',
-            label: 'Dirección 2',
-            placeholder: 'Dirección 2',
-            type: 'text',
-          },
-        ],
+        name: 'addressLine1',
+        label: 'Dirección 1',
+        placeholder: 'Dirección',
+        type: 'text',
+        fullWidth: true,
+      },
+      {
+        name: 'addressLine2',
+        label: 'Dirección 2',
+        placeholder: 'Dirección 2',
+        type: 'text',
+        fullWidth: true,
       },
       {
         name: 'country-info-group',
         type: 'group',
-        columns: 2,
+        columns: 3,
         fields: [
           {
             name: 'city',
@@ -120,53 +127,48 @@ const fields: FieldType<BusinessProfileDTO>[] = [
             placeholder: 'Código postal',
             type: 'text',
           },
-          {
-            name: 'country',
-            label: 'País',
-            placeholder: 'Selecciona un país',
-            type: 'select',
-            options: countriesList.getNames().map((country: string) => ({
-              label: country,
-              value: country,
-            })),
-          },
         ],
-      },
-      {
-        name: 'phoneNumber',
-        label: 'Teléfono',
-        placeholder: 'Teléfono',
-        type: 'tel',
       },
     ],
   },
   {
-    name: 'isOrganization',
-    type: 'checkbox',
-    label: '¿Es una empresa?',
-    placeholder: '¿Es una empresa?',
-    shouldHide: () => true,
+    name: 'phoneNumber',
+    label: 'Teléfono',
+    placeholder: 'Teléfono',
+    type: 'tel',
+  },
+  {
+    name: 'country',
+    label: 'País',
+    placeholder: 'Selecciona un país',
+    type: 'select',
+    options: countriesList.getNames().map((country: string) => ({
+      label: country,
+      value: country,
+    })),
   },
 ];
 
-const BusinessProfileForm = ({
-  action,
-  defaultValues = DEFAULT_VALUES,
-}: BusinessProfileFormProps) => {
-  const onSubmit = async (data: BusinessProfileDTO) => {
+export const BusinessProfileForm = forwardRef<
+  FormRef,
+  BusinessProfileFormProps
+>(({ action, defaultValues = DEFAULT_VALUES, afterSubmit }, ref) => {
+  const onSubmit = async (data: BusinessProfileFormDTO) => {
     const result = await action(data);
     return result;
   };
 
   return (
-    <Form<BusinessProfileDTO>
+    <Form<BusinessProfileFormDTO>
+      ref={ref}
       defaultValues={defaultValues}
       onSubmit={onSubmit}
-      schema={businessProfileIndividualSchema}
+      schema={businessProfileFormSchema}
       fields={fields}
-      submitLabel='Guardar'
+      submitLabel='Save'
+      afterSubmit={afterSubmit}
     />
   );
-};
+});
 
-export default BusinessProfileForm;
+BusinessProfileForm.displayName = 'BusinessProfileForm';
