@@ -2,6 +2,8 @@
 
 import { UserRound } from 'lucide-react';
 
+import { TCountryCode, getCountryData } from 'countries-list';
+
 import { ActionResponse } from '@/actions/business-profiles';
 import { DeleteButtonWithConfirm } from '@/components/button/delete-btn';
 import { Card } from '@/components/card';
@@ -47,7 +49,7 @@ export const BusinessProfileCard = ({
           <p>{businessProfile.phoneNumber}</p>
           <p>{address}</p>
           <p>{city}</p>
-          <p>{businessProfile.country}</p>
+          <p>{getCountryData(businessProfile.country as TCountryCode)?.name}</p>
         </div>
       </div>
     </Card>

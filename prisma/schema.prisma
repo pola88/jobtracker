@@ -92,7 +92,7 @@ model BusinessProfile {
   firstName       String?
   lastName        String?
   companyName     String?
-  email           String
+  email           String?
   website         String?
   phoneNumber     String?
   isOrganization  Boolean   @default(false)

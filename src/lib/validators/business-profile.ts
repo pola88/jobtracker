@@ -10,7 +10,12 @@ const baseSchema = z.object({
 
 const extendedSchema = baseSchema.extend({
   id: z.string(),
-  email: z.email('Email inválido'),
+  email: z
+    .email()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? null : val))
+    .optional()
+    .nullable(),
   website: z.string().optional().nullable(),
   phoneNumber: z.string().optional().nullable(),
   addressLine1: z.string().min(2, 'La dirección es obligatoria'),

@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 
-import countriesList from 'country-list';
+import { ICountryData, getCountryDataList } from 'countries-list';
 
 import { ActionResponse } from '@/actions/business-profiles';
 import Form, { type FormRef } from '@/components/form';
@@ -42,12 +42,6 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
     label: 'Organization',
     placeholder: 'Organization',
   },
-  // {
-  //   name: 'contact-row',
-  //   type: 'group',
-  //   columns: 2,
-  //   label: 'Información básica',
-  //   fields: [
   {
     name: 'companyName',
     label: 'Nombre de la empresa',
@@ -142,9 +136,9 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
     label: 'País',
     placeholder: 'Selecciona un país',
     type: 'select',
-    options: countriesList.getNames().map((country: string) => ({
-      label: country,
-      value: country,
+    options: getCountryDataList().map((country: ICountryData) => ({
+      label: country.name,
+      value: country.iso2,
     })),
   },
 ];
