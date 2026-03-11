@@ -8,37 +8,25 @@ import { MODAL_NAME } from '@/components/business-profile/business-modal';
 import { BusinessProfileCard } from '@/components/business-profile/business-profile-card';
 import { BusinessProfileCard as BusinessProfileCardSkeleton } from '@/components/skeletons/business-profile-card';
 import { useModal } from '@/hooks/use-modal';
-import { countClients, getClients } from '@/lib/data/business-profiles';
+import { getOwnBusinessProfile } from '@/lib/data/business-profiles';
 import { BusinessProfileDTO } from '@/lib/validators/business-profile';
-import { useInterviewStore } from '@/stores/interview';
 
-export function ClientList() {
+export const BusinessProfileList = () => {
   const [isLoading, startTransition] = useTransition();
-  const updatedAt = useInterviewStore((state) => state.updatedAt);
+  const [businessProfiles, setBusinessProfiles] = useState<
+    BusinessProfileDTO[]
+  >([]);
   const { toggleModal } = useModal({ modalName: MODAL_NAME });
-
-  const [fetchResult, setFetchResult] = useState<{
-    clients: BusinessProfileDTO[] | null;
-    totalClients: number;
-  }>({ clients: null, totalClients: 0 });
 
   useEffect(() => {
     startTransition(() => {
-      const fetchClients = async () => {
-        const [result, totalClients] = await Promise.all([
-          getClients({
-            cursor: null,
-          }),
-          countClients(),
-        ]);
-        setFetchResult({
-          clients: result.clients,
-          totalClients,
-        });
+      const fetchBusinessProfiles = async () => {
+        const result = await getOwnBusinessProfile();
+        setBusinessProfiles(result);
       };
-      fetchClients();
+      fetchBusinessProfiles();
     });
-  }, [updatedAt]);
+  }, []);
 
   const handleOnCardClick = useCallback(
     (id: string) => {
@@ -48,18 +36,18 @@ export function ClientList() {
   );
 
   return (
-    <div className='flex gap-4'>
-      <AddBusinessProfileCard isClient isLoading={isLoading} />
+    <div className='flex gap-4 '>
+      <AddBusinessProfileCard isLoading={isLoading} />
       {isLoading && <BusinessProfileCardSkeleton />}
       {!isLoading &&
-        fetchResult.clients?.map((businessProfile) => (
+        businessProfiles.map((businessProfile) => (
           <BusinessProfileCard
             key={businessProfile.id}
             businessProfile={businessProfile}
-            onClickAction={handleOnCardClick}
             onDeleteAction={deleteBusinessProfile}
+            onClickAction={handleOnCardClick}
           />
         ))}
     </div>
   );
-}
+};

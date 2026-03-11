@@ -19,7 +19,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'updatedAt', desc: true },
   ]);
-  const [isLoading, startTransaction] = useTransition();
+  const [isLoading, startTransition] = useTransition();
   const updatedAt = useInterviewStore((state) => state.updatedAt);
   const { toggleModal } = useModal({ modalName: 'ShowInterviewModal' });
 
@@ -38,7 +38,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
   const [pageSize, setPageSize] = useState<number>(10);
 
   useEffect(() => {
-    startTransaction(() => {
+    startTransition(() => {
       const fetchInterviews = async () => {
         const sortBy = {
           [sorting[0].id]: sorting[0].desc ? 'desc' : 'asc',

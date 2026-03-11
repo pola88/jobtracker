@@ -37,7 +37,7 @@ export const countClients = async (): Promise<number> => {
 
 export const getClients = async ({
   cursor,
-  pageSize = 10,
+  pageSize = 100,
   sortBy,
 }: GetClientsProps): Promise<GetClientsResult> => {
   const user = await requireCurrentUser();
@@ -69,6 +69,25 @@ export const getClients = async ({
     ],
     {
       tags: ['business-profile-clients'],
+    },
+  )();
+};
+
+export const getOwnBusinessProfile = async (): Promise<
+  BusinessProfileDTO[]
+> => {
+  const user = await requireCurrentUser();
+  return unstable_cache(
+    async () => {
+      const businessProfiles = await prisma.businessProfile.findMany({
+        where: { userId: user.id, isClient: false },
+      });
+
+      return businessProfiles.map(mapBusinessProfileToDTO);
+    },
+    [`business-profiles`, user.id],
+    {
+      tags: [`business-profiles`],
     },
   )();
 };

@@ -70,6 +70,7 @@ const Field = <T extends FieldValues>({
           <FormControl>
             <Component
               {...field}
+              type={type}
               label={label}
               disabled={disabled}
               placeholder={placeholder}

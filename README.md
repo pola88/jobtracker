@@ -55,3 +55,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - [ ] Get the userId from `requireCurrentUser()` on server actions
 - [ ] Refactor table to support pagination and sort. I have repeated code (Example: clint-list and interview-table)
+- [ ] Paginate business profile for clients
+- [ ] Improve skeleton to load business profile on modal

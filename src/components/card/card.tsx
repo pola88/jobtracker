@@ -15,6 +15,7 @@ export const Card = ({
   children,
   className,
   noBorder,
+  onClick,
 }: CardProps) => {
   const header =
     title || description ? (
@@ -24,7 +25,10 @@ export const Card = ({
       </CardHeader>
     ) : null;
   return (
-    <CardUI className={cn(styles.card, noBorder && styles.noBorder, className)}>
+    <CardUI
+      className={cn(styles.card, noBorder && styles.noBorder, className)}
+      onClick={onClick}
+    >
       {header}
       {children}
     </CardUI>

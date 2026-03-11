@@ -26,7 +26,7 @@ const MODAL_NAME = 'ShowInterviewModal';
 
 export const ShowInterviewModal = () => {
   const [interview, setInterview] = useState<InterviewDTO | null>(null);
-  const [isLoading, startTransaction] = useTransition();
+  const [isLoading, startTransition] = useTransition();
 
   const { modalStatus, toggleModal } = useModal({
     modalName: MODAL_NAME,
@@ -34,7 +34,7 @@ export const ShowInterviewModal = () => {
 
   useEffect(() => {
     if (!modalStatus.isOpen) return;
-    startTransaction(async () => {
+    startTransition(async () => {
       const fetchInterview = async () => {
         if (!modalStatus.id) return;
         const currentInterview = await getInterviewById(modalStatus.id);

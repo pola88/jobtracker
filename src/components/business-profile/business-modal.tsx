@@ -1,6 +1,6 @@
 'use client';
 
-import { startTransition, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 
 import {
   createBusinessProfile,
@@ -24,6 +24,8 @@ import {
   BusinessProfileFormDTO,
 } from '@/lib/validators/business-profile';
 
+import { Skeleton } from '../ui/skeleton';
+
 export const MODAL_NAME = 'BusinessModal';
 
 export const BusinessModal = () => {
@@ -31,6 +33,7 @@ export const BusinessModal = () => {
   const [businessProfile, setBusinessProfile] =
     useState<BusinessProfileDTO | null>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingBusiness, startTransition] = useTransition();
   const { modalStatus, toggleModal } = useModal({
     modalName: MODAL_NAME,
   });
@@ -82,27 +85,30 @@ export const BusinessModal = () => {
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className='no-scrollbar -mx-4 max-h-[60vh] overflow-y-auto px-4 pt-4'>
-          <BusinessProfileForm
-            ref={formRef}
-            action={handleOnSubmit}
-            defaultValues={{
-              isOrganization: false,
-              firstName: businessProfile?.firstName || '',
-              lastName: businessProfile?.lastName || '',
-              companyName: businessProfile?.companyName || '',
-              email: businessProfile?.email || '',
-              addressLine1: businessProfile?.addressLine1 || '',
-              city: businessProfile?.city || '',
-              state: businessProfile?.state || '',
-              postalCode: businessProfile?.postalCode || '',
-              country: businessProfile?.country || '',
-              website: businessProfile?.website || '',
-              phoneNumber: businessProfile?.phoneNumber || '',
-              addressLine2: businessProfile?.addressLine2 || '',
-              isClient,
-            }}
-            afterSubmit={submitCallback}
-          />
+          {isLoadingBusiness && <Skeleton className='h-[60vh] w-full' />}
+          {!isLoadingBusiness && (
+            <BusinessProfileForm
+              ref={formRef}
+              action={handleOnSubmit}
+              defaultValues={{
+                isOrganization: false,
+                firstName: businessProfile?.firstName || '',
+                lastName: businessProfile?.lastName || '',
+                companyName: businessProfile?.companyName || '',
+                email: businessProfile?.email || '',
+                addressLine1: businessProfile?.addressLine1 || '',
+                city: businessProfile?.city || '',
+                state: businessProfile?.state || '',
+                postalCode: businessProfile?.postalCode || '',
+                country: businessProfile?.country || '',
+                website: businessProfile?.website || '',
+                phoneNumber: businessProfile?.phoneNumber || '',
+                addressLine2: businessProfile?.addressLine2 || '',
+                isClient,
+              }}
+              afterSubmit={submitCallback}
+            />
+          )}
         </div>
         <DialogFooter className='mt-6'>
           <Button isLoading={isLoading} onClick={onSubmit}>

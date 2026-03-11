@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import BusinessProfile from '@/components/business-profile';
+import { BusinessProfileCard } from '@/components/business-profile/business-profile-card';
 import Form from '@/components/form';
 import * as businessProfileHelpers from '@/lib/helpers/business-profile';
 import { InvoiceDTO, invoiceSchema } from '@/lib/validators/invoice';
@@ -80,7 +80,7 @@ const InvoiceForm = ({ businessProfile, onPreview }: InvoiceFormProps) => {
               </div>
             )}
             {businessProfile && (
-              <BusinessProfile businessProfile={businessProfile} />
+              <BusinessProfileCard businessProfile={businessProfile} />
             )}
             {/* <div className='space-y-3'>
               <div className='space-y-2'>
