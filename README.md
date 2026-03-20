@@ -37,6 +37,7 @@ The goal was to explore how AI tools integrate into a **real-world development w
 ## 🛠 Tech Stack
 
 **Frontend**
+
 - Next.js (App Router)
 - React
 - TypeScript
@@ -48,6 +49,7 @@ The goal was to explore how AI tools integrate into a **real-world development w
 - Zustand (UI state management)
 
 **Backend**
+
 - Next.js Server Actions
 - Prisma
 - PostgreSQL
@@ -70,16 +72,19 @@ Some notable design choices:
 The application separates **server state** from **UI state**:
 
 **Server State**
+
 - Interviews
 - Interview steps
 - Invoices
 - Business Profiles
 
 Handled through:
+
 - Prisma
 - Next.js Server Actions
 
 **UI State**
+
 - Modal visibility
 - Temporary UI interactions
 - Cross-component UI updates
@@ -145,12 +150,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
     }
 
   ```
+
   This avoids exposing Prisma-specific types (such as Decimal) directly to the frontend.
 
 - [ ] Retrieve userId directly from requireCurrentUser() in Server Actions
 - [ ] Refactor tables to support pagination and reusable sorting logic
 - [ ] Add pagination to business profiles for clients
 - [ ] Improve loading skeletons when opening business profile modals
+
 ---
 
 ## 🔮 Future Improvements
@@ -165,10 +172,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 The project is currently being extended with **invoice generation and tracking** features.
 
 The goal is to allow users to:
+
 - Generate invoices for completed work
 - Track invoice status (sent, paid, pending)
 - View financial information in a simple dashboard
 
 These features are currently under development and will evolve as the project progresses.
-
-

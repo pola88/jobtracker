@@ -1,5 +1,6 @@
 'use server';
 
+import { Prisma } from '@prisma/client';
 import { updateTag } from 'next/cache';
 
 import { requireCurrentUser } from '@/lib/auth';
@@ -27,16 +28,24 @@ export const createBusinessProfile = async (
       return { success: false, message: 'Invalid business profile' };
     }
 
+    const data: Prisma.BusinessProfileUncheckedCreateInput = {
+      ...(parsed.data as unknown as Prisma.BusinessProfileUncheckedCreateInput),
+      userId: user.id,
+    };
+
     const businessProfile = await prisma.businessProfile.create({
       data: {
-        ...parsed.data,
-        userId: user.id,
+        ...data,
       },
     });
 
     updateTag(
-      `business-profile-${businessProfileData.isClient ? 'clients' : 'own'}`,
+      `business-profiles-${businessProfileData.isClient ? 'clients' : 'own'}`,
     );
+
+    if (businessProfile.isClient) {
+      updateTag('client-size');
+    }
 
     return { success: true, businessProfileId: businessProfile.id };
   } catch (error) {
@@ -56,13 +65,17 @@ export const editBusinessProfile = async (
       return { success: false, message: 'Invalid business profile' };
     }
 
+    const data: Prisma.BusinessProfileUncheckedUpdateInput = {
+      ...(parsed.data as unknown as Prisma.BusinessProfileUncheckedUpdateInput),
+    };
+
     const businessProfile = await prisma.businessProfile.update({
       where: {
         id,
         userId: user.id,
       },
       data: {
-        ...parsed.data,
+        ...data,
       },
     });
 
@@ -70,9 +83,7 @@ export const editBusinessProfile = async (
       return { success: false, message: 'Invalid business profile' };
     }
 
-    updateTag(
-      `business-profile-${businessProfileData.isClient ? 'clients' : 'own'}`,
-    );
+    updateTag(`business-profile-${businessProfile.id}`);
 
     return {
       success: true,
@@ -102,6 +113,10 @@ export const deleteBusinessProfile = async (
   updateTag(
     `business-profiles-${businessProfile.isClient ? 'clients' : 'own'}`,
   );
+
+  if (businessProfile.isClient) {
+    updateTag('client-size');
+  }
 
   return {
     success: true,

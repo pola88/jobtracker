@@ -1,6 +1,6 @@
 'use client';
 
-import { UserRound } from 'lucide-react';
+import { Building2, UserRound } from 'lucide-react';
 
 import { TCountryCode, getCountryData } from 'countries-list';
 
@@ -34,7 +34,7 @@ export const BusinessProfileCard = ({
 
   return (
     <Card
-      className='flex flex-col gap-1 relative group/business-profile hover:bg-gray-100 cursor-pointer min-h-37'
+      className='flex flex-col gap-1 relative group/business-profile hover:bg-gray-100 cursor-pointer min-h-37 text-sm'
       onClick={() => onClickAction?.(businessProfile.id)}
     >
       {onDeleteAction && (
@@ -43,13 +43,22 @@ export const BusinessProfileCard = ({
         </div>
       )}
       <div className='flex gap-4'>
-        <UserRound className='h-6 w-6' />
+        {businessProfile.isOrganization ? (
+          <Building2 className='h-6 w-6' />
+        ) : (
+          <UserRound className='h-6 w-6' />
+        )}
         <div>
           <h1>{name}</h1>
           <p>{businessProfile.phoneNumber}</p>
           <p>{address}</p>
           <p>{city}</p>
           <p>{getCountryData(businessProfile.country as TCountryCode)?.name}</p>
+          {businessProfile.customFields?.map((customField) => (
+            <p key={customField.name}>
+              {customField.name}: {customField.value}
+            </p>
+          ))}
         </div>
       </div>
     </Card>

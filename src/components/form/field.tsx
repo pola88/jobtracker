@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 
@@ -75,6 +77,7 @@ const Field = <T extends FieldValues>({
               disabled={disabled}
               placeholder={placeholder}
               options={options ?? []}
+              className='focus-visible:ring-offset-0 focus-visible:ring'
             />
           </FormControl>
           <FormMessage />

@@ -37,7 +37,6 @@ export const BusinessModal = () => {
   const { modalStatus, toggleModal } = useModal({
     modalName: MODAL_NAME,
   });
-  const isClient = Boolean(modalStatus.payload?.isClient);
 
   const submitCallback = (success: boolean) => {
     if (success) {
@@ -65,6 +64,7 @@ export const BusinessModal = () => {
       const fetchBusinessProfile = async () => {
         if (modalStatus.id) {
           const businessProfile = await getBusinessProfile(modalStatus.id);
+          console.log(businessProfile);
           setBusinessProfile(businessProfile);
         }
       };
@@ -79,7 +79,7 @@ export const BusinessModal = () => {
 
   return (
     <Dialog open={modalStatus.isOpen} onOpenChange={() => toggleModal()}>
-      <DialogContent>
+      <DialogContent className='min-w-lvh'>
         <DialogHeader>
           <DialogTitle>New Business profile</DialogTitle>
           <DialogDescription></DialogDescription>
@@ -91,7 +91,7 @@ export const BusinessModal = () => {
               ref={formRef}
               action={handleOnSubmit}
               defaultValues={{
-                isOrganization: false,
+                isOrganization: businessProfile?.isOrganization ?? false,
                 firstName: businessProfile?.firstName || '',
                 lastName: businessProfile?.lastName || '',
                 companyName: businessProfile?.companyName || '',
@@ -104,7 +104,8 @@ export const BusinessModal = () => {
                 website: businessProfile?.website || '',
                 phoneNumber: businessProfile?.phoneNumber || '',
                 addressLine2: businessProfile?.addressLine2 || '',
-                isClient,
+                isClient: businessProfile?.isClient ?? false,
+                customFields: businessProfile?.customFields ?? [],
               }}
               afterSubmit={submitCallback}
             />

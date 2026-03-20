@@ -15,11 +15,17 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-interface DeleteButtonProps {
+interface DeleteButtonWithConfirmProps {
   title?: string;
   description?: string;
   onConfirm: () => Promise<void>;
   className?: string;
+}
+
+interface DeleteButtonProps {
+  isPending?: boolean;
+  className?: string;
+  onClick?: () => void;
 }
 
 export const DeleteButtonWithConfirm = ({
@@ -27,7 +33,7 @@ export const DeleteButtonWithConfirm = ({
   className,
   title = 'Are you absolutely sure?',
   description = 'This action cannot be undone. This will permanently delete it from our servers.',
-}: DeleteButtonProps) => {
+}: DeleteButtonWithConfirmProps) => {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = useCallback(
@@ -65,5 +71,24 @@ export const DeleteButtonWithConfirm = ({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+};
+
+export const DeleteButton = ({
+  isPending,
+  className,
+  onClick,
+}: DeleteButtonProps) => {
+  return (
+    <Button
+      type='button'
+      variant='ghost'
+      size='icon'
+      isLoading={isPending}
+      className={className}
+      {...(onClick ? { onClick } : {})}
+    >
+      <Trash2 className='text-destructive' />
+    </Button>
   );
 };

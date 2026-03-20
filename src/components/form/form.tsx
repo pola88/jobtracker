@@ -10,8 +10,15 @@ import { Form as FormComponent } from '@/components/ui/form';
 
 import Button from '../button';
 import Field from './field';
+import { ObjectArrayField } from './object-array-field';
 import styles, { groupColumnsClass } from './styles';
-import { FieldProps, FormProps, GroupField, SpacerField } from './types';
+import {
+  FieldProps,
+  FormProps,
+  GroupField,
+  ObjectArrayField as ObjectArrayFieldConfig,
+  SpacerField,
+} from './types';
 
 type RegularFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
@@ -99,6 +106,41 @@ const Group = <T extends FieldValues>({
   );
 };
 
+const ObjectArray = <T extends FieldValues>({
+  form,
+  fieldConfig,
+}: {
+  form: UseFormReturn<T>;
+  fieldConfig: ObjectArrayFieldConfig<T>;
+}) => {
+  const containerClass = fieldConfig.fullWidth
+    ? styles.fieldFullWidth
+    : styles.field;
+  const itemColumns =
+    groupColumnsClass[fieldConfig.itemColumns ?? 2] ?? groupColumnsClass[2];
+
+  return (
+    <div key={String(fieldConfig.name)} className={containerClass}>
+      <ObjectArrayField
+        form={form}
+        {...fieldConfig}
+        renderItem={({ getName }) => (
+          <div className={`${styles.groupGrid} ${itemColumns}`}>
+            {fieldConfig.itemFields.map((itemField) => (
+              <Field
+                key={`${String(fieldConfig.name)}.${itemField.name}`}
+                form={form}
+                {...itemField}
+                name={getName(itemField.name)}
+              />
+            ))}
+          </div>
+        )}
+      />
+    </div>
+  );
+};
+
 const FormInner = <T extends FieldValues>(
   {
     defaultValues,
@@ -175,6 +217,16 @@ const FormInner = <T extends FieldValues>(
                 key={fieldConfig.name}
                 form={form}
                 fieldConfig={fieldConfig as GroupField<T>}
+              />
+            );
+          }
+
+          if (fieldConfig.type === 'objectArray') {
+            return (
+              <ObjectArray
+                key={String(fieldConfig.name)}
+                form={form}
+                fieldConfig={fieldConfig as ObjectArrayFieldConfig<T>}
               />
             );
           }

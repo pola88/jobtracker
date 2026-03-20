@@ -1,6 +1,12 @@
 import { BusinessProfile } from '@prisma/client';
 import { z } from 'zod';
 
+const customFieldsSchema = z.object({
+  order: z.number(),
+  name: z.string(),
+  value: z.string(),
+});
+
 const baseSchema = z.object({
   firstName: z.string().optional().nullable(),
   lastName: z.string().optional().nullable(),
@@ -27,6 +33,11 @@ const extendedSchema = baseSchema.extend({
   isClient: z.boolean().default(false),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  customFields: customFieldsSchema
+    .array()
+    .optional()
+    .nullable()
+    .transform((val) => (val === null ? undefined : val)),
 });
 
 const conditionalRefinements = <TSchema extends typeof baseSchema>(
@@ -98,9 +109,18 @@ export type BusinessProfileFormDTO = z.infer<typeof businessProfileFormSchema>;
 export function mapBusinessProfileToDTO(
   businessProfile: BusinessProfile,
 ): BusinessProfileDTO {
+  const parsedCustomFields = customFieldsSchema
+    .array()
+    .optional()
+    .nullable()
+    .safeParse(businessProfile.customFields);
+
   return {
     ...businessProfile,
     createdAt: new Date(businessProfile.createdAt),
     updatedAt: new Date(businessProfile.updatedAt),
+    customFields: parsedCustomFields.success
+      ? (parsedCustomFields.data ?? undefined)
+      : undefined,
   };
 }

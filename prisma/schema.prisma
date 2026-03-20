@@ -104,6 +104,7 @@ model BusinessProfile {
   state           String
   postalCode      String
   country         String    @default("US")
+  customFields     Json?
   
   // Relations
   userId          String

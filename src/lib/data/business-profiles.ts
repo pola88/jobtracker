@@ -68,7 +68,7 @@ export const getClients = async ({
       JSON.stringify(sortBy),
     ],
     {
-      tags: ['business-profile-clients'],
+      tags: ['business-profiles-clients'],
     },
   )();
 };
@@ -87,7 +87,7 @@ export const getOwnBusinessProfile = async (): Promise<
     },
     [`business-profiles`, user.id],
     {
-      tags: [`business-profiles`],
+      tags: [`business-profiles-own`],
     },
   )();
 };

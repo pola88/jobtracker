@@ -33,6 +33,7 @@ const DEFAULT_VALUES: BusinessProfileFormDTO = {
   country: 'US',
   isOrganization: false,
   isClient: false,
+  customFields: [],
 };
 
 const fields: FieldType<BusinessProfileFormDTO>[] = [
@@ -140,6 +141,30 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
       label: country.name,
       value: country.iso2,
     })),
+  },
+  {
+    type: 'objectArray',
+    name: 'customFields',
+    label: 'Custom fields',
+    description: 'Enter the title and value for each custom field',
+    fullWidth: true,
+    orderKey: 'order',
+    newItem: () => ({ order: 0, name: '', value: '' }),
+    itemColumns: 2,
+    itemFields: [
+      {
+        name: 'name',
+        label: '',
+        placeholder: 'Custom field title',
+        type: 'text',
+      },
+      {
+        name: 'value',
+        label: '',
+        placeholder: 'Custom field value',
+        type: 'text',
+      },
+    ],
   },
 ];
 
