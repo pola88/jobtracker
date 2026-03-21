@@ -23,6 +23,7 @@ import {
   BusinessProfileDTO,
   BusinessProfileFormDTO,
 } from '@/lib/validators/business-profile';
+import { useBusinessProfileStore } from '@/stores/business-profile';
 
 import { Skeleton } from '../ui/skeleton';
 
@@ -37,10 +38,11 @@ export const BusinessModal = () => {
   const { modalStatus, toggleModal } = useModal({
     modalName: MODAL_NAME,
   });
+  const touch = useBusinessProfileStore((state) => state.touch);
 
   const submitCallback = (success: boolean) => {
     if (success) {
-      // touch();
+      touch();
       toggleModal();
     }
     setIsLoading(false);

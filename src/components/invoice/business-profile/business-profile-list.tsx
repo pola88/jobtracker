@@ -10,6 +10,7 @@ import { BusinessProfileCard as BusinessProfileCardSkeleton } from '@/components
 import { useModal } from '@/hooks/use-modal';
 import { getOwnBusinessProfile } from '@/lib/data/business-profiles';
 import { BusinessProfileDTO } from '@/lib/validators/business-profile';
+import { useBusinessProfileStore } from '@/stores/business-profile';
 
 export const BusinessProfileList = () => {
   const [isLoading, startTransition] = useTransition();
@@ -17,6 +18,7 @@ export const BusinessProfileList = () => {
     BusinessProfileDTO[]
   >([]);
   const { toggleModal } = useModal({ modalName: MODAL_NAME });
+  const updatedAt = useBusinessProfileStore((state) => state.updatedAt);
 
   useEffect(() => {
     startTransition(() => {
@@ -26,7 +28,7 @@ export const BusinessProfileList = () => {
       };
       fetchBusinessProfiles();
     });
-  }, []);
+  }, [updatedAt]);
 
   const handleOnCardClick = useCallback(
     (id: string) => {

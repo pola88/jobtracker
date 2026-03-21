@@ -116,27 +116,10 @@ const ObjectArray = <T extends FieldValues>({
   const containerClass = fieldConfig.fullWidth
     ? styles.fieldFullWidth
     : styles.field;
-  const itemColumns =
-    groupColumnsClass[fieldConfig.itemColumns ?? 2] ?? groupColumnsClass[2];
 
   return (
     <div key={String(fieldConfig.name)} className={containerClass}>
-      <ObjectArrayField
-        form={form}
-        {...fieldConfig}
-        renderItem={({ getName }) => (
-          <div className={`${styles.groupGrid} ${itemColumns}`}>
-            {fieldConfig.itemFields.map((itemField) => (
-              <Field
-                key={`${String(fieldConfig.name)}.${itemField.name}`}
-                form={form}
-                {...itemField}
-                name={getName(itemField.name)}
-              />
-            ))}
-          </div>
-        )}
-      />
+      <ObjectArrayField form={form} {...fieldConfig} />
     </div>
   );
 };

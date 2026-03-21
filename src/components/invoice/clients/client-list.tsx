@@ -10,11 +10,11 @@ import { BusinessProfileCard as BusinessProfileCardSkeleton } from '@/components
 import { useModal } from '@/hooks/use-modal';
 import { countClients, getClients } from '@/lib/data/business-profiles';
 import { BusinessProfileDTO } from '@/lib/validators/business-profile';
-import { useInterviewStore } from '@/stores/interview';
+import { useBusinessProfileStore } from '@/stores/business-profile';
 
 export function ClientList() {
   const [isLoading, startTransition] = useTransition();
-  const updatedAt = useInterviewStore((state) => state.updatedAt);
+  const updatedAt = useBusinessProfileStore((state) => state.updatedAt);
   const { toggleModal } = useModal({ modalName: MODAL_NAME });
 
   const [fetchResult, setFetchResult] = useState<{

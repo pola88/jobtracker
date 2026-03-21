@@ -69,10 +69,6 @@ export type ObjectArrayItemField<T extends FieldValues> = Omit<
   FieldProps<T>,
   'form' | 'name'
 > & {
-  /**
-   * Property name inside the array item object (e.g. "name", "value", "order").
-   * This is NOT a Path<T>; it's relative to the item.
-   */
   name: string;
 };
 
@@ -85,22 +81,9 @@ export type ObjectArrayField<T extends FieldValues> = {
   addLabel?: string;
   fullWidth?: boolean;
   disabled?: boolean;
-  /**
-   * Factory for a new item; will be appended to the array.
-   */
   newItem: () => Record<string, unknown>;
-  /**
-   * Keep an "order" numeric field in sync after add/remove/reorder.
-   * Example: "order"
-   */
   orderKey?: string;
-  /**
-   * Fields to render for each item. Names are relative to the item.
-   */
   itemFields: ObjectArrayItemField<T>[];
-  /**
-   * Layout: 1..4 columns for the item fields grid.
-   */
   itemColumns?: 1 | 2 | 3 | 4;
 };
 

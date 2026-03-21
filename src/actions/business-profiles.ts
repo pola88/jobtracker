@@ -84,6 +84,9 @@ export const editBusinessProfile = async (
     }
 
     updateTag(`business-profile-${businessProfile.id}`);
+    updateTag(
+      `business-profiles-${businessProfileData.isClient ? 'clients' : 'own'}`,
+    );
 
     return {
       success: true,

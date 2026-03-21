@@ -3,8 +3,6 @@
 import { GripVertical } from 'lucide-react';
 import * as React from 'react';
 import {
-  ArrayPath,
-  FieldArrayWithId,
   FieldValues,
   Path,
   UseFormReturn,
@@ -33,27 +31,13 @@ import { cn } from '@/lib/utils';
 
 import Button from '../button';
 import { DeleteButton } from '../button/delete-btn';
-
-type RenderItemArgs<TFormValues extends FieldValues> = {
-  index: number;
-  item: FieldArrayWithId<TFormValues, ArrayPath<TFormValues>>;
-  disabled: boolean;
-  getName: <K extends string>(key: K) => Path<TFormValues>;
-  remove: () => void;
-};
+import Field from './field';
+import styles, { groupColumnsClass } from './styles';
+import type { ObjectArrayField } from './types';
 
 export type ObjectArrayFieldProps<TFormValues extends FieldValues> = {
   form: UseFormReturn<TFormValues>;
-  name: ArrayPath<TFormValues>;
-  label?: string;
-  description?: string;
-  emptyText?: string;
-  addLabel?: string;
-  disabled?: boolean;
-  newItem: () => Record<string, unknown>;
-  orderKey?: string;
-  renderItem: (args: RenderItemArgs<TFormValues>) => React.ReactNode;
-};
+} & ObjectArrayField<TFormValues>;
 
 function SortableRow({
   id,
@@ -113,7 +97,8 @@ export function ObjectArrayField<TFormValues extends FieldValues>({
   disabled = false,
   newItem,
   orderKey,
-  renderItem,
+  itemFields,
+  itemColumns,
 }: ObjectArrayFieldProps<TFormValues>) {
   const pathName = name as unknown as Path<TFormValues>;
   const { fields, append, remove, move } = useFieldArray({
@@ -189,6 +174,9 @@ export function ObjectArrayField<TFormValues extends FieldValues>({
     onMove(fromIndex, toIndex);
   };
 
+  const itemColumnsClassName =
+    groupColumnsClass[itemColumns ?? 2] ?? groupColumnsClass[2];
+
   return (
     <section className='space-y-3'>
       <header className='space-y-1 relative mb-6'>
@@ -221,20 +209,24 @@ export function ObjectArrayField<TFormValues extends FieldValues>({
           >
             <div className='space-y-3'>
               {fields.map((item, index) => {
-                const getName = <K extends string>(key: K) =>
-                  `${name}.${index}.${key}` as Path<TFormValues>;
-
                 return (
                   <SortableRow key={item.id} id={item.id} disabled={disabled}>
                     <div className='flex items-start gap-3'>
                       <div className='min-w-0 flex-1 space-y-3'>
-                        {renderItem({
-                          index,
-                          item,
-                          disabled,
-                          getName,
-                          remove: () => onRemove(index),
-                        })}
+                        <div
+                          className={`${styles.groupGrid} ${itemColumnsClassName}`}
+                        >
+                          {itemFields.map((itemField) => (
+                            <Field
+                              key={`${String(name)}.${itemField.name}`}
+                              form={form}
+                              {...itemField}
+                              name={
+                                `${name}.${index}.${itemField.name}` as Path<TFormValues>
+                              }
+                            />
+                          ))}
+                        </div>
                       </div>
                       <DeleteButton
                         onClick={() => onRemove(index)}
