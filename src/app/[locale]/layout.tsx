@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
+import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import localFont from 'next/font/local';
+import { notFound } from 'next/navigation';
 
 import { Toaster } from '@/components/ui/sonner';
+import { routing } from '@/i18n/routing';
 
 import './globals.css';
 
@@ -25,18 +28,27 @@ export const metadata: Metadata = {
     'JobTrack centraliza tus entrevistas laborales con métricas accionables.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
   return (
-    <html lang='es' suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {children}
-        <Toaster />
+        <NextIntlClientProvider>
+          {children}
+          <Toaster />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

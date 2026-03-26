@@ -157,6 +157,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [ ] Refactor tables to support pagination and reusable sorting logic
 - [ ] Add pagination to business profiles for clients
 - [ ] Improve loading skeletons when opening business profile modals
+- [ ] Implement rate limit on server-actions and endpoints
+- [ ] Refactor register page
 
 ---
 
@@ -166,6 +168,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [ ] Implement **invoice generation**
 - [ ] Track invoice status (sent, paid, pending)
 - [ ] Add a **financial dashboard**
+- [ ] Add query to know in which tab you are on invoice settings
 
 ## 🚧 Work in Progress
 

@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from 'next-intl/server';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 
@@ -14,6 +15,9 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  const locale = await getLocale();
+  const t = await getTranslations({ locale });
+
   try {
     const body = await request.json();
     const { email, password } = registerSchema.parse(body);
@@ -21,7 +25,7 @@ export async function POST(request: Request) {
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return NextResponse.json(
-        { message: 'El email ya está registrado' },
+        { message: t('api.register.error.repeated_email') },
         { status: 409 },
       );
     }
@@ -49,14 +53,14 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { message: 'Datos inválidos', issues: error.flatten() },
+        { message: t('generic_errors.invalid_data'), issues: error.flatten() },
         { status: 400 },
       );
     }
 
     console.error(error);
     return NextResponse.json(
-      { message: 'Error inesperado al registrar' },
+      { message: t('generic_errors.unknown_error') },
       { status: 500 },
     );
   }

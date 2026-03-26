@@ -1,3 +1,5 @@
+import { getLocale, getTranslations } from 'next-intl/server';
+
 import { Card } from '@/components/card';
 import { InterviewsTable } from '@/components/interviews-table';
 import { Metrics } from '@/components/interviews/metrics';
@@ -9,13 +11,15 @@ export const revalidate = 0;
 
 export default async function InterviewsPage() {
   const user = await requireCurrentUser();
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: 'interviews.page' });
 
   return (
     <>
       <Metrics userId={user.id} />
       <Card
-        title='All Applications'
-        description='Track and manage your job applications'
+        title={t('table.title')}
+        description={t('table.description')}
         noBorder
       >
         <InterviewsTable userId={user.id} />

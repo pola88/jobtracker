@@ -1,7 +1,15 @@
 'use client';
 
 import { SortingState } from '@tanstack/react-table';
-import { useCallback, useEffect, useState, useTransition } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
+
+import { useTranslations } from 'next-intl';
 
 import { useModal } from '@/hooks/use-modal';
 import { countInterview, getInterviews } from '@/lib/data/interviews';
@@ -9,13 +17,16 @@ import { InterviewDTO } from '@/lib/validators/interview';
 import { useInterviewStore } from '@/stores/interview';
 
 import DataTable from '../data-table';
-import { columns } from './columns';
+import { getColumns } from './columns';
 
 interface InterviewsTableProps {
   userId: string;
 }
 
 export function InterviewsTable({ userId }: InterviewsTableProps) {
+  const t = useTranslations('interviews.columns');
+  const tTable = useTranslations('table.headers');
+
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'updatedAt', desc: true },
   ]);
@@ -68,6 +79,7 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
     },
     [toggleModal],
   );
+  const columns = useMemo(() => getColumns(t, tTable), [t, tTable]);
 
   return (
     <div className='glass-panel rounded-xl border'>

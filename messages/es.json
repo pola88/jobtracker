@@ -1,0 +1,97 @@
+{
+  "home": {
+    "page": {
+      "title": "Convierte tu búsqueda de empleo en un proceso medible.",
+      "description": "Gestiona entrevistas, ofertas e ingresos desde un solo lugar."
+    }
+  },
+  "login": {
+    "form": {
+      "title": "Ingresa a JobTrack",
+      "loading": "Cargando formulario..."
+    },
+    "no_account": "¿Aún no tienes cuenta?",
+    "create_account_link": "Crear cuenta"
+  },
+  "register": {
+    "form": {
+      "title": "Crea tu cuenta"
+    },
+    "with_account": "¿Ya tienes cuenta?",
+    "login_link": "Inicia sesión"
+  },
+  "api": {
+    "login": {
+      "error": {
+        "invalid_credentials": "Credenciales inválidas"
+      }
+    },
+    "logout": {
+      "success": "Sesión cerrada"
+    },
+    "register": {
+      "error": {
+        "repeated_email": "Correo electronico ya registrado"
+      }
+    }
+  },
+  "generic_errors": {
+    "invalid_data": "Datos invalidos",
+    "unknown_error": "Error inesperado. Intente devuelta."
+  },
+  "table": {
+    "headers": {
+      "actions": "Acciones"
+    }
+  },
+  "interviews": {
+    "page": {
+      "description": "Gestiona entrevistas, ofertas e ingresos desde un solo lugar.",
+      "table": {
+        "title": "Postulaciones",
+        "description": "Gestiona y administra tus postulaciones"
+      }
+    },
+    "columns": {
+      "company": "Compania",
+      "position": "Posicion",
+      "date": "Postulado",
+      "status": "Estado",
+      "link": "Link",
+      "updatedAt": "Actualizado",
+      "actions": "Acciones"
+    },
+    "status": {
+      "applied": "Aplicado",
+      "active": "Activa",
+      "stand_by": "Stand by",
+      "not_interested": "No interesado",
+      "rejected": "Rechazado",
+      "ghosted": "Ghosted",
+      "accepted": "Aceptado"
+    }
+  },
+  "invoices": {
+    "page": {
+      "title": "Facturas",
+      "description": "Gestiona todas las facturas en un solo lugar"
+    }
+  },
+  "invoices-settings": {
+    "page": {
+      "title": "Configuración de facturas",
+      "description": "Agrega tu perfil de negocio, clientes e items para tus facturas",
+      "tabs": {
+        "business-profile": "Perfil de negocios",
+        "customers": "Clientes",
+        "items": "Items"
+      }
+    }
+  },
+  "invoices-new": {
+    "page": {
+      "title": "Nueva factura",
+      "description": "Crea una nueva factura"
+    }
+  }
+}

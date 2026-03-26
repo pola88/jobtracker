@@ -1,0 +1,97 @@
+{
+  "home": {
+    "page": {
+      "title": "Turn your job search into a measurable process.",
+      "description": "Manage interviews, offers, and revenue from one place."
+    }
+  },
+  "login": {
+    "form": {
+      "title": "Login JobTrack",
+      "loading": "Loading..."
+    },
+    "no_account": "Don't have an account yet?",
+    "create_account_link": "Create account"
+  },
+  "register": {
+    "form": {
+      "title": "Create your account"
+    },
+    "with_account": "Don't have an account yet?",
+    "login_link": "LogIn"
+  },
+  "api": {
+    "login": {
+      "error": {
+        "invalid_credentials": "Invalid credentials"
+      }
+    },
+    "logout": {
+      "success": "Logout success"
+    },
+    "register": {
+      "error": {
+        "repeated_email": "Email address already registered"
+      }
+    }
+  },
+  "generic_errors": {
+    "invalid_data": "Invalid data",
+    "unknown_error": "Unknown error. Try again."
+  },
+  "table": {
+    "headers": {
+      "actions": "Actions"
+    }
+  },
+  "interviews": {
+    "page": {
+      "description": "Manage your applications and interviews",
+      "table": {
+        "title": "All Applications",
+        "description": "Track and manage your job applications"
+      }
+    },
+    "columns": {
+      "company": "Company",
+      "position": "Role",
+      "date": "Application Date",
+      "status": "Status",
+      "link": "Link",
+      "updatedAt": "Updated at",
+      "actions": "Actions"
+    },
+    "status": {
+      "applied": "Applied",
+      "active": "Active",
+      "stand_by": "Stand by",
+      "not_interested": "Not interested",
+      "rejected": "Rejected",
+      "ghosted": "Ghosted",
+      "accepted": "Accepted"
+    }
+  },
+  "invoices": {
+    "page": {
+      "title": "Invoices",
+      "description": "Manage your invoices"
+    }
+  },
+  "invoices-settings": {
+    "page": {
+      "title": "Invoices settings",
+      "description": "Add your business profile, customers and invoice items",
+      "tabs": {
+        "business-profile": "Business Profile",
+        "customers": "Customers",
+        "items": "Items"
+      }
+    }
+  },
+  "invoices-new": {
+    "page": {
+      "title": "New invoice",
+      "description": "Create a new invoice"
+    }
+  }
+}

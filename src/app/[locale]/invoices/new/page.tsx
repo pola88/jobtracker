@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useTransition } from 'react';
 
+import { useTranslations } from 'next-intl';
+
 import { Card } from '@/components/card';
 import InvoiceForm from '@/components/forms/invoice/invoice-form';
 import Preview from '@/components/invoice/preview/preview';
@@ -13,6 +15,7 @@ import { BusinessProfileDTO } from '@/lib/validators/business-profile';
 import { InvoiceDTO } from '@/lib/validators/invoice';
 
 const NewInvoicePage = () => {
+  const t = useTranslations('invoices-new.page');
   const [isPending, startTransition] = useTransition();
   // const [isOrganization, setIsOrganization] = useState(false);
   const [invoice, setInvoice] = useState<InvoiceDTO | null>(null);
@@ -39,7 +42,7 @@ const NewInvoicePage = () => {
   };
 
   return (
-    <AppShell title='Nueva factura' description='Crea una nueva factura'>
+    <AppShell title={t('title')} description={t('description')}>
       <Card>
         {isPending ? (
           <InvoiceFormSkeleton />
