@@ -164,11 +164,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 🔮 Future Improvements
 
-- [ ] Add **i18n** to standardize UI text and support multiple languages
+- [x] Add **i18n** to standardize UI text and support multiple languages
 - [ ] Implement **invoice generation**
 - [ ] Track invoice status (sent, paid, pending)
 - [ ] Add a **financial dashboard**
 - [ ] Add query to know in which tab you are on invoice settings
+- [ ] Add dropdown to change language (Should we save it?)
 
 ## 🚧 Work in Progress
 
