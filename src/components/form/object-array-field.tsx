@@ -25,8 +25,10 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useTranslations } from 'next-intl';
 
 import { AddButton } from '@/components/button/add-button';
+import { resolveValue } from '@/i18n/resolveValue';
 import { cn } from '@/lib/utils';
 
 import Button from '../button';
@@ -99,7 +101,9 @@ export function ObjectArrayField<TFormValues extends FieldValues>({
   orderKey,
   itemFields,
   itemColumns,
+  basei18nkey,
 }: ObjectArrayFieldProps<TFormValues>) {
+  const t = useTranslations(basei18nkey);
   const pathName = name as unknown as Path<TFormValues>;
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
@@ -177,12 +181,37 @@ export function ObjectArrayField<TFormValues extends FieldValues>({
   const itemColumnsClassName =
     groupColumnsClass[itemColumns ?? 2] ?? groupColumnsClass[2];
 
+  const labelValue =
+    label ??
+    resolveValue({
+      basei18nkey,
+      name: `${name}.label`,
+      t,
+    });
+
+  const descriptionValue =
+    description ??
+    resolveValue({
+      basei18nkey,
+      name: `${name}.description`,
+      t,
+    });
+
+  const emptyTextValue =
+    resolveValue({
+      basei18nkey,
+      name: `${name}.empty`,
+      t,
+    }) ?? emptyText;
+
   return (
     <section className='space-y-3'>
       <header className='space-y-1 relative mb-6'>
-        {label && <div className='text-sm font-medium'>{label}</div>}
-        {description && (
-          <div className='text-sm text-muted-foreground'>{description}</div>
+        {labelValue && <div className='text-sm font-medium'>{labelValue}</div>}
+        {descriptionValue && (
+          <div className='text-sm text-muted-foreground'>
+            {descriptionValue}
+          </div>
         )}
         <AddButton
           className='absolute top-0 right-2'
@@ -194,7 +223,7 @@ export function ObjectArrayField<TFormValues extends FieldValues>({
       <div className='space-y-3'>
         {fields.length === 0 && (
           <div className='rounded-md border border-dashed p-3 text-sm text-muted-foreground'>
-            {emptyText}
+            {emptyTextValue}
           </div>
         )}
 

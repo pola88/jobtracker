@@ -8,7 +8,18 @@
   "login": {
     "form": {
       "title": "Ingresa a JobTrack",
-      "loading": "Cargando formulario..."
+      "loading": "Cargando formulario...",
+      "submit": "Iniciar session",
+      "fields": {
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "Correo electrónico"
+        },
+        "password": {
+          "label": "Contraseña",
+          "placeholder": "Contraseña"
+        }
+      }
     },
     "no_account": "¿Aún no tienes cuenta?",
     "create_account_link": "Crear cuenta"
@@ -92,6 +103,147 @@
     "page": {
       "title": "Nueva factura",
       "description": "Crea una nueva factura"
+    }
+  },
+  "interview": {
+    "form": {
+      "submit": "Agregar entrevista",
+      "fields": {
+        "company": {
+          "label": "Nombre de la compania*",
+          "placeholder": "Nombre de la compania"
+        },
+        "position": {
+          "label": "Posicion",
+          "placeholder": "Posicion"
+        },
+        "link": {
+          "label": "URL Application",
+          "placeholder": "https://www.linkedin.com/..."
+        },
+        "date": {
+          "label": "Dia aplicado*",
+          "placeholder": "Dia aplicado"
+        },
+        "compensationType": {
+          "label": "Tipo de compensacion",
+          "placeholder": "Tipo de compensacion",
+          "values": {
+            "fixed": "Fijo",
+            "hourly": "Por hora"
+          }
+        }
+      }
+    }
+  },
+  "interview-step": {
+    "form": {
+      "title": "Paso de entrevista",
+      "description": "Crea un nuevo paso de entrevista",
+      "submit": "Agregar paso",
+      "fields": {
+        "title": {
+          "label": "Título",
+          "placeholder": "Técnico, HR, etc.."
+        },
+        "scheduledAt": {
+          "label": "Fecha y hora",
+          "placeholder": "Fecha y hora"
+        },
+        "status": {
+          "label": "Cómo fue?",
+          "placeholder": "Bien, neutral...",
+          "values": {
+            "passed": "Aprobado",
+            "neutral": "Neutral",
+            "failed": "Falle",
+            "canceled": "Cancelado",
+            "scheduled": "Programado",
+            "waiting": "Esperando"
+          }
+        },
+        "notes": {
+          "label": "Notas & Feedback",
+          "placeholder": "Agrega notas, impresiones, o feedback de la entrevista..."
+        }
+      }
+    }
+  },
+  "interview-notes": {
+    "form": {
+      "submit": "Agregar nota",
+      "fields": {
+        "content": {
+          "label": "",
+          "placeholder": "Agrega notas, impresiones, o feedback de la entrevista..."
+        }
+      }
+    }
+  },
+  "business-profile": {
+    "form": {
+      "fields": {
+        "isOrganization": {
+          "label": "Organización",
+          "placeholder": "Organización"
+        },
+        "companyName": {
+          "label": "Nombre de la empresa",
+          "placeholder": "Nombre de la empresa"
+        },
+        "firstName": {
+          "label": "Nombre",
+          "placeholder": "Nombre"
+        },
+        "lastName": {
+          "label": "Apellido",
+          "placeholder": "Apellido"
+        },
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "Correo electrónico"
+        },
+        "website": {
+          "label": "Sitio web",
+          "placeholder": "Sitio web"
+        },
+        "address-row": {
+          "label": "Contacto"
+        },
+        "addressLine1": {
+          "label": "Dirección (Línea 1)",
+          "placeholder": "Dirección (Línea 1)"
+        },
+        "addressLine2": {
+          "label": "Dirección (Línea 2)",
+          "placeholder": "Dirección (Línea 2)"
+        },
+        "city": {
+          "label": "Ciudad",
+          "placeholder": "Ciudad"
+        },
+        "state": {
+          "label": "Estado",
+          "placeholder": "Estado"
+        },
+        "postalCode": {
+          "label": "Código postal",
+          "placeholder": "Código postal"
+        },
+        "phoneNumber": {
+          "label": "Número de teléfono",
+          "placeholder": "Número de teléfono"
+        },
+        "country": {
+          "label": "País",
+          "placeholder": "Selecciona un país"
+        },
+        "customFields": {
+          "label": "Campos extras",
+          "description": "Entre el titulo y el valor de cada campo",
+          "empty": "Sin items"
+        }
+      }
     }
   }
 }

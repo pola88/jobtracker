@@ -53,7 +53,6 @@ export const NewInterviewModal = () => {
           <InterviewForm
             ref={formRef}
             action={createInterviewAction}
-            submitLabel='Add Application'
             afterSubmit={submitCallback}
           />
         </div>

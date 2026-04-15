@@ -8,7 +8,18 @@
   "login": {
     "form": {
       "title": "Login JobTrack",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "submit": "Login",
+      "fields": {
+        "email": {
+          "label": "Email",
+          "placeholder": "Email"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Password"
+        }
+      }
     },
     "no_account": "Don't have an account yet?",
     "create_account_link": "Create account"
@@ -92,6 +103,147 @@
     "page": {
       "title": "New invoice",
       "description": "Create a new invoice"
+    }
+  },
+  "interview": {
+    "form": {
+      "submit": "Add application",
+      "fields": {
+        "company": {
+          "label": "Company name*",
+          "placeholder": "Company name"
+        },
+        "position": {
+          "label": "Position",
+          "placeholder": "Position"
+        },
+        "link": {
+          "label": "URL Application",
+          "placeholder": "https://www.linkedin.com/..."
+        },
+        "date": {
+          "label": "Date*",
+          "placeholder": "Date"
+        },
+        "compensationType": {
+          "label": "Compensation type",
+          "placeholder": "Compensation type",
+          "values": {
+            "fixed": "Fixed",
+            "hourly": "Hourly"
+          }
+        }
+      }
+    }
+  },
+  "interview-step": {
+    "form": {
+      "title": "Interview step",
+      "description": "Create a new interview step",
+      "submit": "Add step",
+      "fields": {
+        "title": {
+          "label": "Title",
+          "placeholder": "Technical, HR, etc.."
+        },
+        "scheduledAt": {
+          "label": "Date & Time",
+          "placeholder": "Date & Time"
+        },
+        "status": {
+          "label": "How was it?",
+          "placeholder": "Passed, neutral...",
+          "values": {
+            "passed": "Passed",
+            "neutral": "Neutral",
+            "failed": "Failed",
+            "canceled": "Canceled",
+            "scheduled": "Scheduled",
+            "waiting": "Waiting"
+          }
+        },
+        "notes": {
+          "label": "Notes & Feedback",
+          "placeholder": "Add notes, impressions, or feedback from the interview..."
+        }
+      }
+    }
+  },
+  "interview-notes": {
+    "form": {
+      "submit": "Add note",
+      "fields": {
+        "content": {
+          "label": "",
+          "placeholder": "Add a general note about this application..."
+        }
+      }
+    }
+  },
+  "business-profile": {
+    "form": {
+      "fields": {
+        "isOrganization": {
+          "label": "Organization",
+          "placeholder": "Organization"
+        },
+        "companyName": {
+          "label": "Company name",
+          "placeholder": "Company name"
+        },
+        "firstName": {
+          "label": "First name",
+          "placeholder": "First name"
+        },
+        "lastName": {
+          "label": "Last name",
+          "placeholder": "Last name"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Email"
+        },
+        "website": {
+          "label": "Website",
+          "placeholder": "Website"
+        },
+        "address-row": {
+          "label": "Contact"
+        },
+        "addressLine1": {
+          "label": "Address (Line 1)",
+          "placeholder": "Address (Line 1)"
+        },
+        "addressLine2": {
+          "label": "Address (Line 2)",
+          "placeholder": "Address (Line 2)"
+        },
+        "city": {
+          "label": "City",
+          "placeholder": "City"
+        },
+        "state": {
+          "label": "State",
+          "placeholder": "State"
+        },
+        "postalCode": {
+          "label": "Postal code",
+          "placeholder": "Postal Code"
+        },
+        "phoneNumber": {
+          "label": "Phone number",
+          "placeholder": "Phone number"
+        },
+        "country": {
+          "label": "Country",
+          "placeholder": "Choice a country"
+        },
+        "customFields": {
+          "label": "Custom fields",
+          "description": "Enter the title and value for each custom field",
+          "empty": "No items yet"
+        }
+      }
     }
   }
 }

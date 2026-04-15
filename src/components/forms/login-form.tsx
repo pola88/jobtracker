@@ -16,15 +16,11 @@ const DEFAULT_VALUES: LoginSchemaDTO = {
 const fields: Field<LoginSchemaDTO>[] = [
   {
     name: 'email',
-    label: 'Email',
-    placeholder: 'Email',
     type: 'email',
     fullWidth: true,
   },
   {
     name: 'password',
-    label: 'Contraseña',
-    placeholder: 'Contraseña',
     type: 'password',
     fullWidth: true,
   },
@@ -46,11 +42,11 @@ export function LoginForm() {
 
   return (
     <Form<LoginSchemaDTO>
+      basei18nkey='login.form'
       defaultValues={DEFAULT_VALUES}
       onSubmit={onSubmit}
       schema={loginSchema}
       fields={fields}
-      submitLabel='Login'
       skipToast
     />
   );

@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 
+import { useTranslations } from 'next-intl';
+
 import {
   FormControl,
   FormField,
@@ -36,7 +38,11 @@ const Field = <T extends FieldValues>({
   options,
   shouldHide,
   checkIfDisabled,
+  basei18nkey,
 }: FieldProps<T>) => {
+  const t = useTranslations(basei18nkey);
+  const labelText = label ?? t(`${String(name)}.label`);
+  const placeholderText = placeholder ?? t(`${String(name)}.placeholder`);
   const [hidden, setHidden] = useState(
     shouldHide ? shouldHide(form.getValues()) : false,
   );
@@ -68,14 +74,15 @@ const Field = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          {type != 'checkbox' && <FormLabel>{label}</FormLabel>}
+          {type != 'checkbox' && <FormLabel>{labelText}</FormLabel>}
           <FormControl>
             <Component
               {...field}
+              basei18nkey={basei18nkey}
               type={type}
-              label={label}
+              label={labelText}
               disabled={disabled}
-              placeholder={placeholder}
+              placeholder={placeholderText}
               options={options ?? []}
               className='focus-visible:ring-offset-0 focus-visible:ring'
             />

@@ -22,33 +22,24 @@ const DEFAULT_VALUES: InterviewStepFormDTO = {
 const fields: FieldType<InterviewStepFormDTO>[] = [
   {
     name: 'title',
-    label: 'Title*',
-    placeholder: 'Technical, HR, etc..',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'scheduledAt',
-    label: 'Date & Time',
-    placeholder: 'Date & Time',
     type: 'date',
     fullWidth: false,
   },
   {
     name: 'status',
-    label: 'How was it?',
-    placeholder: 'Passed, neutral...',
     type: 'select',
     fullWidth: false,
     options: Object.values(InterviewStepStatus).map((type) => ({
-      label: type.charAt(0).toUpperCase() + type.slice(1),
       value: type,
     })),
   },
   {
     name: 'notes',
-    label: 'Notes & Feedback',
-    placeholder: 'Add notes, impressions, or feedback from the interview...',
     type: 'textarea',
     fullWidth: true,
   },
@@ -73,12 +64,12 @@ export const InterviewStepForm = forwardRef<FormRef, InterviewStepFormProps>(
 
     return (
       <Form<InterviewStepFormDTO>
+        basei18nkey='interview-step.form'
         ref={ref}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
         schema={interviewStepFormSchema}
         fields={fields}
-        submitLabel='Add note'
         onCancel={onCancel}
         btnSize='sm'
       />

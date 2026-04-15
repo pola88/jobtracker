@@ -4,9 +4,12 @@ import React, { useImperativeHandle } from 'react';
 import { FieldValues, UseFormReturn, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import { Form as FormComponent } from '@/components/ui/form';
+import { resolveValue } from '@/i18n/resolveValue';
+import { TranslationKey } from '@/i18n/type';
 
 import Button from '../button';
 import Field from './field';
@@ -31,6 +34,16 @@ type GroupFieldProps<T extends FieldValues> = {
   isNested?: boolean;
 };
 
+type FormTranslationKey = Extract<TranslationKey, `${string}.form`>;
+type FormFieldsTranslationKey = Extract<
+  TranslationKey,
+  `${FormTranslationKey}.fields`
+>;
+
+const isFormTranslationKey = (
+  key?: TranslationKey,
+): key is FormTranslationKey => Boolean(key?.endsWith('.form'));
+
 export type FormRef =
   | {
       submit: () => void;
@@ -53,7 +66,7 @@ const RegularField = <T extends FieldValues>({
   const { fullWidth = false, ...field } = fieldConfig;
   const containerClass = fullWidth ? styles.fieldFullWidth : styles.field;
 
-  if (!('name' in field) || !('label' in field) || !('placeholder' in field)) {
+  if (!('name' in field)) {
     return null;
   }
 
@@ -69,6 +82,7 @@ const Group = <T extends FieldValues>({
   fieldConfig,
   isNested = false,
 }: GroupFieldProps<T>) => {
+  const t = useTranslations(fieldConfig.basei18nkey);
   const groupColumns =
     groupColumnsClass[fieldConfig.columns ?? 2] ?? groupColumnsClass[2];
 
@@ -76,16 +90,22 @@ const Group = <T extends FieldValues>({
     ? styles.fieldFullWidth
     : styles.groupWrapper;
 
+  const translateLabelKey = `${fieldConfig.name}.label`;
+  const label = resolveValue({
+    basei18nkey: fieldConfig.basei18nkey,
+    name: translateLabelKey,
+    t,
+  });
+
   return (
     <div
       key={fieldConfig.name}
       className={!isNested ? wrapperClass : undefined}
     >
-      {fieldConfig.label && (
-        <div className={styles.groupLabel}>{fieldConfig.label}</div>
-      )}
+      {label && <div className={styles.groupLabel}>{label}</div>}
       <div className={`${styles.groupGrid} ${groupColumns}`}>
         {fieldConfig.fields.map((groupField) => {
+          groupField.basei18nkey = fieldConfig.basei18nkey;
           return groupField.type === 'group' ? (
             <Group
               key={groupField.name}
@@ -137,10 +157,12 @@ const FormInner = <T extends FieldValues>(
     btnSize = 'default',
     toastMsg,
     skipToast = false,
+    basei18nkey,
     afterSubmit,
   }: FormProps<T>,
   ref: React.ForwardedRef<FormRef | undefined>,
 ) => {
+  const t = useTranslations(basei18nkey);
   const form = useForm<T>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(schema as any),
@@ -184,6 +206,11 @@ const FormInner = <T extends FieldValues>(
       <form onSubmit={submitHandler} className={styles.form}>
         {render?.(form)}
         {fields?.map((fieldConfig) => {
+          if (isFormTranslationKey(basei18nkey)) {
+            fieldConfig.basei18nkey =
+              `${basei18nkey}.fields` as FormFieldsTranslationKey;
+          }
+
           if (fieldConfig.type === 'spacer') {
             return (
               <Spacer
@@ -245,7 +272,7 @@ const FormInner = <T extends FieldValues>(
               isLoading={loadingState}
               type='submit'
             >
-              {submitLabel}
+              {t('submit') ?? submitLabel}
             </Button>
           </div>
         )}

@@ -40,42 +40,30 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
   {
     name: 'isOrganization',
     type: 'checkbox',
-    label: 'Organization',
-    placeholder: 'Organization',
   },
   {
     name: 'companyName',
-    label: 'Nombre de la empresa',
-    placeholder: 'Nombre de la empresa',
     type: 'text',
     shouldHide: (values) => !values.isOrganization,
     fullWidth: true,
   },
   {
     name: 'firstName',
-    label: 'Nombre',
-    placeholder: 'Nombre',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'lastName',
-    label: 'Apellido',
-    placeholder: 'Apellido',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'email',
-    label: 'Email',
-    placeholder: 'Email',
     type: 'email',
     fullWidth: true,
   },
   {
     name: 'website',
-    label: 'Sitio web',
-    placeholder: 'Sitio web',
     type: 'url',
     fullWidth: true,
   },
@@ -83,19 +71,14 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
     name: 'address-row',
     type: 'group',
     columns: 1,
-    label: 'Contacto',
     fields: [
       {
         name: 'addressLine1',
-        label: 'Dirección 1',
-        placeholder: 'Dirección',
         type: 'text',
         fullWidth: true,
       },
       {
         name: 'addressLine2',
-        label: 'Dirección 2',
-        placeholder: 'Dirección 2',
         type: 'text',
         fullWidth: true,
       },
@@ -106,20 +89,14 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
         fields: [
           {
             name: 'city',
-            label: 'Ciudad',
-            placeholder: 'Ciudad',
             type: 'text',
           },
           {
             name: 'state',
-            label: 'Estado',
-            placeholder: 'Estado',
             type: 'text',
           },
           {
             name: 'postalCode',
-            label: 'Código postal',
-            placeholder: 'Código postal',
             type: 'text',
           },
         ],
@@ -128,14 +105,10 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
   },
   {
     name: 'phoneNumber',
-    label: 'Teléfono',
-    placeholder: 'Teléfono',
     type: 'tel',
   },
   {
     name: 'country',
-    label: 'País',
-    placeholder: 'Selecciona un país',
     type: 'select',
     options: getCountryDataList().map((country: ICountryData) => ({
       label: country.name,
@@ -145,8 +118,6 @@ const fields: FieldType<BusinessProfileFormDTO>[] = [
   {
     type: 'objectArray',
     name: 'customFields',
-    label: 'Custom fields',
-    description: 'Enter the title and value for each custom field',
     fullWidth: true,
     orderKey: 'order',
     newItem: () => ({ order: 0, name: '', value: '' }),
@@ -180,11 +151,11 @@ export const BusinessProfileForm = forwardRef<
   return (
     <Form<BusinessProfileFormDTO>
       ref={ref}
+      basei18nkey='business-profile.form'
       defaultValues={defaultValues}
       onSubmit={onSubmit}
       schema={businessProfileFormSchema}
       fields={fields}
-      submitLabel='Save'
       afterSubmit={afterSubmit}
     />
   );

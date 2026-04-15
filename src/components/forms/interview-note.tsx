@@ -18,8 +18,6 @@ const DEFAULT_VALUES: InterviewNoteFormDTO = {
 const fields: Field<InterviewNoteFormDTO>[] = [
   {
     name: 'content',
-    label: '',
-    placeholder: 'Add a general note about this application...',
     type: 'textarea',
     fullWidth: true,
   },
@@ -44,12 +42,12 @@ export const InterviewNoteForm = forwardRef<FormRef, InterviewNoteFormProps>(
 
     return (
       <Form<InterviewNoteFormDTO>
+        basei18nkey='interview-notes.form'
         ref={ref}
         defaultValues={defaultValues}
         onSubmit={onSubmit}
         schema={interviewNoteFormSchema}
         fields={fields}
-        submitLabel='Save'
         onCancel={onCancel}
         btnSize='sm'
       />

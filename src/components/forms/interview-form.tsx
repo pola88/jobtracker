@@ -28,39 +28,28 @@ const DEFAULT_VALUES: InterviewFormDTO = {
 const fields: FieldType<InterviewFormDTO>[] = [
   {
     name: 'company',
-    label: 'Company name*',
-    placeholder: 'Company name',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'position',
-    label: 'Position',
-    placeholder: 'Position',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'link',
-    label: 'URL Application',
-    placeholder: 'Puesto',
     type: 'text',
     fullWidth: true,
   },
   {
     name: 'date',
-    label: 'Date*',
-    placeholder: 'Date',
     type: 'date',
     fullWidth: true,
   },
   {
     name: 'compensationType',
-    label: 'Compensation type',
-    placeholder: 'Compensation type',
     type: 'select',
     options: Object.values(CompensationType).map((type) => ({
-      label: type,
       value: type,
     })),
     fullWidth: true,
@@ -99,28 +88,19 @@ const fields: FieldType<InterviewFormDTO>[] = [
 type InterviewFormProps = {
   action: (formData: InterviewFormDTO) => Promise<ActionResponse>;
   defaultValues?: InterviewFormDTO;
-  submitLabel?: string;
   afterSubmit: (success: boolean) => void;
 };
 
 export const InterviewForm = forwardRef<FormRef, InterviewFormProps>(
-  (
-    {
-      action,
-      defaultValues = DEFAULT_VALUES,
-      submitLabel = 'Guardar',
-      afterSubmit,
-    },
-    ref,
-  ) => {
+  ({ action, defaultValues = DEFAULT_VALUES, afterSubmit }, ref) => {
     return (
       <Form<InterviewFormDTO>
         ref={ref}
+        basei18nkey='interview.form'
         defaultValues={defaultValues}
         onSubmit={action}
         schema={interviewFormSchema}
         fields={fields}
-        submitLabel={submitLabel}
         afterSubmit={afterSubmit}
       />
     );

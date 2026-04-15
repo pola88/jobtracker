@@ -10,20 +10,21 @@ import {
 
 import { ZodSchema } from 'zod';
 
+import { TranslationKey } from '@/i18n/type';
 import { ActionResponseBase } from '@/lib/types';
 
 import { ButtonProps } from '../ui/button';
 
 export type SelectFieldOption = {
-  label: string;
+  label?: string;
   value: string;
 };
 
 type BaseFieldProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>;
-  label: string;
-  placeholder: string;
+  label?: string;
+  placeholder?: string;
   fullWidth?: boolean;
   options?: SelectFieldOption[];
   shouldHide?: (values: T) => boolean;
@@ -43,12 +44,12 @@ type SelectFieldVariant<T extends FieldValues> = BaseFieldProps<T> & {
   options: SelectFieldOption[];
 };
 
-export type FieldProps<T extends FieldValues> =
-  | TextFieldProps<T>
-  | TextareaFieldProps<T>
-  | SelectFieldVariant<T>;
+export type FieldProps<T extends FieldValues> = {
+  basei18nkey?: TranslationKey;
+} & (TextFieldProps<T> | TextareaFieldProps<T> | SelectFieldVariant<T>);
 
 export type SpacerField<T extends FieldValues> = {
+  basei18nkey?: TranslationKey;
   name: string;
   type: 'spacer';
   fullWidth?: boolean;
@@ -56,6 +57,7 @@ export type SpacerField<T extends FieldValues> = {
 };
 
 export type GroupField<T extends FieldValues> = {
+  basei18nkey?: TranslationKey;
   name: string;
   type: 'group';
   fields: Array<Omit<FieldProps<T>, 'form'> | GroupField<T>>;
@@ -73,6 +75,7 @@ export type ObjectArrayItemField<T extends FieldValues> = Omit<
 };
 
 export type ObjectArrayField<T extends FieldValues> = {
+  basei18nkey?: TranslationKey;
   type: 'objectArray';
   name: ArrayPath<T>;
   label?: string;
@@ -106,9 +109,12 @@ export type FormProps<T extends FieldValues> = {
   toastMsg?: string;
   skipToast?: boolean;
   afterSubmit?: (success: boolean, errors?: FieldErrors<T>) => void;
+  basei18nkey?: TranslationKey;
 };
 
 export type SelectFieldProps = {
+  name: string;
+  basei18nkey?: TranslationKey;
   value: string;
   onChange: (value: string) => void;
   options: SelectFieldOption[];

@@ -38,7 +38,7 @@ function stripLocalePrefix(pathname: string, locale: string) {
 
 export default async function proxy(request: NextRequest) {
   const response = handleI18nRouting(request);
-  console.log('locale', request.nextUrl.locale);
+
   const { pathname } = request.nextUrl;
   const locale = getLocaleFromPathname(pathname);
   const normalizedPathname = stripLocalePrefix(pathname, locale);
