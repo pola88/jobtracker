@@ -9,6 +9,8 @@ export const registerSchema = z.object({
     .regex(/[0-9]/, 'Debe incluir un número'),
 });
 
+export type RegisterSchemaDTO = z.infer<typeof registerSchema>;
+
 export const loginSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(1, 'La contraseña es obligatoria'),

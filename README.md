@@ -158,7 +158,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [ ] Add pagination to business profiles for clients
 - [ ] Improve loading skeletons when opening business profile modals
 - [ ] Implement rate limit on server-actions and endpoints
-- [ ] Refactor register page
+- [x] Refactor register page
 
 ---
 

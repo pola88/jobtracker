@@ -1,21 +1,22 @@
 import { ActionResponseBase } from '@/lib/types';
-import { LoginSchemaDTO, loginSchema } from '@/lib/validators/auth';
+import { RegisterSchemaDTO, registerSchema } from '@/lib/validators/auth';
 
-export async function loginAction(
-  values: LoginSchemaDTO,
+export async function registerAction(
+  values: RegisterSchemaDTO,
 ): Promise<ActionResponseBase> {
   try {
-    const parsed = loginSchema.safeParse(values);
+    const parsed = registerSchema.safeParse(values);
     if (!parsed.success) {
       return { success: false, message: 'Invalid fields' };
     }
 
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({
-        email: parsed.data.email,
-        password: parsed.data.password,
-      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+      credentials: 'include',
     });
 
     if (!response.ok) {

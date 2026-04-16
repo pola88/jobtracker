@@ -26,7 +26,18 @@
   },
   "register": {
     "form": {
-      "title": "Crea tu cuenta"
+      "title": "Crea tu cuenta",
+      "submit": "Crear",
+      "fields": {
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "Correo electrónico"
+        },
+        "password": {
+          "label": "Contraseña",
+          "placeholder": "Contraseña"
+        }
+      }
     },
     "with_account": "¿Ya tienes cuenta?",
     "login_link": "Inicia sesión"
