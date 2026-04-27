@@ -26,11 +26,3 @@ export const interviewStepFormSchema = interviewStepBaseSchema.omit({
 
 export type InterviewStepDTO = z.infer<typeof interviewStepBaseSchema>;
 export type InterviewStepFormDTO = z.infer<typeof interviewStepFormSchema>;
-// export const updateStepSchema = interviewStepSchema.extend({
-//   stepId: z.string().cuid('Paso inválido'),
-// });
-
-// export const deleteStepSchema = z.object({
-//   stepId: z.string().cuid('Paso inválido'),
-//   interviewId: z.string().cuid('Entrevista inválida'),
-// });

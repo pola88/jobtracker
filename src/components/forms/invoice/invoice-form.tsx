@@ -26,7 +26,12 @@ const InvoiceForm = ({ businessProfile, onPreview }: InvoiceFormProps) => {
     toEmail: '',
     toAddress: '',
     lineItems: [
-      { id: crypto.randomUUID(), description: '', quantity: 1, rate: 0 },
+      {
+        id: crypto.randomUUID(),
+        description: '',
+        quantity: 1,
+        rate: 0,
+      },
     ],
   };
 

@@ -159,12 +159,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [ ] Improve loading skeletons when opening business profile modals
 - [ ] Implement rate limit on server-actions and endpoints
 - [x] Refactor register page
+- [ ] Refactor hook to detect changes. Instead of create one for each record, we should have one hook where we can pass the record name to detect the change
+- [ ] Call actions instead of data to fetch records on the UI
 
 ---
 
 ## 🔮 Future Improvements
 
-- [x] Add **i18n** to standardize UI text and support multiple languages
+- [-] Add **i18n** to standardize UI text and support multiple languages
 - [ ] Implement **invoice generation**
 - [ ] Track invoice status (sent, paid, pending)
 - [ ] Add a **financial dashboard**

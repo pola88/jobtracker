@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { BusinessModal } from '@/components/business-profile/business-modal';
 import { BusinessProfileList } from '@/components/invoice/business-profile/business-profile-list';
 import { ClientList } from '@/components/invoice/clients/client-list';
+import { InvoiceLineItemsTable } from '@/components/invoice/items/table';
 import { AppShell } from '@/components/layout/app-shell';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -30,7 +31,7 @@ const InvoicesSettingsPage = async () => {
           <ClientList />
         </TabsContent>
         <TabsContent value='items'>
-          <>Items</>
+          <InvoiceLineItemsTable />
         </TabsContent>
       </Tabs>
       <BusinessModal />

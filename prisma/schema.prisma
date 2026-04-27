@@ -170,7 +170,6 @@ model InvoiceLineItem {
   description String
   quantity    Decimal   @db.Decimal(10, 2)
   rate        Decimal   @db.Decimal(12, 2) 
-  amount      Decimal   @db.Decimal(12, 2)
   
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

@@ -116,6 +116,24 @@
       "description": "Crea una nueva factura"
     }
   },
+  "invoice-line-item": {
+    "page": {
+      "new-btn": "Agregar item"
+    },
+    "columns": {
+      "description": "Descripcion",
+      "quantity": "Cantidad",
+      "rate": "Precio",
+      "updatedAt": "Actualizado"
+    },
+    "form": {
+      "fields": {
+        "description": { "label": "Descripcion", "placeholder": "Descripcion" },
+        "quantity": { "label": "Cantidad", "placeholder": "Cantidad" },
+        "rate": { "label": "Precio", "placeholder": "Precio" }
+      }
+    }
+  },
   "interview": {
     "form": {
       "submit": "Agregar entrevista",

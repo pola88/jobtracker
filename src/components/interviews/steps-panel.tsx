@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
 import { InterviewNotesStepListSkeleton } from '@/components/skeletons/interview-notes-steps-list';
-import { getInterviewSteps } from '@/lib/data/interviews';
+import { getInterviewSteps } from '@/lib/repository/interviews';
 import { InterviewStepDTO } from '@/lib/validators/interview-step';
 
 import { AddStepForm } from './step-form';

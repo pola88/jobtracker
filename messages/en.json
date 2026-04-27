@@ -116,6 +116,24 @@
       "description": "Create a new invoice"
     }
   },
+  "invoice-line-item": {
+    "page": {
+      "new-btn": "Add line item"
+    },
+    "columns": {
+      "description": "Description",
+      "quantity": "Quantity",
+      "rate": "Rate",
+      "updatedAt": "Updated at"
+    },
+    "form": {
+      "fields": {
+        "description": { "label": "Description", "placeholder": "Description" },
+        "quantity": { "label": "Quantity", "placeholder": "Quantity" },
+        "rate": { "label": "Rate", "placeholder": "Rate" }
+      }
+    }
+  },
   "interview": {
     "form": {
       "submit": "Add application",

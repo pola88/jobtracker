@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useTransition } from 'react';
 
-import { getInterviewNotes } from '@/lib/data/interviews';
+import { getInterviewNotes } from '@/lib/repository/interviews';
 import { InterviewNoteDTO } from '@/lib/validators/interview-note';
 
 import { InterviewNotesStepListSkeleton } from '../skeletons/interview-notes-steps-list';

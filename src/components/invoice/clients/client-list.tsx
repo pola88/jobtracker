@@ -8,7 +8,7 @@ import { MODAL_NAME } from '@/components/business-profile/business-modal';
 import { BusinessProfileCard } from '@/components/business-profile/business-profile-card';
 import { BusinessProfileCard as BusinessProfileCardSkeleton } from '@/components/skeletons/business-profile-card';
 import { useModal } from '@/hooks/use-modal';
-import { countClients, getClients } from '@/lib/data/business-profiles';
+import { countClients, getClients } from '@/lib/repository/business-profiles';
 import { BusinessProfileDTO } from '@/lib/validators/business-profile';
 import { useBusinessProfileStore } from '@/stores/business-profile';
 

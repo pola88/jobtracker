@@ -80,7 +80,7 @@ const DataTable = <TData, TValue>({
               onPageSizeChange?.(Number(newPageSize))
             }
           >
-            <SelectTrigger className='w-26 flex gap-2'>
+            <SelectTrigger className='w-30 flex gap-2'>
               Show
               <SelectValue placeholder='Show' />
             </SelectTrigger>

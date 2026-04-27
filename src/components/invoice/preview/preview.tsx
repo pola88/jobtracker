@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { LineItemDTO } from '@/lib/validators/invoice';
 
 import { PdfDownload } from '../pdf';
 import { PreviewProps } from './types';
@@ -24,7 +23,7 @@ const Preview = ({ data, open, onOpenChange }: PreviewProps) => {
 
   const lineItems = data.lineItems || [];
   const subtotal = lineItems.reduce(
-    (sum: number, item: LineItemDTO) => sum + item.quantity * item.rate,
+    (sum: number, item) => sum + item.quantity * item.rate,
     0,
   );
   const tax = subtotal * 0.1;
@@ -149,7 +148,7 @@ const Preview = ({ data, open, onOpenChange }: PreviewProps) => {
                   </tr>
                 </thead>
                 <tbody className='divide-y'>
-                  {lineItems.map((item: LineItemDTO) => (
+                  {lineItems.map((item) => (
                     <tr key={item.id}>
                       <td className='py-4 text-sm text-[#1e293b]'>
                         {item.description}

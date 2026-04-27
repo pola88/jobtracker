@@ -128,8 +128,8 @@ export async function deleteInterviewAction(
   interviewId: string,
 ): Promise<void> {
   try {
-    if (!interviewId || typeof interviewId !== 'string') {
-      throw new Error('Identificador inválido');
+    if (!interviewId) {
+      throw new Error('Invalid id');
     }
 
     const user = await requireCurrentUser();

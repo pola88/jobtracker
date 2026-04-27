@@ -1,7 +1,7 @@
 import { Clock, TrendingUp } from 'lucide-react';
 
 import { MetricCard } from '@/components/dashboard/metric-card';
-import { getMetric } from '@/lib/data/interviews';
+import { getMetric } from '@/lib/repository/interviews';
 
 interface MetricsProps {
   userId: string;

@@ -1,11 +1,6 @@
 import { z } from 'zod';
 
-const lineItemSchema = z.object({
-  id: z.string().min(1),
-  description: z.string().min(1),
-  quantity: z.number().min(1),
-  rate: z.number().min(0),
-});
+import { invoiceLineItemSchema } from './invoice-line-item';
 
 export const invoiceSchema = z.object({
   invoiceNumber: z.string().min(1),
@@ -22,8 +17,12 @@ export const invoiceSchema = z.object({
   toName: z.string().min(1),
   toEmail: z.email(),
   toAddress: z.string().min(1),
-  lineItems: z.array(lineItemSchema),
+  lineItems: z.array(
+    invoiceLineItemSchema.omit({
+      createdAt: true,
+      updatedAt: true,
+    }),
+  ),
 });
 
-export type LineItemDTO = z.infer<typeof lineItemSchema>;
 export type InvoiceDTO = z.infer<typeof invoiceSchema>;

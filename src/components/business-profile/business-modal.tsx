@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useModal } from '@/hooks/use-modal';
-import { getBusinessProfile } from '@/lib/data/business-profiles';
+import { getBusinessProfile } from '@/lib/repository/business-profiles';
 import {
   BusinessProfileDTO,
   BusinessProfileFormDTO,

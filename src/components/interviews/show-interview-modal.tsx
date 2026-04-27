@@ -13,8 +13,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useModal } from '@/hooks/use-modal';
-import { getInterviewById } from '@/lib/data/interviews';
 import { formatDate } from '@/lib/helpers/date';
+import { getInterviewById } from '@/lib/repository/interviews';
 import { InterviewDTO } from '@/lib/validators/interview';
 
 import { InterviewStatus } from '../interview-status';

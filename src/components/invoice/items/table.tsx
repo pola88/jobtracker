@@ -1,44 +1,37 @@
 'use client';
 
 import { SortingState } from '@tanstack/react-table';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useTransition,
-} from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 
 import { useTranslations } from 'next-intl';
 
-import { useModal } from '@/hooks/use-modal';
-import { countInterview, getInterviews } from '@/lib/repository/interviews';
-import { InterviewDTO } from '@/lib/validators/interview';
-import { useInterviewStore } from '@/stores/interview';
+import {
+  countInvoiceLineItemsAction,
+  getInvoiceLineItemsAction,
+} from '@/actions/invoice-line-items';
+import { InvoiceLineItemDTO } from '@/lib/validators/invoice-line-item';
+import { useInvoiceLineItemStore } from '@/stores/invoice-line-item';
 
-import DataTable from '../data-table';
+import DataTable from '../../data-table';
 import { getColumns } from './columns';
+import { NewInvoiceLineItemBtn } from './new-item';
+import { NewInvoiceLineItem } from './new-line-item-modal';
 
-interface InterviewsTableProps {
-  userId: string;
-}
-
-export function InterviewsTable({ userId }: InterviewsTableProps) {
-  const t = useTranslations('interviews.columns');
+export function InvoiceLineItemsTable() {
+  const t = useTranslations('invoice-line-item.columns');
   const tTable = useTranslations('table.headers');
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'updatedAt', desc: true },
   ]);
   const [isLoading, startTransition] = useTransition();
-  const updatedAt = useInterviewStore((state) => state.updatedAt);
-  const { toggleModal } = useModal({ modalName: 'ShowInterviewModal' });
+  const updatedAt = useInvoiceLineItemStore((state) => state.updatedAt);
 
   const [fetchResult, setFetchResult] = useState<{
     nextCursor?: string;
-    interviews: InterviewDTO[] | null;
-    totalInterview: number;
-  }>({ interviews: null, totalInterview: 0 });
+    invoiceLineItems: InvoiceLineItemDTO[] | null;
+    totalItems: number;
+  }>({ invoiceLineItems: null, totalItems: 0 });
 
   const [currentCursor, setCurrentCursor] = useState<string | null | undefined>(
     null,
@@ -50,56 +43,57 @@ export function InterviewsTable({ userId }: InterviewsTableProps) {
 
   useEffect(() => {
     startTransition(() => {
-      const fetchInterviews = async () => {
+      const fetchInvoiceItems = async () => {
         const sortBy = {
           [sorting[0].id]: sorting[0].desc ? 'desc' : 'asc',
         };
-        const [result, totalInterview] = await Promise.all([
-          getInterviews({
-            userId,
+        const [result, totalItems] = await Promise.all([
+          getInvoiceLineItemsAction({
             cursor: currentCursor,
             pageSize,
             sortBy,
           }),
-          countInterview(userId),
+          countInvoiceLineItemsAction(),
         ]);
         setFetchResult({
           nextCursor: result.nextCursor,
-          interviews: result.interviews,
-          totalInterview,
+          invoiceLineItems: result.invoiceLineItems,
+          totalItems,
         });
       };
-      fetchInterviews();
+      fetchInvoiceItems();
     });
-  }, [userId, currentCursor, pageSize, updatedAt, sorting]);
+  }, [currentCursor, pageSize, updatedAt, sorting]);
 
-  const handleOnRowClick = useCallback(
-    (row: InterviewDTO) => {
-      toggleModal({ id: row.id });
-    },
-    [toggleModal],
-  );
+  // const handleOnRowClick = useCallback(
+  //   (row: InvoiceLineItemDTO) => {
+  //     toggleModal({ id: row.id });
+  //   },
+  //   [toggleModal],
+  // );
   const columns = useMemo(() => getColumns(t, tTable), [t, tTable]);
 
   return (
     <div className='glass-panel rounded-xl border'>
+      <NewInvoiceLineItem />
       <DataTable
         columns={columns}
-        data={fetchResult.interviews}
-        onRowClick={handleOnRowClick}
+        data={fetchResult.invoiceLineItems}
+        // onRowClick={handleOnRowClick}
         isLoading={isLoading}
         onPageSizeChange={setPageSize}
         setCursor={(cursor) => {
           setPrevCursor(currentCursor);
           setCurrentCursor(cursor);
         }}
+        topRight={<NewInvoiceLineItemBtn />}
         sorting={sorting}
         onSortingChange={setSorting}
         pagination={{
           prevCursor: prevCursor,
           nextCursor: fetchResult.nextCursor,
           pageSize,
-          countElement: fetchResult.totalInterview,
+          countElement: fetchResult.totalItems,
         }}
       />
     </div>

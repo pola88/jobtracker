@@ -2,7 +2,8 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { ActionResponseBase } from '@/lib/types';
 import { BusinessProfileDTO } from '@/lib/validators/business-profile';
-import { InvoiceDTO, LineItemDTO } from '@/lib/validators/invoice';
+import { InvoiceDTO } from '@/lib/validators/invoice';
+import { InvoiceLineItemDTO } from '@/lib/validators/invoice-line-item';
 
 export interface ItemsProps {
   form: UseFormReturn<InvoiceDTO>;
@@ -10,7 +11,7 @@ export interface ItemsProps {
 
 export interface LineItemProps {
   index: number;
-  item: LineItemDTO;
+  item: Omit<InvoiceLineItemDTO, 'createdAt' | 'updatedAt'>;
   removeLineItem: () => void;
 }
 
